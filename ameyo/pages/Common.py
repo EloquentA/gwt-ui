@@ -1,5 +1,5 @@
 """
-Module: This is the common module which contains methods for common flows in EXOTEL UI."""
+Module: This is the common module which contains methods for common flows in AMEYO UI."""
 import datetime
 import os
 import sys

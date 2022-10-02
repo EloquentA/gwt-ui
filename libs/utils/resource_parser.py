@@ -42,6 +42,6 @@ class ResourceParser:
 
 
 if __name__ == "__main__":
-    obj = ResourceParser(project="5.x")
+    obj = ResourceParser(project="ameyo")
     resources = obj.get_resources()
     print(resources)

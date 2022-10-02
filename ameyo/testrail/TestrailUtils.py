@@ -35,7 +35,7 @@ class AmeyoTestrail:
         """Gets available status list from testrail."""
         response = None
         try:
-            response  = self._api.statuses.get_statuses()
+            response = self._api.statuses.get_statuses()
             if not isinstance(response, list):
                 raise ValueError(f'No status list found in response: {response}')
             return response
@@ -68,7 +68,7 @@ class AmeyoTestrail:
         try:
             self._run = self._api.runs.add_run(
                 project_id=self.project_id,
-                description="Automated test run for EXOTEL UI.",
+                description="Automated test run for AMEYO UI.",
                 name=self.get_unique_test_run_name(),
                 include_all=False,
                 case_ids=test_case_ids

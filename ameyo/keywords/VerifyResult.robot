@@ -5,8 +5,9 @@ Documentation     Keywords supported for handling result verification from singl
 
 
 *** Keywords **
-I verify result ${result}
+I verify result
     [Documentation]   This keyword verifies result for consistency and single point to manage
+    [Arguments]  ${result}
     IF  ${TESTRAIL_REPORTING}
         Should Be Equal As Strings      "${result[1]}"     "${EMPTY}"
     ELSE
