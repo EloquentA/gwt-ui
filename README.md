@@ -40,11 +40,17 @@ To run automation command please ensure virtual environment is activated and abo
   - For more arguments run `python -m robot --help`
 
 
-### Run individual test suite files
-`python -m robot --variablefile .\ameyo\variables\sample_variables.yml .\ameyo\tests\TS001_LoginSuite\TC001_Login.robot` 
+### Run individual test suite files on Windows
+`python -m robot --variablefile .\ameyo\variables\sample_variables.yml .\ameyo\tests\TS001_LoginSuite\TC001_Login.robot`
+
+### Run individual test suite files on Mac/Ubuntu
+`python3 -m robot --variablefile ./ameyo/variables/sample_variables.yml ./ameyo/tests/TS001_LoginSuite/TC001_Login.robot`
 
 ### Run individual test suite directory
 `python -m robot --variablefile ./ameyo/variables/sample_variables.yml ./ameyo/tests/TS001_LoginSuite` 
+
+### Run individual test suite directory on Mac/Ubuntu
+`python3 -m robot --variablefile ./ameyo/variables/sample_variables.yml ./ameyo/tests/TS001_LoginSuite`
 
 ### Run test with Testrail reporting
 `python -m robot --listener ".\ameyo\testrail\TestrailListener.py;server_url=<testrail-server-url>;testrail_username=<testrail-username>;<testrail-password>;project_id=<testrail-project-id>" --variablefile .\ameyo\variables\local_variables.yml --outputdir <log-dir> .\ameyo\tests\TS001_LoginSuite`
