@@ -267,6 +267,16 @@ class Action:
         self.element = self._element_finder(locator)
         self._current_browser().execute_script("arguments[0].focus();", self.element)
 
+    def wait_for_alert_and_act(self, cancel=False, waittime=20):
+        """Waits for alert to appear and performs requested action.
+
+        By default, this keyword chooses 'OK' option from the dialog. If
+            'Cancel' needs to be chosen, set keyword ` Cancel = True'"""
+        WebDriverWait(self._browser.get_current_browser(), waittime).until(EC.alert_is_present(),
+                                        'Timed out waiting for ' +
+                                        'confirmation popup to appear.')
+        self.alert_action(cancel)
+
     def alert_action(self, Cancel=False):
         """Dismisses currently shown alert dialog and returns it's message.
 

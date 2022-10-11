@@ -5,23 +5,23 @@ BROWSER_CONFIG:
   server: ''
   port: ''
 SKIP_POST_RUN_CLEANUP: True
-AMEYO_URL: ''
+AMEYO_URL: 'https://vapt.ameyo.net:8443/app/'
 # Automatically updated to True if run triggered with testrail reporting
 TESTRAIL_REPORTING: False
 TESTRAIL_RUN_URL: "/index.php?/runs/view/{run_id}&group_by=cases:section_id&group_order=asc"
 CLOSE_TESTRAIL_RUN: True
 AUTOMATION_NAME: 'Ameyo UI Robot Automation Run'
-RUN_AS: user
+RUN_AS: executive
 CREDENTIALS:
+  multi_cc_manager:
+    username: ''
+    password: ''
   admin:
-    username: <admin-email>
-    password: <admin-pass>
-    is_mfa: False
-  user:
-    username: <agent-email>
-    password: <agent-pass>
-    is_mfa: False
+    username: ''
+    password: ''
+  executive:
+    username: ''
+    password: ''
   supervisor:
-    username: <supervisor-email>
-    password: <supervisor-pass>
-    is_mfa: False
+    username: ''
+    password: ''

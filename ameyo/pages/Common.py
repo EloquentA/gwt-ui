@@ -16,3 +16,12 @@ class Common:
 
     def __init__(self, web_browser):
         self.action = Action(web_browser)
+
+    def close_alert_if_exists(self, cancel=False, waittime=20):
+        """Method to close force login pop up."""
+        try:
+            self.action.wait_for_alert_and_act(cancel, waittime)
+            return True
+        except Exception as e:
+            print("Error closing alert after logout: ", e)
+            return True

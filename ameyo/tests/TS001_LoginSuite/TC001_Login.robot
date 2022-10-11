@@ -3,8 +3,8 @@ Documentation     Ameyo Login test cases
 ...               Developed By - Developer by EA
 
 # Suite Setup and Teardown
-Test Setup       Login Initialization
-Test Teardown    Login Cleanup
+Suite Setup       Login Initialization
+Suite Teardown    Login Cleanup
 
 # Keywords Definition file
 Resource          ../../keywords/SetupTeardown.robot
@@ -16,13 +16,33 @@ Library           ../../pages/Ameyo.py    browser_config=${BROWSER_CONFIG}    pr
 
 *** Test Cases ***
 TC - Login into Ameyo as ${RUN_AS} user
-    [Tags]  sanity
+    [Tags]  smoke    testrailid=AP-15997
     IF  ${is_parent_setup}
-        I logout from Ameyo ${instance1}
+        I logout from ameyo    ${instance1}
     END
-#    I open Ameyo home page ${instance1}
-    I login into Ameyo ${instance1}
+    I open ameyo home page    ${instance1}
+    I login into Ameyo    ${instance1}    ${RUN_AS}
 
 TC - Logout from Ameyo
-    [Tags]  sanity
-    I logout from Ameyo ${instance1}
+    [Tags]  smoke    testrailid=AP-15997
+    I logout from ameyo    ${instance1}
+
+TC - Login into Ameyo with incorrect username and incorrect password
+    [Tags]  smoke    testrailid=AP-15997
+    I open ameyo home page    ${instance1}
+    I login into ameyo with incorrect username and incorrect password    ${instance1}
+
+TC - Login into Ameyo with correct username and incorrect password
+    [Tags]  smoke    testrailid=AP-15997
+    I open ameyo home page    ${instance1}
+    I login into ameyo with correct username and incorrect password    ${instance1}
+
+TC - Login into Ameyo with incorrect username and correct password
+    [Tags]  smoke    testrailid=AP-15997
+    I open ameyo home page    ${instance1}
+    I login into ameyo with incorrect username and correct password    ${instance1}
+
+TC - Login into Ameyo with blank username and blank password
+    [Tags]  smoke    testrailid=AP-15997
+    I open ameyo home page    ${instance1}
+    I login into ameyo with blank username and blank password    ${instance1}

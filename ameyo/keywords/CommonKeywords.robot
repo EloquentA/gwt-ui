@@ -8,33 +8,34 @@ Resource          ./VerifyResult.robot
 Resource          ./LoginKeywords.robot
 
 *** Keywords **
-I open Ameyo home page
+I open ameyo home page
     [Documentation]   This keyword opens Ameyo home page and maximazes wrowser window
     [Arguments]  ${instance}
     &{url}=    Create Dictionary      url=${AMEYO_URL}
     ${result}=   call method    ${instance}    open_home_page    ${url}
-    I verify result ${result}
+    I verify result    ${result}
 
 I close browser window
     [Documentation]   This keyword closes the browser
     [Arguments]  ${instance}
     ${result}=   call method    ${instance}    close_browser_window
-    I verify result ${result}
+    I verify result    ${result}
 
-I refresh browser page
-    [Documentation]   This keyword refreshes the browser page
+I close alert if present
+    [Documentation]   This keyword closes alert if present
     [Arguments]  ${instance}
-    ${result}=   call method    ${instance}    refresh_page
-    I verify result ${result}
+    ${result}=   call method    ${instance}    close_alert_if_present
+    I verify result    ${result}
 
 Ameyo setup
     [Documentation]   This keyword sets up setup for every suite
     [Arguments]  ${instance}
-    I open Ameyo home page ${instance}
-    I login into Ameyo ${instance}
+    I open ameyo home page    ${instance}
+    I close alert if present   ${instance}
+    I login into Ameyo    ${instance}    ${RUN_AS}
 
 Ameyo teardown
     [Documentation]   This keyword does teardown setup for every suite
     [Arguments]  ${instance}
-    I logout from Ameyo ${instance1}
-    I close browser window ${instance1}
+    I logout from Ameyo    ${instance1}
+    I close browser window    ${instance1}

@@ -49,22 +49,21 @@ class Ameyo:
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("open_home_page", error))
 
-    def refresh_page(self):
-        """Refreshes current page."""
+    def close_alert_if_present(self):
+        """Closes alert if present"""
         try:
-            self.action.refresh_page()
+            self.common.close_alert_if_exists()
             return self._return_result()
         except Exception as error:
-            return self._return_result(False, error, self.__capture_error("refresh_page", error))
+            return self._return_result(False, error, self.__capture_error("close_alert_if_present", error))
 
-    def ameyo_login(self, kwargs):
+    def ameyo_login(self, kwargs, run_as=None):
         """Method to login"""
         try:
             print(f'Logging in as {self._run_as}')
-            self.login.login(**kwargs.get(self._run_as))
-            return self._return_result()
+            return self._return_result(self.login.login(**kwargs.get(run_as or self._run_as)))
         except Exception as error:
-            return self._return_result(False, error, self.__capture_error("Ameyo_login", error))
+            return self._return_result(False, error, self.__capture_error("ameyo_login", error))
 
     def logout(self):
         """Method to logout"""
@@ -73,6 +72,14 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("logout", error))
+
+    def login_failure(self, kwargs, username_type, password_type):
+        """Method to test login failures."""
+        try:
+            self.login.login_failure(kwargs.get(self._run_as), username_type, password_type)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"login_failure_{username_type}_{password_type}", error))
 
     @staticmethod
     def _return_result(status=True, error='', ss_path='', *args):
