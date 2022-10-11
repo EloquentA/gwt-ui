@@ -1,0 +1,12 @@
+keep_alive:
+    threshold: 15000
+log_level: INFO
+locale: en_IN
+max_workers: 50
+rest:
+    timeout: 3600
+    retries: 5
+    verify: true
+    pool:
+        connections: 2000
+        maxsize: 2000

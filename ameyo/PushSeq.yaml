@@ -1,0 +1,85 @@
+agent_ringtimeout_DefaultVR:
+  pushes:
+    UserCallModelUpdatedPush:
+      - ringing
+      - hungup
+    CustomerCallMemberCreatedPush:
+      - queued
+customer_not_picked_DefaultVR:
+  pushes:
+    UserCallModelUpdatedPush:
+      - connected
+      - hungup
+    CustomerCallMemberUpdatedPush:
+      - ringing
+      - hungup
+customer_not_reachable_DefaultVR:
+  pushes:
+    UserCallModelUpdatedPush:
+      - connected
+      - hungup
+    CustomerCallMemberUpdatedPush:
+      - initialized
+      - hungup
+customer_ringtimeout_DefaultVR:
+  pushes:
+    UserCallModelUpdatedPush:
+      - connected
+      - hungup
+    CustomerCallMemberUpdatedPush:
+      - ringing
+      - hungup
+customer_success_60_DefaultVR:
+  pushes:
+    UserCallModelUpdatedPush:
+      - connected
+      - hungup
+    CustomerCallMemberUpdatedPush:
+      - connected
+      - hungup
+customer_success_1800_DefaultVR:
+  pushes:
+    UserCallModelUpdatedPush:
+      - connected
+      - hungup
+    CustomerCallMemberUpdatedPush:
+      - connected
+      - hungup
+transfer_to_campaign:
+  pushes:
+    CustomerCallMemberUpdatedPush:
+      - connected
+    UserCallModelUpdatedPush:
+      - hungup
+transfer_to_phone:
+  pushes:
+    CustomerCallMemberUpdatedPush:
+      - connected
+    PhoneCallMemberUpdatedPush:
+      - connected
+transfer_to_user:
+  pushes:
+    CustomerCallMemberUpdatedPush:
+      - hungup
+    UserCallModelUpdatedPush:
+      - hungup
+transfer_to_queue:
+  pushes:
+    CustomerCallMemberUpdatedPush:
+      - connected
+confer_to_phone:
+  pushes:
+    UserCallModelUpdatedPush:
+      - connected
+confer_to_user:
+  pushes:
+    CustomerCallMemberUpdatedPush:
+      - connected
+    UserCallModelUpdatedPush:
+      - connected
+auto_dial_agent:
+  pushes:
+    CustomerCallMemberCreatedPush:
+      - connected
+    CustomerCallMemberUpdatedPush:
+      - connected
