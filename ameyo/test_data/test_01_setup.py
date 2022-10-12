@@ -1,8 +1,9 @@
 __author__ = "Developed by EA"
 
 import pytest
-import time
-import random, string
+import random
+import json
+import os
 
 
 @pytest.mark.SETUP
@@ -13,164 +14,168 @@ class TestSetup:
     Test Suite to create Test Data
     """
 
+    @staticmethod
+    def read_json(filename):
+        path = os.getcwd()
+        test_data_dir = os.path.join(path, "ameyo", "test_data")
+        json_file = os.path.join(test_data_dir, filename)
+        with open(json_file, 'r') as file_obj:
+            return json.load(file_obj)
+
+    # @pytest.mark.skip("WIP")
     def test_01_create_cc(self, ameyo):
         """
         Create Contact Center
         :param ameyo:
         :return:
         """
+
+        test_data = TestSetup.read_json("test_data.json")
         for cc in ameyo.get_all_cc().json():
-            if cc['contactCenterName'] == self.ccn:
-                pytest.skip(msg=f"Contact Center {self.ccn} already Exists !!")
+            if cc['contactCenterName'] == test_data['ccn']:
+                pytest.skip(msg=f"Contact Center {test_data['ccn']} already Exists !!")
                 break
         else:
             # Create Contact Center
-            ameyo.create_cc(contactCenterName=self.ccn).json()
+            ameyo.create_cc(contactCenterName=test_data['ccn']).json()
 
             # Check if cc has been created
             for cc in ameyo.get_all_cc().json():
-                if cc['contactCenterName'] == self.ccn:
+                if cc['contactCenterName'] == test_data['ccn']:
                     break
             else:
-                raise Exception(f"Cannot Find CC {self.ccn} !!")
+                raise Exception(f"Cannot Find CC {test_data['ccn']} !!")
 
-    @pytest.mark.parametrize("suffix,isRoot,role", [
-        ("ADMIN_USER", True, 'Administrator'), ("SUPERVISOR_USER", False, 'Supervisor'),
-        ("EXECUTIVE_USER", False, 'Executive')
-    ])
-    def test_02_create_user_with_multi_cc_manager(self, ameyo, suffix, isRoot, role, calling):
+    # @pytest.mark.skip("WIP")
+    def test_02_create_user_with_multi_cc_manager(self, ameyo, calling):
         """
         Create user with multi CC manager token
         :param ameyo:
         :return:
         """
-        userId = f"{self.ccn}_{suffix}"
-        users = ameyo.get_all_users(sessionId=ameyo.ccManagerToken).json()
-        for user in users:
-            if user['userID'] == userId:
-                pytest.skip(msg=f"{userId} already Exists !!")
+        test_data = TestSetup.read_json("test_data.json")
+        multi_cc_created_users_list = test_data['multi_cc_created_users']
 
-        response = ameyo.create_cc_user(**{
-            'userId': userId,
-            'userData': 'Test300!@#',
-            'userType': role,
-            'isRoot': isRoot
-        }).json()
-        calling['userType'] = response['userType']
+        for multi_cc_created_user in multi_cc_created_users_list:
+            userId = f"{multi_cc_created_user['name']}"
+            users = ameyo.get_all_users(sessionId=ameyo.ccManagerToken).json()
+            for user in users:
+                if user['userID'] == userId:
+                    pytest.skip(msg=f"{userId} already Exists !!")
 
-    @pytest.mark.parametrize("suffix,role", [
-        ("ADMIN_USER", 'Administrator'), ("SUPERVISOR_USER", 'Supervisor'), ("EXECUTIVE_USER", 'Executive')])
-    def test_03_assign_user_to_cc_with_multi_cc_manager(self, ameyo, suffix, role):
+            response = ameyo.create_cc_user(**{
+                'userId': userId,
+                'userData': multi_cc_created_user['password'],
+                'userType': multi_cc_created_user['role'],
+                'isRoot': multi_cc_created_user['isRoot']
+            }).json()
+            calling['userType'] = response['userType']
+
+    # @pytest.mark.skip("WIP")
+    def test_03_assign_user_to_cc_with_multi_cc_manager(self, ameyo):
         """
         Assign user to CC with multi CC manager token
         :param ameyo:
         :param role:
         :return:
         """
+
+        test_data = TestSetup.read_json("test_data.json")
+        multi_cc_created_users_list = test_data['multi_cc_created_users']
         for cc in ameyo.get_all_cc().json():
-            if cc['contactCenterName'] == self.ccn:
+            if cc['contactCenterName'] == test_data['ccn']:
                 break
         else:
-            raise Exception(f"Cannot Find CC {self.ccn} !!")
+            raise Exception(f"Cannot Find CC {test_data['ccn']} !!")
         ccId = cc['contactCenterId']
 
-        userId = f"{self.ccn}_{suffix}"
+        for multi_cc_created_user in multi_cc_created_users_list:
+            userId = f"{multi_cc_created_user['name']}"
 
-        users = sorted(ameyo.get_all_users_assigned_to_cc(ccId=ccId, sessionId=ameyo.ccManagerToken).json(),
-                       key=lambda a: a['userId'])
-        if userId in [x['userId'] for x in users]:
-            pytest.skip(msg=f"User {userId} already assigned to CC")
+            users = sorted(ameyo.get_all_users_assigned_to_cc(ccId=ccId, sessionId=ameyo.ccManagerToken).json(),
+                           key=lambda a: a['userId'])
+            if userId in [x['userId'] for x in users]:
+                pytest.skip(msg=f"User {userId} already assigned to CC")
 
-        ameyo.assign_user_to_cc(**{
-            'allocateContactCenterId': ccId,
-            'userIds': userId,
-            'userTypes': role
-        })
+            ameyo.assign_user_to_cc(**{
+                'allocateContactCenterId': ccId,
+                'userIds': userId,
+                'userTypes': multi_cc_created_user['role']
+            })
 
-        # Check user is assigned to CC
-        users = ameyo.get_all_users_assigned_to_cc(ccId=ccId, sessionId=ameyo.ccManagerToken).json()
-        for user in users:
-            if userId == user['userId']:
-                break
-        else:
-            raise Exception(f"User {userId} not assigned to CC !!")
+            # Check user is assigned to CC
+            users = ameyo.get_all_users_assigned_to_cc(ccId=ccId, sessionId=ameyo.ccManagerToken).json()
+            for user in users:
+                if userId == user['userId']:
+                    break
+            else:
+                raise Exception(f"User {userId} not assigned to CC !!")
 
-    @pytest.mark.parametrize("suffix,isRoot,role", [
-        ("ADMIN_USER_01", True, 'Administrator'), ("SUPERVISOR_USER_01", False, 'Supervisor'),
-        ("EXECUTIVE_USER_01", False, 'Executive')])
-    def test_04_create_user_using_admin_token(self, ameyo, suffix, isRoot, role):
+    # @pytest.mark.skip("WIP")
+    def test_04_create_user_using_admin_token(self, ameyo):
         """
         Create User using Admin Token
         :param ameyo:
         :param role:
         :return:
         """
+
+        test_data = TestSetup.read_json("test_data.json")
+        multi_cc_created_users_list = test_data['multi_cc_created_users']
+        admin_created_users_list = test_data['admin_created_users']
+
         if ameyo.adminToken is None:
-            ameyo.adminToken = ameyo.user_login(userId=f"{self.ccn}_ADMIN_USER").json()['userSessionInfo']['sessionId']
+            ameyo.adminToken = ameyo.user_login(userId=f"{multi_cc_created_users_list[0]['name']}").json()['userSessionInfo']['sessionId']
 
         for cc in ameyo.get_all_cc().json():
-            if cc['contactCenterName'] == self.ccn:
+            if cc['contactCenterName'] == test_data['ccn']:
                 break
         else:
-            raise Exception(f"Cannot Find CC {self.ccn} !!")
+            raise Exception(f"Cannot Find CC {test_data['ccn']} !!")
         ccId = cc['contactCenterId']
 
-        userId = f"{self.ccn}_{suffix}"
-        users = sorted(
-            ameyo.get_all_users_assigned_to_cc(ccId=ccId, sessionId=ameyo.adminToken).json(), key=lambda a: a['userId']
-        )
-        if userId in [x['userId'] for x in users]:
-            pytest.skip(msg=f"User {userId} already assigned to CC")
+        for admin_created_user in admin_created_users_list:
+            userId = f"{admin_created_user['name']}"
+            users = sorted(
+                ameyo.get_all_users_assigned_to_cc(ccId=ccId, sessionId=ameyo.adminToken).json(), key=lambda a: a['userId']
+            )
+            if userId in [x['userId'] for x in users]:
+                pytest.skip(msg=f"User {userId} already assigned to CC")
 
-        ameyo.create_user(**{
-            'userId': userId,
-            'userType': role,
-            'password': 'Test300!@#',
-            'contactCenterId': ccId
-        })
+            ameyo.create_user(**{
+                'userId': userId,
+                'userType': admin_created_user['role'],
+                'password': admin_created_user['password'],
+                'contactCenterId': ccId
+            })
 
-        # Check user is assigned to CC
-        users = ameyo.get_all_users_assigned_to_cc(ccId=ccId, sessionId=ameyo.adminToken).json()
-        for user in users:
-            if userId == user['userId']:
-                break
-        else:
-            raise Exception(f"User {userId} not assigned to CC !!")
+            # Check user is assigned to CC
+            users = ameyo.get_all_users_assigned_to_cc(ccId=ccId, sessionId=ameyo.adminToken).json()
+            for user in users:
+                if userId == user['userId']:
+                    break
+            else:
+                raise Exception(f"User {userId} not assigned to CC !!")
 
-    @pytest.mark.parametrize("suffix,role", [
-        ("ADMIN_USER_01", 'Administrator'), ("SUPERVISOR_USER_01", 'Supervisor'), ("EXECUTIVE_USER_01", 'Executive')])
-    def test_05_login_users(self, ameyo, suffix, role):
-        """
-        Login Users
-        :param ameyo:
-        :param role:
-        :return:
-        """
-        userId = f"{self.ccn}_{suffix}"
-        if role == 'Administrator':
-            ameyo.adminToken = ameyo.user_login(userId=userId).json()['userSessionInfo']['sessionId']
-        elif role == 'Supervisor':
-            ameyo.supervisorToken = ameyo.user_login(userId=userId).json()['userSessionInfo']['sessionId']
-        elif role == 'Executive':
-            ameyo.executiveToken = ameyo.user_login(userId=userId).json()['userSessionInfo']['sessionId']
-        else:
-            pass
-
-    def test_06_assign_call_contexts_to_cc(self, ameyo):
+    # @pytest.mark.skip("WIP")
+    def test_05_assign_call_contexts_to_cc(self, ameyo):
         """
         Assign Call Contexts to Contact Center
         :param ameyo:
         :return:
         """
+
+        test_data = TestSetup.read_json("test_data.json")
+
         for cc in ameyo.get_all_cc().json():
-            if cc['contactCenterName'] == self.ccn:
+            if cc['contactCenterName'] == test_data['ccn']:
                 break
         else:
-            raise Exception(f"Cannot Find CC {self.ccn} !!")
+            raise Exception(f"Cannot Find CC {test_data['ccn']} !!")
         ccId = cc['contactCenterId']
 
         SystemContexts = ameyo.get_all_call_context().json()
-        assigned = ameyo.get_cc_call_contexts(ccId=ccId).json()
+        assigned = ameyo.get_cc_call_contexts(ccId=ccId, sessionId=ameyo.adminToken).json()
         callContexts = []
         for SystemContext in SystemContexts:
             if SystemContext['name'] in [x['callContextName'] for x in assigned] or SystemContext['id'] <= 0:
@@ -186,59 +191,48 @@ class TestSetup:
             return
 
         # assign and verify call contexts in response
-        assigned = ameyo.assign_call_contexts_to_cc(contactCenterId=ccId, callContexts=callContexts, ).json()
+        assigned = ameyo.assign_call_contexts_to_cc(contactCenterId=ccId,
+                                                    callContexts=callContexts,
+                                                    sessionId=ameyo.adminToken).json()
         assigned = {x['callContextId'] for x in assigned['contactCenterCallContextBeans']}
         if len({x['callContextId'] for x in callContexts}.intersection(assigned)) != len(callContexts):
             raise Exception(f"Some Call Context not assigned !!")
 
         # Verify Call Contexts in Get Call
-        response = ameyo.get_cc_call_contexts()
+        response = ameyo.get_cc_call_contexts(sessionId=ameyo.adminToken)
         assigned = {x['callContextId'] for x in response.json()}
         if len({x['callContextId'] for x in callContexts}.intersection(assigned)) != len(callContexts):
             raise Exception(f"Some Call Context not assigned !!")
 
-    @pytest.mark.CREATE_PROCESS
-    def test_07_create_process(self, ameyo, pn):
+    # @pytest.mark.skip("WIP")
+    def test_06_create_process(self, ameyo):
         """
         Create Process
         :param ameyo:
         :return:
         """
-        processName = f"{self.ccn}_{pn}"
-        ameyo.create_process(processName=processName)
-        Processes = ameyo.get_all_processes().json()
-        if processName not in [x['processName'] for x in Processes]:
-            raise Exception(f"Process {processName} not Found !!")
 
-    def test_08_update_process_crm_settings(self, ameyo):
-        """
-        Update Process
-        :param ameyo:
-        :return:
-        """
-        for _, Process in enumerate(ameyo.get_all_processes().json()):
-            response = ameyo.get_process_crm_settings(**{
-                'processId': Process['processId'],
-                'toFail': False
-            })
-            if response.ok is False:
-                response = response.json()
-                message = f"No configuration for process with id {Process['processId']} exists"
-                if response['status'] == 512 and response['message'] == message:
-                    pass
-            else:
-                response = response.json()
-                if response['propagateCustomerRemoval'] is True and response['propagateLeadRemoval'] is True:
-                    continue
+        test_data = TestSetup.read_json("test_data.json")
+        process_names_list = test_data['process_names']
 
-            ameyo.update_process_crm_settings(processId=Process['processId'])
+        for process_name in process_names_list:
+            ameyo.create_process(processName=process_name, sessionId=ameyo.adminToken)
+            processes = ameyo.get_all_processes(sessionId=ameyo.adminToken).json()
+            if process_name not in [x['processName'] for x in processes]:
+                raise Exception(f"Process {process_name} not Found !!")
 
-    def test_09_create_campaign(self, ameyo):
+    @pytest.mark.skip("WIP")
+    def test_07_create_campaign(self, ameyo):
         """
         Create Campaign
         :param ameyo:
         :return:
         """
+
+        test_data = TestSetup.read_json("test_data.json")
+        process_names_list = test_data['process_names']
+        campaign_names_list = test_data['campaign_names']
+
         for Process in ameyo.get_all_processes().json():
             campaignName = f"{Process['processName']}_CAMPAIGN"
 
@@ -261,7 +255,8 @@ class TestSetup:
             if campaignName not in [x['campaignName'] for x in Campaigns]:
                 raise Exception(f"Campaign {campaignName} is not Present !!")
 
-    def test_10_assign_call_contexts_to_campaign(self, ameyo):
+    @pytest.mark.skip("WIP")
+    def test_09_assign_call_contexts_to_campaign(self, ameyo):
         """
         Assign all Call Contexts to a Given Campaign
         25-03 - Assigning call contexts(which starts with customer i.e. customer_success_*, customer_notreachable*) to campaigns
@@ -301,6 +296,7 @@ class TestSetup:
 
                 ameyo.get_call_contexts_in_campaign(campaignId=Campaign['campaignId'])
 
+    @pytest.mark.skip("WIP")
     def test_11_assign_supervisor_to_campaign(self, ameyo):
         """
         Assign Supervisor user to Campaign
@@ -344,6 +340,7 @@ class TestSetup:
             returneduserids = [returneduser['userId'] for returneduser in returnedusers]
             assert (len(userIds) == len(returneduserids) and sorted(userIds) == sorted(returneduserids))
 
+    @pytest.mark.skip("WIP")
     def test_12_create_new_lead(self, ameyo):
         """
         Create a new Lead
@@ -383,6 +380,7 @@ class TestSetup:
                 else:
                     raise Exception(f"New Created Lead not Found !!")
 
+    @pytest.mark.skip("WIP")
     def test_13_assign_lead_to_campaign(self, ameyo):
         """
         Assign Lead to Campaign
@@ -401,6 +399,7 @@ class TestSetup:
             if len(leadIds) > 0:
                 ameyo.assign_lead_to_campaign(campaignContextId=Campaign['campaignId'], leadIds=leadIds)
 
+    @pytest.mark.skip("WIP")
     def test_14_create_executive_agents(self, ameyo, request):
         """
         Get Contact Center Agents
@@ -439,6 +438,8 @@ class TestSetup:
         notCreated = []
         arguments = [{'userId': f"{self.ccn}_EXECUTIVE_USER_{i:04}"} for i in
                      range(1, request.config.option.agents + 1)]
+        ameyo.logger.info(f"Arguments: {arguments}")
+        ameyo.logger.info(f"len of Arguments: {len(arguments)}")
         batch = 100
         for i in range(0, len(arguments), batch):
             response = ameyo.run_in_parallel(_create, arguments=arguments[i: i + batch], max_workers=batch, logs=False)
@@ -461,6 +462,7 @@ class TestSetup:
         if len(notCreated) > 0:
             raise Exception(f"Users {notCreated} Not Created !!")
 
+    @pytest.mark.skip("WIP")
     def test_15_assign_user_to_campaigns(self, ameyo):
         """
         Assign user to campaign
@@ -518,7 +520,8 @@ class TestSetup:
                 if User['userId'] not in [x['userId'] for x in assigned]:
                     raise Exception(f"User {User['userId']} not assigned to Campaign !!")
 
-    def test_22_assign_supervisor_to_all_campaigns(self, ameyo):
+    @pytest.mark.skip("WIP")
+    def test_16_assign_supervisor_to_all_campaigns(self, ameyo):
         """
         Assign Supervisor user to all Campaigns (required for supervisor monitoring)
         :param ameyo:

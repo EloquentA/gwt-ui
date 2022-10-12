@@ -1,0 +1,48 @@
+{
+	"ccn": "Santosh_Test_001",
+	"multi_cc_created_users": [{
+			"name": "Santosh_Test_001_ADMIN_USER",
+			"isRoot": true,
+			"role": "Administrator",
+			"password": "Test300!@#"
+		},
+		{
+			"name": "Santosh_Test_001_SUPERVISOR_USER",
+			"isRoot": false,
+			"role": "Supervisor",
+			"password": "Test300!@#"
+		},
+		{
+			"name": "Santosh_Test_001_EXECUTIVE_USER",
+			"isRoot": false,
+			"role": "Executive",
+			"password": "Test300!@#"
+		}
+	],
+	"admin_created_users": [{
+			"name": "Santosh_Test_001_ADMIN_USER_01",
+			"isRoot": true,
+			"role": "Administrator",
+			"password": "Test300!@#"
+		},
+		{
+			"name": "Santosh_Test_001_SUPERVISOR_USER_01",
+			"isRoot": false,
+			"role": "Supervisor",
+			"password": "Test300!@#"
+		},
+		{
+			"name": "Santosh_Test_001_EXECUTIVE_USER_01",
+			"isRoot": false,
+			"role": "Executive",
+			"password": "Test300!@#"
+		}
+	],
+	"process_names": ["PROCESS_0001", "PROCESS_0002", "PROCESS_0003", "PROCESS_0004", "PROCESS_0005",
+		"PROCESS_0006", "PROCESS_0007", "PROCESS_0008", "PROCESS_0009", "PROCESS_0010"
+	],
+	"campaign_names": ["PROCESS_0001_CAMPAIGN", "PROCESS_0002_CAMPAIGN", "PROCESS_0003_CAMPAIGN",
+		"PROCESS_0004_CAMPAIGN", "PROCESS_0005_CAMPAIGN", "PROCESS_0006_CAMPAIGN",
+		"PROCESS_0007_CAMPAIGN", "PROCESS_0008_CAMPAIGN", "PROCESS_0009_CAMPAIGN", "PROCESS_0010_CAMPAIGN"
+	]
+}

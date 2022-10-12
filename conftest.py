@@ -407,7 +407,7 @@ def _refresh(ameyo, request):
     yield
     setattr(request.config.option, 'send_keep_alive', False)
 
-#
+
 # @pytest.fixture(scope="session")
 # def postgres(ameyo, request):
 #     """
@@ -453,7 +453,7 @@ def _refresh(ameyo, request):
 #     ameyo.logger.info(f"Started Capturing Ameyo Server Debug Logs ...")
 #     return ssh
 #
-
+#
 # @pytest.fixture(scope="function", autouse=True)
 # def _logs(_ssh, request):
 #     """
