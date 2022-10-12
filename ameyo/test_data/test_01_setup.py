@@ -197,6 +197,7 @@ class TestSetup:
         if len({x['callContextId'] for x in callContexts}.intersection(assigned)) != len(callContexts):
             raise Exception(f"Some Call Context not assigned !!")
 
+    @pytest.mark.CREATE_PROCESS
     def test_07_create_process(self, ameyo, pn):
         """
         Create Process

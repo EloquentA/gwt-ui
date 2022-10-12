@@ -1195,6 +1195,41 @@ class DataCreationAPIs(Wrapper):
             ], _item)
         return response
 
+    def add_lead(self, **kwargs):
+        """
+        Add Lead in supervisor
+        """
+        processId = kwargs.get('processId', None)
+        leadname = kwargs.get('leadName', None)
+        ownerUserId = kwargs.get('ownerUserId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([processId, leadname, ownerUserId, sessionId])
+
+        enabled = kwargs.get('enabled', True)
+        description = kwargs.get('description', f"{leadname} Description")
+        timeZone = kwargs.get('timeZone', "")
+
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, "ameyorestapi/customerManager/addLeadWithUser"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "leadName": leadname,
+                "processId": processId,
+                "enabled": enabled,
+                "description": description,
+                "timeZone": timeZone,
+                "ownerUserId": ownerUserId
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict([
+            'leadName', 'processId', 'isEnabled', 'timeZone', 'ownerUserId', 'leadId'
+        ], response.json())
+        return response
+
     def assign_lead_to_campaign(self, **kwargs):
         """
         Assign Lead to Campaign
