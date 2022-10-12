@@ -16,7 +16,7 @@ Library           ../../pages/Ameyo.py    browser_config=${BROWSER_CONFIG}    pr
 
 *** Test Cases ***
 TC - Login into Ameyo as ${RUN_AS} user
-    [Tags]  smoke    testrailid=AP-15997
+    [Tags]  smoke    testrailid=AP-15997-1    regression
     IF  ${is_parent_setup}
         I logout from ameyo    ${instance1}
     END
@@ -24,25 +24,25 @@ TC - Login into Ameyo as ${RUN_AS} user
     I login into Ameyo    ${instance1}    ${RUN_AS}
 
 TC - Logout from Ameyo
-    [Tags]  smoke    testrailid=AP-15997
+    [Tags]  smoke    testid=AP-15999-1    regression
     I logout from ameyo    ${instance1}
 
 TC - Login into Ameyo with incorrect username and incorrect password
-    [Tags]  smoke    testrailid=AP-15997
+    [Tags]  smoke    testid=AP-15997-2    regression
     I open ameyo home page    ${instance1}
     I login into ameyo with incorrect username and incorrect password    ${instance1}
 
 TC - Login into Ameyo with correct username and incorrect password
-    [Tags]  smoke    testrailid=AP-15997
+    [Tags]  smoke    testid=AP-15997-3    regression
     I open ameyo home page    ${instance1}
     I login into ameyo with correct username and incorrect password    ${instance1}
 
 TC - Login into Ameyo with incorrect username and correct password
-    [Tags]  smoke    testrailid=AP-15997
+    [Tags]  smoke    testid=AP-15997-4    regression
     I open ameyo home page    ${instance1}
     I login into ameyo with incorrect username and correct password    ${instance1}
 
 TC - Login into Ameyo with blank username and blank password
-    [Tags]  smoke    testrailid=AP-15997
+    [Tags]  smoke    testid=AP-15997-5    regression
     I open ameyo home page    ${instance1}
     I login into ameyo with blank username and blank password    ${instance1}
