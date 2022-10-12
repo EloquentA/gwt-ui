@@ -16,7 +16,7 @@ Library           ../../pages/Ameyo.py    browser_config=${BROWSER_CONFIG}    pr
 
 *** Test Cases ***
 TC - Login into Ameyo as ${RUN_AS} user
-    [Tags]  smoke    testrailid=AP-15997-1    regression
+    [Tags]  smoke    testid=AP-15997-1    regression
     IF  ${is_parent_setup}
         I logout from ameyo    ${instance1}
     END
