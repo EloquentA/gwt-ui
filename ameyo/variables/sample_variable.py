@@ -34,6 +34,12 @@ CREDENTIALS = {
   },
   "supervisor": {
     "username": '',
-    "password": ''
+    "password": '',
+    "campaign_details": {
+      "interaction": '',
+      "chat": '',
+      "voice": '',
+      "Video": ''
+    }
   }
 }
