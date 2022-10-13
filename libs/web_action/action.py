@@ -153,6 +153,9 @@ class Action:
         if self.element:
             self.element.send_keys(file_path)
 
+    def get_current_url(self):
+        return self._browser.get_current_url()
+
     def double_click_element(self, locator):
         """Double click element identified by `locator`.
 

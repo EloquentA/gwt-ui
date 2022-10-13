@@ -192,6 +192,9 @@ class WebBrowser:
     def get_current_browser(self):
         return self._browser
 
+    def get_current_url(self):
+        return self._browser.current_url
+
     def get_locator(self, by):
         """
         generic method to return found elements

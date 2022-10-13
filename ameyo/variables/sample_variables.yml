@@ -22,6 +22,16 @@ CREDENTIALS:
   executive:
     username: ''
     password: ''
+    campaign_details:
+      interaction: ''
+      chat: ''
+      voice: ''
+      video: ''
   supervisor:
     username: ''
     password: ''
+    campaign_details:
+      interaction: ''
+      chat: ''
+      voice: ''
+      video: ''
