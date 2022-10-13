@@ -24,10 +24,22 @@ CREDENTIALS = {
   },
   "executive": {
     "username": '',
-    "password": ''
+    "password": '',
+    "campaign_details": {
+          "interaction": '',
+          "chat": '',
+          "voice": '',
+          "Video": ''
+        }
   },
   "supervisor": {
     "username": '',
-    "password": ''
+    "password": '',
+    "campaign_details": {
+      "interaction": '',
+      "chat": '',
+      "voice": '',
+      "Video": ''
+    }
   }
 }

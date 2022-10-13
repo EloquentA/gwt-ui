@@ -5,5 +5,12 @@
   "logout_btn":{"by":"css", "value":".logout-button__campaign-selection > a:nth-child(1)", "index":"0"},
   "force_login_ok_btn":{"by":"id", "value":"automationButton1", "index":"0"},
   "login_error_msg_span":{"by":"xpath", "value":"/html/body/div[3]/div/div[1]/div/div/div[2]/div/div[1]/div/div[2]/div/div[1]/div/div[2]/form/div/div[6]/div/span", "index":"0"},
-  "voice_campaign_dropdown":{"by":"id", "value":"select2-yqzu-container", "index":"0"}
+  "voice_campaign_dropdown":{"by":"id", "value":"select2-yqzu-container", "index":"0"},
+  "dropdown_interaction":{"by":"xpath", "value":"//*[@title='Select Interaction Campaign']", "index":"0"},
+  "dropdown_chat":{"by":"xpath", "value":"//*[@title='Select Chat Campaign']", "index":"0"},
+  "dropdown_voice":{"by":"xpath", "value":"//*[@title='Select Voice Campaign']", "index":"0"},
+  "dropdown_video":{"by":"xpath", "value":"//*[@title='Select Video Chat Campaign']", "index":"0"},
+  "textbox_search":{"by":"xpath", "value":"//*[@type='search']", "index":"0"},
+  "dropdown_items":{"by":"xpath", "value":"//*[@role='treeitem']", "index":"-1"},
+  "button_next":{"by":"xpath", "value":"//*[@automationid='camapignSaveBtn']", "index":"0"}
 }

@@ -113,3 +113,11 @@ class Ameyo:
         file_name = method_name + f'{str(datetime.datetime.now().time()).replace(":", "_")}.png'
         # get the final screenshot file path
         return file_storage_path + os.sep + file_name
+
+    def select_campaign(self, kwargs):
+        """This function will select campaign"""
+        try:
+            self.login.select_campaign(kwargs)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("select_campaign", error))

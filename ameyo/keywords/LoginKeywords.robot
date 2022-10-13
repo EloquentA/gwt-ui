@@ -42,3 +42,9 @@ I login into ameyo with blank username and blank password
     [Arguments]  ${instance}
     ${result}=   call method    ${instance}    login_failure    ${CREDENTIALS}    blank_username    blank_password
     I verify result    ${result}
+
+select campaign
+    [Documentation]   This keyword will select campaigns as per input given from script
+    [Arguments]  ${instance}
+    ${result}=   call method    ${instance}    select_campaign    ${CREDENTIALS['${RUN_AS}']['campaign_details']}
+    I verify result    ${result}
