@@ -4,7 +4,7 @@ Documentation     Ameyo Login and campaign selection test cases
 
 # Suite Setup and Teardown
 Suite Setup       Login Initialization
-Suite Teardown    None
+Suite Teardown    Login Cleanup
 
 # Keywords Definition file
 Resource          ../../keywords/SetupTeardown.robot
@@ -22,4 +22,4 @@ AP_16000 - Login and campaign selection test cases
     END
     I open ameyo home page    ${instance1}
     I login into Ameyo    ${instance1}    ${RUN_AS}
-    select campaign    ${instance1}
+    select campaign    ${instance1}    ${RUN_AS}

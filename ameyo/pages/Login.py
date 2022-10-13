@@ -37,7 +37,7 @@ class Login:
         self.action.is_presence_of_element_located('logout_btn')
         return True
 
-    def logout(self, **kwargs) -> bool:
+    def logout_from_campaign_selection_page(self, **kwargs) -> bool:
         """Logout from Ameyo system"""
         self.action.is_presence_of_element_located('logout_btn')
         self.action.click_element('logout_btn')

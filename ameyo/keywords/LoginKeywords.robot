@@ -13,10 +13,10 @@ I login into Ameyo
     ${result}=   call method    ${instance}    ameyo_login    ${CREDENTIALS}    ${run_as}
     I verify result    ${result}
 
-I logout from ameyo
-    [Documentation]   This keyword logouts from the Ameyo portal
+I logout from campaign selection page
+    [Documentation]   This keyword logouts from campaign selection page
     [Arguments]  ${instance}
-    ${result}=   call method    ${instance}    logout
+    ${result}=   call method    ${instance}    logout_from_campaign_selection_page
     I verify result    ${result}
 
 I login into ameyo with incorrect username and incorrect password
@@ -45,6 +45,6 @@ I login into ameyo with blank username and blank password
 
 select campaign
     [Documentation]   This keyword will select campaigns as per input given from script
-    [Arguments]  ${instance}
-    ${result}=   call method    ${instance}    select_campaign    ${CREDENTIALS['${RUN_AS}']['campaign_details']}
+    [Arguments]  ${instance}    ${run_as}
+    ${result}=   call method    ${instance}    select_campaign    ${CREDENTIALS['${run_as}']['campaign_details']}
     I verify result    ${result}

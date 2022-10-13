@@ -25,7 +25,7 @@ TC - Login into Ameyo as ${RUN_AS} user
 
 TC - Logout from Ameyo
     [Tags]  smoke    testid=AP-15999-1    regression
-    I logout from ameyo    ${instance1}
+    I logout from campaign selection page    ${instance1}
 
 TC - Login into Ameyo with incorrect username and incorrect password
     [Tags]  smoke    testid=AP-15997-2    regression

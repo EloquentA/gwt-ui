@@ -33,9 +33,10 @@ Ameyo setup
     I open ameyo home page    ${instance}
     I close alert if present   ${instance}
     I login into Ameyo    ${instance}    ${RUN_AS}
-    select campaign    ${instance}
+    select campaign    ${instance}    ${RUN_AS}
+
 Ameyo teardown
     [Documentation]   This keyword does teardown setup for every suite
     [Arguments]  ${instance}
-    I logout from Ameyo    ${instance1}
+    I logout from ameyo home page    ${instance1}
     I close browser window    ${instance1}

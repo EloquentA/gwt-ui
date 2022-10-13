@@ -65,13 +65,13 @@ class Ameyo:
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("ameyo_login", error))
 
-    def logout(self):
-        """Method to logout"""
+    def logout_from_campaign_selection_page(self):
+        """Method to logout from campaign selection page."""
         try:
-            self.login.logout()
+            self.login.logout_from_campaign_selection_page()
             return self._return_result()
         except Exception as error:
-            return self._return_result(False, error, self.__capture_error("logout", error))
+            return self._return_result(False, error, self.__capture_error("logout_from_campaign_selection_page", error))
 
     def login_failure(self, kwargs, username_type, password_type):
         """Method to test login failures."""
