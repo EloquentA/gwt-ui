@@ -4,7 +4,7 @@ Documentation     Ameyo Login and campaign selection test cases
 
 # Suite Setup and Teardown
 Suite Setup       Login Initialization
-Suite Teardown    Login Cleanup
+Suite Teardown    Suite Cleanup
 
 # Keywords Definition file
 Resource          ../../keywords/SetupTeardown.robot
@@ -15,7 +15,7 @@ Resource          ../../keywords/LoginKeywords.robot
 Library           ../../pages/Ameyo.py    browser_config=${BROWSER_CONFIG}    project=${PROJECT}    run_as=${RUN_AS}    WITH NAME    Client1
 
 *** Test Cases ***
-AP_16000 - Login and campaign selection test cases
+TC - Campaign selection test cases
     [Tags]  smoke    testid=AP-16000    regression
     IF  ${is_parent_setup}
         I logout from ameyo homepage    ${instance1}

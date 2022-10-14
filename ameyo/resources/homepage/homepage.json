@@ -4,11 +4,11 @@
   "call_btn":{"by":"xpath", "value":"//button[@id='automationIdCallButton']", "index":"0"},
   "dial_only_btn":{"by":"xpath", "value":"//button/span[text()='Dial only']", "index":"0"},
   "end_call_btn":{"by":"xpath", "value":"//button[@title='End Call']/span[text()='End Call']", "index":"0"},
-  "preferences_drop_down_btn":{"by":"xpath", "value":"//a[contains(@class,'dropdown-button preferences')]", "index":"0"},
+  "preferences_drop_down_btn":{"by":"xpath", "value":"//a[contains(@class,'setting-wrapper__dropdown-button')]", "index":"0"},
   "active_phone_icon": {"by":"xpath", "value":"//div[contains(@class,' active')]/i[contains(@class,'phone')]", "index":"0"},
-  "preferences_logout_btn":{"by":"xpath", "value":"//li[@automationid='logoutBtn']", "index":"0"},
+  "preferences_logout_btn":{"by":"xpath", "value":"//a[contains(@class,'setting-wrapper__dropdown-button')]/following-sibling::ul//span[text()='Logout']", "index":"0"},
   "status_dropdown_link":{"by":"xpath", "value":"//a[contains(@class,'statusDropdown')]", "index":"0"},
-  "new_status_selection":{"by":"xpath", "value":"//ul[contains(@id,'statusDropdown')]/li//span[contains(text(),'')]", "index":"0"},
   "available_status":{"by":"xpath", "value":"//ul[contains(@id,'statusDropdown')]/li//span[contains(text(),'Available')]", "index":"0"},
-  "disabled_logout_btn":{"by":"xpath", "value":"//li[@automationid='logoutBtn']/a[@class='disabled' and @title='Call in progress']", "index":"0"}
+  "disabled_logout_btn":{"by":"xpath", "value":"//li[@automationid='logoutBtn']/a[@class='disabled' and @title='Call in progress']", "index":"0"},
+  "call_status":{"by":"xpath", "value":"//span[@automationid='callStatus']", "index":"0"}
 }

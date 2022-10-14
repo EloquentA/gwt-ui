@@ -30,7 +30,7 @@ class Homepage:
         self.action.alert_action()
         self.action.explicit_wait('dial_only_btn')
         self.action.click_element('dial_only_btn')
-        time.sleep(5)
+        self.action.explicit_wait('call_status', ec='text_to_be_present_in_element', msg_to_verify='Connected')
         self.action.explicit_wait('end_call_btn')
         self.action.is_presence_of_element_located('end_call_btn')
         return True
@@ -44,9 +44,9 @@ class Homepage:
 
     def end_call_and_auto_dispose(self):
         """End the call and validate call auto disposed in 30 seconds"""
-        time.sleep(5)
         self.action.explicit_wait('end_call_btn')
         self.action.click_element('end_call_btn')
+        # Waiting for 30seconds- call auto dispose time
         time.sleep(30)
         self.action.is_presence_of_element_located('call_btn')
         return True

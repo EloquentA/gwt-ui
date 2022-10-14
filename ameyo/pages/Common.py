@@ -28,7 +28,7 @@ class Common:
 
     def change_status(self, desired_state, new_state_element):
         """Method to change user status to desired state"""
-        if not self.action._get_attribute('status_dropdown_link', 'title') == desired_state:
+        if not self.action.get_element_attribute('status_dropdown_link', 'title') == desired_state:
             self.action.explicit_wait('status_dropdown_link')
             self.action.click_element('status_dropdown_link')
             self.action.explicit_wait(new_state_element)
