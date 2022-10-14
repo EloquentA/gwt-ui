@@ -1,38 +1,38 @@
 {
-	"ccn": "Santosh_Test_001",
+	"ccn": "E2E_0001",
 	"multi_cc_created_users": [{
-			"name": "Santosh_Test_001_ADMIN_USER",
+			"name": "E2E_0001_ADMIN_USER",
 			"isRoot": true,
 			"role": "Administrator",
 			"password": "Test300!@#"
 		},
 		{
-			"name": "Santosh_Test_001_SUPERVISOR_USER",
+			"name": "E2E_0001_SUPERVISOR_USER",
 			"isRoot": false,
 			"role": "Supervisor",
 			"password": "Test300!@#"
 		},
 		{
-			"name": "Santosh_Test_001_EXECUTIVE_USER",
+			"name": "E2E_0001_EXECUTIVE_USER",
 			"isRoot": false,
 			"role": "Executive",
 			"password": "Test300!@#"
 		}
 	],
 	"admin_created_users": [{
-			"name": "Santosh_Test_001_ADMIN_USER_01",
+			"name": "E2E_0001_ADMIN_USER_01",
 			"isRoot": true,
 			"role": "Administrator",
 			"password": "Test300!@#"
 		},
 		{
-			"name": "Santosh_Test_001_SUPERVISOR_USER_01",
+			"name": "E2E_0001_SUPERVISOR_USER_01",
 			"isRoot": false,
 			"role": "Supervisor",
 			"password": "Test300!@#"
 		},
 		{
-			"name": "Santosh_Test_001_EXECUTIVE_USER_01",
+			"name": "E2E_0001_EXECUTIVE_USER_01",
 			"isRoot": false,
 			"role": "Executive",
 			"password": "Test300!@#"
@@ -47,15 +47,15 @@
 	],
 	"campaign_type_outbound_voice": "Outbound Voice Campaign",
 	"campaign_type_inbound_voice": "Inbound Voice Campaign",
-	"agents": ["Santosh_Test_001_EXECUTIVE_USER_0001", "Santosh_Test_001_EXECUTIVE_USER_0002",
-		"Santosh_Test_001_EXECUTIVE_USER_0003", "Santosh_Test_001_EXECUTIVE_USER_0004",
-		"Santosh_Test_001_EXECUTIVE_USER_0005", "Santosh_Test_001_EXECUTIVE_USER_0006",
-		"Santosh_Test_001_EXECUTIVE_USER_0007", "Santosh_Test_001_EXECUTIVE_USER_0008",
-		"Santosh_Test_001_EXECUTIVE_USER_0009", "Santosh_Test_001_EXECUTIVE_USER_0010",
-		"Santosh_Test_001_EXECUTIVE_USER_0011", "Santosh_Test_001_EXECUTIVE_USER_0012",
-		"Santosh_Test_001_EXECUTIVE_USER_0013", "Santosh_Test_001_EXECUTIVE_USER_0014",
-		"Santosh_Test_001_EXECUTIVE_USER_0015", "Santosh_Test_001_EXECUTIVE_USER_0016",
-		"Santosh_Test_001_EXECUTIVE_USER_0017", "Santosh_Test_001_EXECUTIVE_USER_0018",
-		"Santosh_Test_001_EXECUTIVE_USER_0019", "Santosh_Test_001_EXECUTIVE_USER_0020"
+	"agents": ["E2E_0001_EXECUTIVE_USER_0001", "E2E_0001_EXECUTIVE_USER_0002",
+		"E2E_0001_EXECUTIVE_USER_0003", "E2E_0001_EXECUTIVE_USER_0004",
+		"E2E_0001_EXECUTIVE_USER_0005", "E2E_0001_EXECUTIVE_USER_0006",
+		"E2E_0001_EXECUTIVE_USER_0007", "E2E_0001_EXECUTIVE_USER_0008",
+		"E2E_0001_EXECUTIVE_USER_0009", "E2E_0001_EXECUTIVE_USER_0010",
+		"E2E_0001_EXECUTIVE_USER_0011", "E2E_0001_EXECUTIVE_USER_0012",
+		"E2E_0001_EXECUTIVE_USER_0013", "E2E_0001_EXECUTIVE_USER_0014",
+		"E2E_0001_EXECUTIVE_USER_0015", "E2E_0001_EXECUTIVE_USER_0016",
+		"E2E_0001_EXECUTIVE_USER_0017", "E2E_0001_EXECUTIVE_USER_0018",
+		"E2E_0001_EXECUTIVE_USER_0019", "E2E_0001_EXECUTIVE_USER_0020"
 	]
 }

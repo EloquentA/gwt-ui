@@ -387,8 +387,18 @@ class DataCreationAPIs(Wrapper):
                 'json': {"domain": domain, "userId": userId, "token": token, "forceLogin": forceLogin},
                 'headers': {"correlation": self.uuid}
             })
+            if response.status_code == 512:
+                if response.json()["message"].startswith('["SessionService.login.failed.not.able.to.fetch.user.info"'):
+                    self.logger.info("Handling for 1st time login failure just after fresh user creation")
+                    response = self.rest.send_request(**{
+                        'method': 'POST',
+                        'url': urljoin(self.creds.url, 'ameyorestapi/userLogin/login'),
+                        'json': {"domain": domain, "userId": userId, "token": token, "forceLogin": forceLogin},
+                        'headers': {"correlation": self.uuid}
+                    })
             if self.noop is True or kwargs.get('toFail', True) is False:
                 return response
+
             self.rest.raise_for_status(response)
             self.is_key_there_in_dict([
                 'requestId', 'contactCenterId', 'userSessionInfo', 'authenticationState', 'configurations'
@@ -409,8 +419,18 @@ class DataCreationAPIs(Wrapper):
                 'params': {"continueUrl": continueUrl},
                 'headers': {"correlation": self.uuid}
             })
+            if response.status_code == 512:
+                if response.json()["message"].startswith('["SessionService.login.failed.not.able.to.fetch.user.info"'):
+                    self.logger.info("Handling for 1st time login failure just after fresh user creation")
+                    response = self.rest.send_request(**{
+                        'method': 'POST',
+                        'url': urljoin(self.creds.url, 'ameyorestapi/userLogin/login'),
+                        'json': {"domain": domain, "userId": userId, "token": token, "forceLogin": forceLogin},
+                        'headers': {"correlation": self.uuid}
+                    })
             if self.noop is True or kwargs.get('toFail', True) is False:
                 return response
+
             self.rest.raise_for_status(response)
             self.is_key_there_in_dict([
                 'requestId', 'contactCenterId', 'userSessionInfo', 'authenticationState', 'loginProperties'
@@ -472,6 +492,55 @@ class DataCreationAPIs(Wrapper):
             'privilegePlanId', 'maskedPrivileges', 'processUserIds', 'contactCenterTeamIds', 'userBusinessMetadata',
             'contactCenterId', 'defaultReady', 'extensions', 'root', 'description', 'userName'
         ], response.json())
+        return response
+
+    def get_password_policy_for_user(self, **kwargs):
+        """
+        Get password policy for user
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', None)
+        userId = kwargs.get('userId', None)
+        self.check_required_args([sessionId, userId])
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'url': urljoin(self.creds.url, f"ameyorestapi/session/getPasswordPolicyForUser"),
+            'params': {"userId": userId},
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict([
+            'allowed_special_character', 'anagramAllow', 'complexPasswordPolicyConfigured',
+            'disallowPreviousPassword', 'disallowUserId', 'disallowUserName', 'enforcePasswordPolicyConfigured',
+            'excludeStrings', 'maxPasswordAge', 'maxPasswordLength', 'minLowercaseLetter', 'minNumber',
+            'minPasswordAge', 'minPasswordLength', 'minSpecialCharacter', 'minUppercaseLetter', 'mustContainString',
+            'pwdGraceValue', 'regrexPasswordPolicyConfigurated', 'repeatingCharacterAllow', 'required_lowercase',
+            'required_number', 'required_specialCharcater', 'required_uppercase', 'simplePasswordPolicyConfigured'
+        ], response.json())
+        return response
+
+    def change_password(self, **kwargs):
+        """
+        Change login password
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', None)
+        userId = kwargs.get('userId', None)
+        oldPassword = kwargs.get('oldPassword', None)
+        newPassword = kwargs.get('newPassword', None)
+        self.check_required_args([sessionId, userId, oldPassword, newPassword])
+
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, 'ameyorestapi/session/changePassword'),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {"userId": userId, "oldPassword": oldPassword, "newPassword": newPassword}
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
         return response
 
     def get_all_call_context(self, **kwargs):
