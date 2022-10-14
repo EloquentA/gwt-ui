@@ -48,3 +48,10 @@ select campaign
     [Arguments]  ${instance}    ${run_as}
     ${result}=   call method    ${instance}    select_campaign    ${CREDENTIALS['${run_as}']['campaign_details']}
     I verify result    ${result}
+
+I logout from ameyo homepage
+    [Documentation]   This keyword logouts from the Ameyo home page by clicking on the preferences dropdown
+    [Arguments]  ${instance}
+    ${result}=   call method    ${instance}    logout_from_ameyo_homepage
+    I verify result    ${result}
+

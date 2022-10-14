@@ -148,6 +148,9 @@ class WebBrowser:
             # Ignore certificate errors
             options.add_argument('--ignore-certificate-errors')
 
+            #Allow microphone access
+            options.add_argument("--use-fake-ui-for-media-stream")
+
             # Part of JavaScript console.log modification
             service_args = []
             if self.console_log:

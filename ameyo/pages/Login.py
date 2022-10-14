@@ -44,6 +44,15 @@ class Login:
         self.common.close_alert_if_exists()
         return True
 
+    def logout_from_ameyo_homepage(self):
+        """Logout from Ameyo Homepage"""
+        self.action.is_presence_of_element_located('preferences_drop_down_btn')
+        self.action.click_element('preferences_drop_down_btn')
+        self.action.explicit_wait('preferences_logout_btn', ec='element_to_be_clickable')
+        self.action.click_element('preferences_logout_btn')
+        self.common.close_alert_if_exists()
+        return True
+
     def verify_login_error_msg(self):
         """Gets login error message."""
         self.action.explicit_wait('login_error_msg_span', 60)

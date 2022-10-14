@@ -43,3 +43,5 @@ CREDENTIALS = {
     }
   }
 }
+CALLING_NUMBER = ""
+DESIRED_STATE = ""

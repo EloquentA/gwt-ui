@@ -38,5 +38,5 @@ Ameyo setup
 Ameyo teardown
     [Documentation]   This keyword does teardown setup for every suite
     [Arguments]  ${instance}
-    I logout from ameyo home page    ${instance1}
+    I logout from ameyo homepage    ${instance1}
     I close browser window    ${instance1}

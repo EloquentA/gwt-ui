@@ -18,7 +18,7 @@ Library           ../../pages/Ameyo.py    browser_config=${BROWSER_CONFIG}    pr
 AP_16000 - Login and campaign selection test cases
     [Tags]  smoke    testid=AP-16000    regression
     IF  ${is_parent_setup}
-        I logout from ameyo    ${instance1}
+        I logout from ameyo homepage    ${instance1}
     END
     I open ameyo home page    ${instance1}
     I login into Ameyo    ${instance1}    ${RUN_AS}

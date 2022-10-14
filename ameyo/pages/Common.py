@@ -25,3 +25,12 @@ class Common:
         except Exception as e:
             print("Error closing alert after logout: ", e)
             return True
+
+    def change_status(self, desired_state, new_state_element):
+        """Method to change user status to desired state"""
+        if not self.action._get_attribute('status_dropdown_link', 'title') == desired_state:
+            self.action.explicit_wait('status_dropdown_link')
+            self.action.click_element('status_dropdown_link')
+            self.action.explicit_wait(new_state_element)
+            self.action.click_element(new_state_element)
+        return True

@@ -18,12 +18,12 @@ Library           ../../pages/Ameyo.py    browser_config=${BROWSER_CONFIG}    pr
 TC - Login into Ameyo as ${RUN_AS} user
     [Tags]  smoke    testid=AP-15997-1    regression
     IF  ${is_parent_setup}
-        I logout from ameyo    ${instance1}
+        I logout from ameyo homepage    ${instance1}
     END
     I open ameyo home page    ${instance1}
     I login into Ameyo    ${instance1}    ${RUN_AS}
 
-TC - Logout from Ameyo
+TC - Logout from Ameyo Campaign Selection Page
     [Tags]  smoke    testid=AP-15999-1    regression
     I logout from campaign selection page    ${instance1}
 

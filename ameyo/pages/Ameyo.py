@@ -15,8 +15,8 @@ sys.path.append(os.path.join(
 from action import Action
 from web_browser import WebBrowser
 from Common import Common
-
 from Login import Login
+from Homepage import Homepage
 
 
 class Ameyo:
@@ -31,6 +31,7 @@ class Ameyo:
 
         self.action = Action(self.web_browser)
         self.login = Login(self.web_browser, self.common)
+        self.homepage = Homepage(self.web_browser, self.common)
 
     def __capture_error(self, method_name, error_msg):
         """Utility method to capture and report errors"""
@@ -72,6 +73,14 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("logout_from_campaign_selection_page", error))
+
+    def logout_from_ameyo_homepage(self):
+        """Method to logout from Ameyo Home Page"""
+        try:
+            self.login.logout_from_ameyo_homepage()
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("logout_from_ameyo_homepage", error))
 
     def login_failure(self, kwargs, username_type, password_type):
         """Method to test login failures."""
@@ -121,3 +130,27 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("select_campaign", error))
+
+    def manual_dial_only(self, calling_number):
+        """Method to manual dial only"""
+        try:
+            self.homepage.manual_dial_only(calling_number)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("manual_dial_only", error))
+
+    def validate_logout_disabled_when_call_in_progress(self):
+        """Method to validate logout functionality disabled when call in progress"""
+        try:
+            self.homepage.validate_logout_disabled_when_call_in_progress()
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("validate_logout_disabled_when_call_in_progress", error))
+
+    def end_call_and_auto_dispose(self):
+        """Method to end the call and validate its auto disposed in 30 seconds"""
+        try:
+            self.homepage.end_call_and_auto_dispose()
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("end_call_and_auto_dispose", error))
