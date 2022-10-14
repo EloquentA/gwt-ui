@@ -29,14 +29,14 @@ I close alert if present
 
 Ameyo setup
     [Documentation]   This keyword sets up setup for every suite
-    [Arguments]  ${instance}
+    [Arguments]  ${instance}    ${req_run_as}
     I open ameyo home page    ${instance}
     I close alert if present   ${instance}
-    I login into Ameyo    ${instance}    ${RUN_AS}
-    select campaign    ${instance}    ${RUN_AS}
+    I login into Ameyo    ${instance}    ${req_run_as}
+    select campaign    ${instance}    ${req_run_as}
 
 Ameyo teardown
     [Documentation]   This keyword does teardown setup for every suite
     [Arguments]  ${instance}
-    I logout from ameyo homepage    ${instance1}
-    I close browser window    ${instance1}
+    I logout from ameyo homepage    ${instance}
+    I close browser window    ${instance}

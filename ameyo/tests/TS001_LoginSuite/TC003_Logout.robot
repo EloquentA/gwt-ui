@@ -3,7 +3,7 @@ Documentation     Ameyo Login test cases
 ...               Developed By - Developer by EA
 
 # Suite Setup and Teardown
-Suite Setup       Suite Initialization
+Suite Setup       Suite Initialization    ${RUN_AS}
 Suite Teardown    Login Cleanup
 
 # Keywords Definition file

@@ -15,16 +15,16 @@ Resource          ../../keywords/LoginKeywords.robot
 Library           ../../pages/Ameyo.py    browser_config=${BROWSER_CONFIG}    project=${PROJECT}    run_as=${RUN_AS}    WITH NAME    Client1
 
 *** Test Cases ***
-TC - Login into Ameyo as ${RUN_AS} user
+TC - Login into Ameyo as executive user
     [Tags]  smoke    testid=AP-15997-1    regression
     IF  ${is_parent_setup}
         I logout from ameyo homepage    ${instance1}
     END
     I open ameyo home page    ${instance1}
-    I login into Ameyo    ${instance1}    ${RUN_AS}
+    I login into Ameyo    ${instance1}    executive
 
 TC - Logout from Ameyo Campaign Selection Page
-    [Tags]  smoke    testid=AP-15999-1    regression
+    [Tags]  smoke    testid=AP-15997-1    regression
     I logout from campaign selection page    ${instance1}
 
 TC - Login into Ameyo with incorrect username and incorrect password

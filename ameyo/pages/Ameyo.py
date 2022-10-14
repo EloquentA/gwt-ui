@@ -17,6 +17,7 @@ from web_browser import WebBrowser
 from Common import Common
 from Login import Login
 from Homepage import Homepage
+from User import User
 
 
 class Ameyo:
@@ -32,6 +33,7 @@ class Ameyo:
         self.action = Action(self.web_browser)
         self.login = Login(self.web_browser, self.common)
         self.homepage = Homepage(self.web_browser, self.common)
+        self.user = User(self.web_browser, self.common)
 
     def __capture_error(self, method_name, error_msg):
         """Utility method to capture and report errors"""
@@ -123,10 +125,14 @@ class Ameyo:
         # get the final screenshot file path
         return file_storage_path + os.sep + file_name
 
-    def select_campaign(self, kwargs):
+    def select_campaign(self, kwargs, run_as):
         """This function will select campaign"""
         try:
-            self.login.select_campaign(kwargs)
+            kwargs = kwargs.get(run_as).get('campaign_details')
+            if kwargs is not None:
+                self.login.select_campaign(kwargs)
+            else:
+                print(f'Select campaign is not applicable for user type: {run_as}')
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("select_campaign", error))
@@ -154,3 +160,9 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("end_call_and_auto_dispose", error))
+    def create_user(self, user_type):
+        """Method to create requested user."""
+        try:
+            return self._return_result(self.user.create_user(user_type))
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"create_user_{user_type}", error))

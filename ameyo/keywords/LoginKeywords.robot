@@ -9,8 +9,8 @@ Resource          ./VerifyResult.robot
 *** Keywords ***
 I login into Ameyo
     [Documentation]   This keyword logs-in to Ameyo portal
-    [Arguments]  ${instance}    ${run_as}
-    ${result}=   call method    ${instance}    ameyo_login    ${CREDENTIALS}    ${run_as}
+    [Arguments]  ${instance}    ${req_run_as}
+    ${result}=   call method    ${instance}    ameyo_login    ${CREDENTIALS}    ${req_run_as}
     I verify result    ${result}
 
 I logout from campaign selection page
@@ -45,8 +45,8 @@ I login into ameyo with blank username and blank password
 
 select campaign
     [Documentation]   This keyword will select campaigns as per input given from script
-    [Arguments]  ${instance}    ${run_as}
-    ${result}=   call method    ${instance}    select_campaign    ${CREDENTIALS['${run_as}']['campaign_details']}
+    [Arguments]  ${instance}    ${req_run_as}
+    ${result}=   call method    ${instance}    select_campaign    ${CREDENTIALS}    ${req_run_as}
     I verify result    ${result}
 
 I logout from ameyo homepage
