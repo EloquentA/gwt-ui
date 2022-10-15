@@ -256,9 +256,9 @@ class Action:
             if msg:
                 result = wait(condition(msg))
             elif msg is None and msg_to_verify is None:
-                result = wait(condition((element_to_find["by"], element_to_find["value"])))
+                result = wait(condition((self._browser.get_locator(element_to_find["by"]), element_to_find["value"])))
             elif msg_to_verify:
-                result = wait(condition((element_to_find["by"], element_to_find["value"]), msg_to_verify))
+                result = wait(condition((self._browser.get_locator(element_to_find["by"]), element_to_find["value"]), msg_to_verify))
         except Exception as e:
             raise Exception(error_msg + str(e))
 

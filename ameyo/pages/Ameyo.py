@@ -162,7 +162,7 @@ class Ameyo:
             return self._return_result(False, error, self.__capture_error("end_call_and_auto_dispose", error))
 
     def verify_create_user(self, ref_data, user_type):
-        """Method to verfiy creation of requested user."""
+        """Method to verify creation of requested user."""
         try:
             return self._return_result(self.user.verify_create_user(ref_data, user_type))
         except Exception as error:
@@ -175,3 +175,9 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"dispose_and_dial", error))
+    def verify_delete_user(self,user_type, admin_password, ref_data):
+        """Method to verify deletion of requested user."""
+        try:
+            return self._return_result(self.user.verify_delete_user(user_type, admin_password, ref_data))
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"verify_delete_user{user_type}", error))

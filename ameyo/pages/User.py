@@ -25,12 +25,12 @@ class User:
         while self.action.get_text('user_type_dropdown') != 'Administrator' and time.time() - current_time <= 60:
             time.sleep(1)
 
-    def _wait_for_searched_user_record_to_load(self):
+    def _wait_for_searched_user_record_to_load(self, expected_records=1):
         """Waits for searched user to be loaded in table.
             Maximum wait time is 1 minute.
         """
         current_time = time.time()
-        while self.get_total_user_records() != 1 and time.time() - current_time <= 60:
+        while self.get_total_user_records() != expected_records and time.time() - current_time <= 60:
             time.sleep(1)
 
     def get_total_user_records(self):
@@ -38,12 +38,20 @@ class User:
         records_str = self.action.get_text('total_user_records')
         return int(records_str.split('of')[-1].strip())
 
+    def search_user(self, user_name_text, expected_records=1):
+        """Searches for requested user in user table and waits for records to load."""
+        self.action.input_text('user_table_search_input', user_name_text)
+        self.action.press_key('user_table_search_input', 'ENTER')
+        self._wait_for_searched_user_record_to_load(expected_records)
+        return True
+
     def create_user(self, ref_data, user_type):
         """Creates requested user."""
         self.action.click_element('user_tab')
         user_name_text = f"aaa_{ref_data.get('username_prefix')}_{'_'.join(user_type.split(' '))}"
         user_id_text = f"aaa_{ref_data.get('userid_prefix')}_{'_'.join(user_type.split(' '))}"
         self.action.click_element('create_user_btn')
+        self.action.explicit_wait('create_user_id_input')
         self.action.input_text('create_user_id_input', user_id_text)
         self.action.input_text('user_name_input', user_name_text)
         self.action.input_text('create_password_input', ref_data.get('password'))
@@ -71,4 +79,43 @@ class User:
                 break
         else:
             assert False, f'Expected: {user_name_text} user not found in the user table rows: {user_table_data}'
+        return True
+
+    def delete_user(self, user_name_text, admin_password, user_type):
+        """Deletes requested use."""
+        self.action.click_element('user_tab')
+        self.action.explicit_wait('user_table_search_input')
+        self.search_user(user_name_text, expected_records=1)
+        user_table_rows = self.action.get_table_row_elements('user_table')
+        user_table_data = ''
+        for row in user_table_rows:
+            row_text = ( row.text or '')
+            user_table_data += row_text
+            if user_name_text in row_text and user_type in row_text:
+                row.click()
+                break
+        else:
+            assert False, f'Expected: {user_name_text} user not found in the user table rows: {user_table_data} before deletion.'
+        self.action.click_element('delete_user_btn')
+        self.action.explicit_wait('confirm_delete_user_btn', 60)
+        self.action.click_element('confirm_delete_user_btn')
+        self.action.explicit_wait('authorize_delete_user_password_input')
+        self.action.input_text('authorize_delete_user_password_input', admin_password)
+        self.action.click_element('submit_delete_user_btn')
+        return True
+
+    def verify_delete_user(self, user_type, admin_password, ref_data):
+        """Method to verify deletion of requested user."""
+        # self.action.click_element('reports_tab')
+        user_name_text = f"aaa_{ref_data.get('username_prefix')}_{'_'.join(user_type.split(' '))}"
+        self.delete_user(user_name_text, admin_password, user_type)
+        # Re-verify if user was deleted
+        self.search_user(user_name_text, expected_records=0)
+        user_table_rows = self.action.get_table_row_elements('user_table')
+        user_table_data = ''
+        for row in user_table_rows:
+            row_text = ( row.text or '')
+            user_table_data += row_text
+            if user_name_text in row_text and user_type in row_text:
+                assert False, f'Deleted user: {user_name_text}  found in the user table rows: {user_table_data} after deletion!'
         return True

@@ -1,10 +1,10 @@
 {
   "user_id_input":{"by":"id", "value":"gwt-uid-1", "index":"0"},
   "password_input":{"by":"id", "value":"gwt-uid-2", "index":"0"},
-  "login_btn":{"by":"css", "value":"div.row:nth-child(7) > div:nth-child(1) > button:nth-child(1)", "index":"0"},
-  "logout_btn":{"by":"css", "value":".logout-button__campaign-selection > a:nth-child(1)", "index":"0"},
+  "login_btn":{"by":"xpath", "value":"//button/span[text()='Login']", "index":"0"},
+  "logout_btn":{"by":"xpath", "value":"//a/span[text()='Logout']", "index":"0"},
   "force_login_ok_btn":{"by":"id", "value":"automationButton1", "index":"0"},
-  "login_error_msg_span":{"by":"xpath", "value":"/html/body/div[3]/div/div[1]/div/div/div[2]/div/div[1]/div/div[2]/div/div[1]/div/div[2]/form/div/div[6]/div/span", "index":"0"},
+  "login_error_msg_span":{"by":"xpath", "value":"//span[contains(@class, 'error-msg')]", "index":"0"},
   "voice_campaign_dropdown":{"by":"id", "value":"select2-yqzu-container", "index":"0"},
   "dropdown_interaction":{"by":"xpath", "value":"//*[@title='Select Interaction Campaign']", "index":"0"},
   "dropdown_chat":{"by":"xpath", "value":"//*[@title='Select Chat Campaign']", "index":"0"},

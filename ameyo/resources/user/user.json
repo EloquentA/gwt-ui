@@ -16,52 +16,52 @@
   },
   "create_user_id_input": {
     "by": "xpath",
-    "value": "/html/body/div[4]/div/div[2]/div/div[2]/div[2]/div[1]/div/input",
+    "value": "//div[contains(@id,'automationIdAdminAddUserIdTextBox')]/input",
     "index": "0"
   },
   "user_type_dropdown": {
     "by": "xpath",
-    "value": "/html/body/div[4]/div/div[2]/div/div[2]/div[2]/div[3]/div/span[1]/span[1]/span/span[1]",
+    "value": "//div[contains(@class,'materialListBox input-field combobox')]",
     "index": "0"
   },
   "user_type_dropdown_search": {
     "by": "xpath",
-    "value": "/html/body/span/span/span[1]/input",
+    "value": "//span[contains(@class, 'dropdown')]//input",
     "index": "0"
   },
   "user_type_dropdown_list": {
     "by": "xpath",
-    "value": "/html/body/span/span/span[2]/ul",
+    "value": "//span[contains(@class,'select2-results')]/ul",
     "index": "0"
   },
   "user_name_input": {
     "by": "xpath",
-    "value": "/html/body/div[4]/div/div[2]/div/div[2]/div[3]/div[1]/div/input",
+    "value": "//div[contains(@id,'automationIdAdminAddUserNameTextBox')]/input",
     "index": "0"
   },
   "create_password_input": {
     "by": "xpath",
-    "value": "/html/body/div[4]/div/div[2]/div/div[2]/div[3]/div[2]/div/div/input",
+    "value": "//div[contains(@id,'automationIdAdminAddUserPasswordTextBox')]/input",
     "index": "0"
   },
   "confirm_password_input": {
     "by": "xpath",
-    "value": "/html/body/div[4]/div/div[2]/div/div[2]/div[3]/div[3]/div/div/input",
+    "value": "//div[contains(@id,'automationIdAdminAddUserConfirmPassword')]/input",
     "index": "0"
   },
   "phone_number_input": {
     "by": "xpath",
-    "value": "/html/body/div[4]/div/div[2]/div/div[2]/div[4]/div[3]/div/input",
+    "value": "//label[contains(text(), 'Phone Number')]/parent::div/input",
     "index": "0"
   },
   "user_table": {
     "by": "xpath",
-    "value": "/html/body/div[4]/div/div[2]/div/div/div/div[2]/div[1]/div[4]/div/div/div[3]/section/div/table",
+    "value": "//div[contains(@class,'table-body')]/table",
     "index": "0"
   },
   "user_table_search_input": {
     "by": "xpath",
-    "value": "/html/body/div[4]/div/div[2]/div/div/div/div[2]/div[1]/div[4]/div/div/div[1]/div[1]/div[2]/div/div[1]/div/div/input",
+    "value": "//div[contains(@automationid,'search')]/input",
     "index": "0"
   },
   "user_id_table_col": {
@@ -71,7 +71,27 @@
   },
   "total_user_records": {
     "by": "xpath",
-    "value": "/html/body/div[4]/div/div[2]/div/div/div/div[2]/div[1]/div[4]/div/div/div[4]/div[2]/div/div/div[1]/span",
+    "value": "//div[contains(@class,'action-page-panel')]/span",
+    "index": "0"
+  },
+  "delete_user_btn": {
+    "by": "xpath",
+    "value": "//i[contains(@class,'mdi mdi-delete')]",
+    "index": "0"
+  },
+  "confirm_delete_user_btn": {
+    "by": "xpath",
+    "value": "//button[contains(@automationid,'confirmationBtn')]//span[text()='Delete']",
+    "index": "0"
+  },
+  "authorize_delete_user_password_input": {
+    "by": "xpath",
+    "value": "//div[contains(@class,'input-field')]/input[@type='password']",
+    "index": "0"
+  },
+  "submit_delete_user_btn": {
+    "by": "xpath",
+    "value": "//button/span[text()='Submit']",
     "index": "0"
   }
 }
