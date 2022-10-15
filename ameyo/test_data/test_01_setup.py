@@ -17,8 +17,8 @@ class TestSetup:
     @staticmethod
     def read_json(filename):
         path = os.getcwd()
-        test_data_dir = os.path.join(path)
-        # test_data_dir = os.path.join(path, "ameyo", "test_data")
+        # test_data_dir = os.path.join(path)
+        test_data_dir = os.path.join(path, "ameyo", "test_data")
         json_file = os.path.join(test_data_dir, filename)
         with open(json_file, 'r') as file_obj:
             return json.load(file_obj)
@@ -71,6 +71,7 @@ class TestSetup:
                 'isRoot': multi_cc_created_user['isRoot']
             }).json()
             calling['userType'] = response['userType']
+            ameyo.logger.info(f"Newly created users: {calling['userType']} ...")
 
     def test_03_assign_user_to_cc_with_multi_cc_manager(self, ameyo, calling):
         """
@@ -116,23 +117,8 @@ class TestSetup:
         admin_created_users_list = calling['test_data']['admin_created_users']
 
         if ameyo.adminToken is None:
-            ameyo.adminToken = \
-                ameyo.user_login(userId=f"{multi_cc_created_users_list[0]['name']}").json()['userSessionInfo'][
-                    'sessionId']
-            # response = ameyo.user_login(userId=f"{multi_cc_created_users_list[0]['name']}")
-            # if response.ok is False:
-            #     response = response.json()
-            #     message = f"SessionService.login.failed.not.able.to.fetch.user.info"
-            #     if response['status_code'] == 512 and response['message'] == message:
-            #         ameyo.adminToken = \
-            #             ameyo.user_login(userId=f"{multi_cc_created_users_list[0]['name']}").json()['userSessionInfo'][
-            #                 'sessionId']
-            #     else:
-            #         pass
-            # else:
-            #     ameyo.adminToken = \
-            #     ameyo.user_login(userId=f"{multi_cc_created_users_list[0]['name']}").json()['userSessionInfo'][
-            #         'sessionId']
+            ameyo.adminToken = ameyo.user_login(userId=f"{multi_cc_created_users_list[0]['name']}").json()[
+                'userSessionInfo']['sessionId']
 
         for cc in ameyo.get_all_cc().json():
             if cc['contactCenterName'] == calling['test_data']['ccn']:
@@ -341,9 +327,9 @@ class TestSetup:
             })
             time.sleep(1)
 
-    def test_09_login_agents(self, ameyo, calling):
+    def test_10_login_agents(self, ameyo, calling):
         """
-        Login Agents, change password, assign and select campaign, set extension, logout
+        Login Agents, change password and logout
         :param ameyo:
         :param role:
         :return:
@@ -374,51 +360,12 @@ class TestSetup:
         else:
             pass
 
-    @pytest.mark.skip("WIP")
-    def test_10_assign_supervisor_to_all_campaigns(self, ameyo):
+    def test_11_logout_admin(self, ameyo, calling):
         """
-        Assign Supervisor user to all Campaigns (required for supervisor monitoring)
+        Login logout admin
         :param ameyo:
+        :param role:
         :return:
         """
-        for cc in ameyo.get_all_cc().json():
-            if cc['contactCenterName'] == self.ccn:
-                ccId = cc['contactCenterId']
-                break
-        else:
-            raise Exception(f"{self.ccn} not found !!")
 
-        Users = list(filter(
-            lambda a: a['systemUserType'] in ['Supervisor'],
-            ameyo.get_all_users_assigned_to_cc(ccId=ccId).json()
-        ))
-
-        for count, Campaign in enumerate(ameyo.get_all_campaigns().json()):
-            response = ameyo.get_all_campaign_users(campaignId=Campaign['campaignId'])
-            assigned = [x['userId'] for x in response.json()]
-
-            contactCenterUserIds, privilegePlanIds, userIds, contactCenterUserTypes = [], [], [], []
-            for User in Users:
-                if User['userId'] not in assigned:
-                    contactCenterUserIds.append(User['ccUserId'])
-                    privilegePlanIds.append(User['privilegePlanId'])
-                    userIds.append(User['userId'])
-                    contactCenterUserTypes.append(User['systemUserType'])
-
-            if all([contactCenterUserIds, privilegePlanIds, userIds, contactCenterUserTypes]) is False:
-                continue
-
-            # assign agent to Campaign
-            ameyo.assign_agent_to_campaign(**{
-                'campaignId': Campaign['campaignId'],
-                'contactCenterUserIds': contactCenterUserIds,
-                'privilegePlanIds': privilegePlanIds,
-                'userIds': userIds,
-                'contactCenterUserTypes': contactCenterUserTypes,
-            })
-
-            # Get users assigned to campaign
-            response = ameyo.get_all_campaign_users(campaignId=Campaign['campaignId'])
-            ameyo.logger.info(
-                f"All {len(response.json())} users in <{Campaign['campaignId']}> <{Campaign['campaignName']}> {[x['userId'] for x in response.json()]}")
-
+        ameyo.user_logout(sessionId=ameyo.adminToken)

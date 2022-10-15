@@ -2,6 +2,7 @@ __author__ = "Developed by EA"
 
 from urllib.parse import urljoin
 from datetime import datetime
+import time
 
 from ameyo.test_data_lib.wrapper import Wrapper
 
@@ -388,17 +389,23 @@ class DataCreationAPIs(Wrapper):
                 'headers': {"correlation": self.uuid}
             })
             if response.status_code == 512:
-                if response.json()["message"].startswith('["SessionService.login.failed.not.able.to.fetch.user.info"'):
-                    self.logger.info("Handling for 1st time login failure just after fresh user creation")
-                    response = self.rest.send_request(**{
-                        'method': 'POST',
-                        'url': urljoin(self.creds.url, 'ameyorestapi/userLogin/login'),
-                        'json': {"domain": domain, "userId": userId, "token": token, "forceLogin": forceLogin},
-                        'headers': {"correlation": self.uuid}
-                    })
+                msg = "SessionService.login.failed.not.able.to.fetch.user.info"
+                if msg in response.json()["message"]:
+                    self.logger.info("Login failed, retrying...")
+                    while True:
+                        response = self.rest.send_request(**{
+                            'method': 'POST',
+                            'url': urljoin(self.creds.url, 'ameyorestapi/userLogin/login'),
+                            'json': {"domain": domain, "userId": userId, "token": token, "forceLogin": forceLogin},
+                            'headers': {"correlation": self.uuid}
+                        })
+                        if response.status_code == 200:
+                            self.is_logged_in = True
+                            break
+                        else:
+                            time.sleep(2)
             if self.noop is True or kwargs.get('toFail', True) is False:
                 return response
-
             self.rest.raise_for_status(response)
             self.is_key_there_in_dict([
                 'requestId', 'contactCenterId', 'userSessionInfo', 'authenticationState', 'configurations'
@@ -419,18 +426,8 @@ class DataCreationAPIs(Wrapper):
                 'params': {"continueUrl": continueUrl},
                 'headers': {"correlation": self.uuid}
             })
-            if response.status_code == 512:
-                if response.json()["message"].startswith('["SessionService.login.failed.not.able.to.fetch.user.info"'):
-                    self.logger.info("Handling for 1st time login failure just after fresh user creation")
-                    response = self.rest.send_request(**{
-                        'method': 'POST',
-                        'url': urljoin(self.creds.url, 'ameyorestapi/userLogin/login'),
-                        'json': {"domain": domain, "userId": userId, "token": token, "forceLogin": forceLogin},
-                        'headers': {"correlation": self.uuid}
-                    })
             if self.noop is True or kwargs.get('toFail', True) is False:
                 return response
-
             self.rest.raise_for_status(response)
             self.is_key_there_in_dict([
                 'requestId', 'contactCenterId', 'userSessionInfo', 'authenticationState', 'loginProperties'

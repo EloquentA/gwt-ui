@@ -34,6 +34,7 @@ class Wrapper(General):
         self.tc_name = None
         self.skip_case = False
         self.is_auto_dial_enabled = False
+        self.is_logged_in = False
         self.process_during_call_deleted = False
         self.webaccess_api_token = None
 
