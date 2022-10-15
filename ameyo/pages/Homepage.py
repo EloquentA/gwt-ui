@@ -50,3 +50,63 @@ class Homepage:
         time.sleep(30)
         self.action.is_presence_of_element_located('call_btn')
         return True
+
+    def select_quick_disposition(self, dispose_value):
+        """This function will select the given quick disposition value"""
+        if 'Already hungup' == dispose_value:
+            self.action.click_element('btn_already_hungup')
+        elif 'Sale' == dispose_value:
+            self.action.click_element('btn_sale')
+        elif 'Foreign Language' == dispose_value:
+            self.action.click_element('btn_foreign_language')
+        elif 'Abrupt disconnection' == dispose_value:
+            self.action.click_element('btn_abrupt_disconnection')
+        elif 'Agent volume too low' == dispose_value:
+            self.action.click_element('btn_agent_volume_too_low')
+        else:
+            print('Given value for quick_disposition did not match')
+            return False
+
+    def select_disposition(self, dispose_value, sub_disposition_value):
+        """This function will select the disposition and sub disposition"""
+        self.action.click_element('dropdown_disposition')
+        self.action.input_text("textbox_search", dispose_value)
+        self.action.press_key("textbox_search", "ARROW_DOWN")
+        self.action.press_key("textbox_search", "ENTER")
+        self.action.click_element('dropdown_sub_disposition')
+        self.action.input_text("textbox_search", sub_disposition_value)
+        self.action.press_key("textbox_search", "ARROW_DOWN")
+        self.action.press_key("textbox_search", "ENTER")
+
+    def save_and_dispose(self):
+        """This function will select the disposition and sub disposition"""
+        self.action.click_element('end_call_btn')
+        time.sleep(2)
+        self.action.click_element('btn_already_hungup')
+        self.action.click_element('btn_save_and_dispose')
+
+    def open_close_dialer(self):
+        """This function will open and close dialer"""
+        self.action.explicit_wait('phone_icon', ec='element_to_be_clickable')
+        self.action.click_element('phone_icon')
+
+    def dispose_and_dial(self, dispose_dial_dict, dispose_type, dial_position):
+        """This function will cover dispose and dial call flow"""
+        if dial_position.lower() == 'dial_after_call_cut':
+            self.action.click_element('end_call_btn')
+            time.sleep(2)
+        if dial_position.lower() == 'dial_before_call_cut':
+            self.action.click_element('btn_disposition_down_arrow')
+        if dispose_type.lower() == 'quick':
+            self.select_quick_disposition(dispose_dial_dict['quick_disposition'])
+        elif dispose_type.lower() == 'selection':
+            self.select_disposition(dispose_dial_dict['disposition'], dispose_dial_dict['sub_disposition'])
+        self.action.input_text("text_disposition_note", dispose_dial_dict['disposition_note'])
+        self.action.click_element('btn_dispose_and_dial')
+        self.action.input_text("text_enter_number", dispose_dial_dict['dial_number'])
+        self.action.click_element('btn_call')
+        self.action.explicit_wait('call_status', ec='text_to_be_present_in_element', msg_to_verify='Connected')
+        time.sleep(2)
+        self.save_and_dispose()
+        self.open_close_dialer()
+        return True

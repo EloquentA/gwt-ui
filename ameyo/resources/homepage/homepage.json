@@ -10,5 +10,18 @@
   "status_dropdown_link":{"by":"xpath", "value":"//a[contains(@class,'statusDropdown')]", "index":"0"},
   "available_status":{"by":"xpath", "value":"//ul[contains(@id,'statusDropdown')]/li//span[contains(text(),'Available')]", "index":"0"},
   "disabled_logout_btn":{"by":"xpath", "value":"//li[@automationid='logoutBtn']/a[@class='disabled' and @title='Call in progress']", "index":"0"},
-  "call_status":{"by":"xpath", "value":"//span[@automationid='callStatus']", "index":"0"}
+  "call_status":{"by":"xpath", "value":"//span[@automationid='callStatus']", "index":"0"},
+  "btn_disposition_down_arrow":{"by":"xpath", "value":"//*[@class='btn btn-large']", "index":"0"},
+  "dropdown_disposition":{"by":"xpath", "value":"//*[@automationid='dispositionClassesShowListItems']", "index":"0"},
+  "dropdown_sub_disposition":{"by":"xpath", "value":"//*[@automationid='dispositionCodesShowListItems']", "index":"0"},
+  "text_disposition_note":{"by":"xpath", "value":"//*[@automationid='dispositionNoteTextArea']/textarea", "index":"0"},
+  "btn_dispose_and_dial":{"by":"xpath", "value":"//*[@automationid='disposeAndDialBtn']", "index":"0"},
+  "btn_save_and_dispose":{"by":"xpath", "value":"//*[@automationid='saveAndDisposeBtn']", "index":"0"},
+  "text_enter_number":{"by":"xpath", "value":"//*[@placeholder='Phone Number']", "index":"0"},
+  "btn_call":{"by":"xpath", "value":"//*[@class='btn btn-positive btn-block']", "index":"0"},
+  "btn_already_hungup":{"by":"xpath", "value":"//*[@automationid='Already hungup']", "index":"0"},
+  "btn_sale":{"by":"xpath", "value":"//*[@automationid='Sale']", "index":"0"},
+  "btn_foreign_language":{"by":"xpath", "value":"//*[@automationid='Foreign Language']", "index":"0"},
+  "btn_abrupt_disconnection":{"by":"xpath", "value":"//*[@automationid='Abrupt disconnection']", "index":"0"},
+  "btn_agent_volume_too_low":{"by":"xpath", "value":"//*[@automationid='Agent volume too low']", "index":"0"}
 }
