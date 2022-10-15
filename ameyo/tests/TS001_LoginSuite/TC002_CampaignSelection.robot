@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation     Ameyo Login and campaign selection test cases
+Documentation     Campaign selection test cases
 ...               Developed By - Developer by EA
 
 # Suite Setup and Teardown

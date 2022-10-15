@@ -1,0 +1,77 @@
+{
+  "user_tab": {
+    "by": "id",
+    "value": "automationIdAdminUserManagementTab",
+    "index": "0"
+  },
+  "create_user_btn": {
+    "by": "id",
+    "value": "automationIdAdminAddUserButton",
+    "index": "0"
+  },
+  "save_user_btn": {
+    "by": "id",
+    "value": "automationIdAdminAddUserApplyButton",
+    "index": "0"
+  },
+  "create_user_id_input": {
+    "by": "xpath",
+    "value": "/html/body/div[4]/div/div[2]/div/div[2]/div[2]/div[1]/div/input",
+    "index": "0"
+  },
+  "user_type_dropdown": {
+    "by": "xpath",
+    "value": "/html/body/div[4]/div/div[2]/div/div[2]/div[2]/div[3]/div/span[1]/span[1]/span/span[1]",
+    "index": "0"
+  },
+  "user_type_dropdown_search": {
+    "by": "xpath",
+    "value": "/html/body/span/span/span[1]/input",
+    "index": "0"
+  },
+  "user_type_dropdown_list": {
+    "by": "xpath",
+    "value": "/html/body/span/span/span[2]/ul",
+    "index": "0"
+  },
+  "user_name_input": {
+    "by": "xpath",
+    "value": "/html/body/div[4]/div/div[2]/div/div[2]/div[3]/div[1]/div/input",
+    "index": "0"
+  },
+  "create_password_input": {
+    "by": "xpath",
+    "value": "/html/body/div[4]/div/div[2]/div/div[2]/div[3]/div[2]/div/div/input",
+    "index": "0"
+  },
+  "confirm_password_input": {
+    "by": "xpath",
+    "value": "/html/body/div[4]/div/div[2]/div/div[2]/div[3]/div[3]/div/div/input",
+    "index": "0"
+  },
+  "phone_number_input": {
+    "by": "xpath",
+    "value": "/html/body/div[4]/div/div[2]/div/div[2]/div[4]/div[3]/div/input",
+    "index": "0"
+  },
+  "user_table": {
+    "by": "xpath",
+    "value": "/html/body/div[4]/div/div[2]/div/div/div/div[2]/div[1]/div[4]/div/div/div[3]/section/div/table",
+    "index": "0"
+  },
+  "user_table_search_input": {
+    "by": "xpath",
+    "value": "/html/body/div[4]/div/div[2]/div/div/div/div[2]/div[1]/div[4]/div/div/div[1]/div[1]/div[2]/div/div[1]/div/div/input",
+    "index": "0"
+  },
+  "user_id_table_col": {
+    "by": "id",
+    "value": "col1",
+    "index": "0"
+  },
+  "total_user_records": {
+    "by": "xpath",
+    "value": "/html/body/div[4]/div/div[2]/div/div/div/div[2]/div[1]/div[4]/div/div/div[4]/div[2]/div/div/div[1]/span",
+    "index": "0"
+  }
+}

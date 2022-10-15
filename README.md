@@ -16,8 +16,6 @@ Automation for quality analysis of AMEYO UI.
   - Setup variable in any of format from following to use in later commands to run automation
     - ameyo/variables/sample_variable.py
     - ameyo/variables/sample_variables.yml
-- Use setup-python.sh script on your ubuntu machine to setup Chrome Driver
-  - It will also install all required packages and dependencies.
 ### Initiate automation 
 To run automation command please ensure virtual environment is activated and above all prerequisites are fulfilled.
 

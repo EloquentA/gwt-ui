@@ -339,6 +339,15 @@ class Action:
         self.browserdriver = self._browser.get_current_browser()
         self.browserdriver.switch_to.parent_frame()
 
+    def select_from_ul_dropdown_using_text(self, locator, itemtext):
+        """ Selecting item from unordered dropdown list by using the li item text
+        """
+        selection_list = self.get_element(locator).find_elements(By.TAG_NAME, "li")
+        for li_item in selection_list:
+            if itemtext == li_item.text:
+                li_item.click()
+                break
+
     def select_from_dropdown_using_text(self, locator, itemtext):
         """ Selecting item from dropdownlist by using the option itemtext
         
@@ -789,6 +798,16 @@ class Action:
                 return status
         else:
             raise AssertionError("Unable to Validate Javascript Errors")
+
+    def get_table_row_elements(self, locator):
+        """Returns row elements from table."""
+        try:
+            self.table = self._element_finder(locator)
+            if self.table:
+                self.rowlist = self.table.find_elements(By.TAG_NAME,'tr')
+                return self.rowlist
+        except Exception as err:
+            raise AssertionError(f"Error in get_table_row_elements - Check table locator: {err}")
 
     def get_table_cell_data(self, locator, row, col):
         """Returns cell data of a table using row & col number.

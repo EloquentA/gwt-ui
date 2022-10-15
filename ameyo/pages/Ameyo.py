@@ -160,9 +160,10 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("end_call_and_auto_dispose", error))
-    def create_user(self, user_type):
-        """Method to create requested user."""
+
+    def verify_create_user(self, ref_data, user_type):
+        """Method to verfiy creation of requested user."""
         try:
-            return self._return_result(self.user.create_user(user_type))
+            return self._return_result(self.user.verify_create_user(ref_data, user_type))
         except Exception as error:
-            return self._return_result(False, error, self.__capture_error(f"create_user_{user_type}", error))
+            return self._return_result(False, error, self.__capture_error(f"verify_create_user_{user_type}", error))

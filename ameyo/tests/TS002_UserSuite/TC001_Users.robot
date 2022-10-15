@@ -19,3 +19,23 @@ Library           ../../pages/Ameyo.py    browser_config=${BROWSER_CONFIG}    pr
 TC - Create executive user
     [Tags]  smoke    testid=AP-16047-1    regression
     I create executive user    ${instance1}
+
+TC - Create supervisor user
+    [Tags]  smoke    testid=AP-16047-1    regression
+    I create supervisor user    ${instance1}
+
+TC - Create professional agent user
+    [Tags]  smoke    testid=AP-16047-1    regression
+    I create professional agent user    ${instance1}
+
+TC - Create group manager user
+    [Tags]  smoke    testid=AP-16047-1    regression
+    I create group manager user    ${instance1}
+
+TC - Create analyst user
+    [Tags]  smoke    testid=AP-16047-1    regression
+    I create analyst user    ${instance1}
+
+TC - Create user access manager user
+    [Tags]  smoke    testid=AP-16047-1    regression
+    I create user access manager user    ${instance1}
