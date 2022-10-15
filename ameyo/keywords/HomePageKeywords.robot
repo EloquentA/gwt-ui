@@ -24,3 +24,10 @@ End call and auto dispose
     [Arguments]  ${instance}
     ${result}=   call method    ${instance}    end_call_and_auto_dispose
     I verify result    ${result}
+
+dispose and dial
+    [Documentation]   This keyword covers dispose and dial flow
+    [Arguments]  ${instance}  ${dispose_type}  ${dial_position}
+    ${result}=   call method    ${instance}    dispose_and_dial    ${DISPOSITION}
+    ...          ${dispose_type}    ${dial_position}
+    I verify result    ${result}

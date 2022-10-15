@@ -167,3 +167,11 @@ class Ameyo:
             return self._return_result(self.user.verify_create_user(ref_data, user_type))
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"verify_create_user_{user_type}", error))
+
+    def dispose_and_dial(self, dispose_dial_config, dispose_type, dial_position):
+        """This function will cover dispose and dial"""
+        try:
+            self.homepage.dispose_and_dial(dispose_dial_config, dispose_type, dial_position)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"dispose_and_dial", error))

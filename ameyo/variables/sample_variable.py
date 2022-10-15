@@ -51,3 +51,10 @@ CREATE_USER_DATA = {
   "username_prefix": "test_user_name",
   "userid_prefix": "test_user_id"
 }
+DISPOSITION = {
+  'disposition': 'telecom.issues',
+  'sub_disposition': 'Already hungup',
+  'disposition_note': 'Automation dispose',
+  'dial_number': '123456',
+  'quick_disposition': 'Sale'
+}
