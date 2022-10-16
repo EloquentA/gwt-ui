@@ -64,7 +64,6 @@ CREDENTIALS = {
 CALLING_NUMBER = ""
 DESIRED_STATE = ""
 CREATE_USER_DATA = {
-  "password": "Ameyo@12345",
   "phone_number": 9999999999,
   "username_prefix": "test_user_name",
   "userid_prefix": "test_user_id"

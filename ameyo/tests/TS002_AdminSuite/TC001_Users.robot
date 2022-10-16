@@ -41,6 +41,30 @@ TC - Create user access manager user
     [Tags]  smoke    testid=AP-16047-1    regression
     I create user access manager user    ${instance1}
 
+TC - Update executive user
+    [Tags]  smoke    testid=AP-16047-2    regression
+    I update executive user    ${instance1}    ${CREDENTIALS['admin']['password']}
+
+TC - Update supervisor user
+    [Tags]  smoke    testid=AP-16047-2    regression
+    I update supervisor user    ${instance1}    ${CREDENTIALS['admin']['password']}
+
+TC - Update professional agent user
+    [Tags]  smoke    testid=AP-16047-2    regression
+    I update professional agent user    ${instance1}    ${CREDENTIALS['admin']['password']}
+
+TC - Update group manager user
+    [Tags]  smoke    testid=AP-16047-2    regression
+    I update group manager user    ${instance1}    ${CREDENTIALS['admin']['password']}
+
+TC - Update analyst user
+    [Tags]  smoke    testid=AP-16047-2    regression
+    I update analyst user    ${instance1}    ${CREDENTIALS['admin']['password']}
+
+TC - Update user access manager user
+    [Tags]  smoke    testid=AP-16047-2    regression
+    I update user access manager user    ${instance1}    ${CREDENTIALS['admin']['password']}
+
 TC - Delete executive user
     [Tags]  smoke    testid=AP-16047-3    regression
     I delete executive user    ${instance1}    ${CREDENTIALS['admin']['password']}

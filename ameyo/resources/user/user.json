@@ -54,9 +54,9 @@
     "value": "//label[contains(text(), 'Phone Number')]/parent::div/input",
     "index": "0"
   },
-  "user_table": {
+  "user_table_tbody": {
     "by": "xpath",
-    "value": "//div[contains(@class,'table-body')]/table",
+    "value": "//div[contains(@class,'table-body')]/table/tbody",
     "index": "0"
   },
   "user_table_search_input": {
@@ -92,6 +92,46 @@
   "submit_delete_user_btn": {
     "by": "xpath",
     "value": "//button/span[text()='Submit']",
+    "index": "0"
+  },
+  "apply_edit_user_btn": {
+    "by": "xpath",
+    "value": "//button/span[text()='Apply']",
+    "index": "0"
+  },
+  "cancel_edit_user_btn": {
+    "by": "xpath",
+    "value": "//div[@class='right btn-group']/button/span[text()='Cancel']",
+    "index": "0"
+  },
+  "edit_user_password_input": {
+    "by": "xpath",
+    "value": "//label[text()='Password']/parent::div/input",
+    "index": "0"
+  },
+  "edit_user_confirm_password_input": {
+    "by": "xpath",
+    "value": "//label[text()='Confirm Password']/parent::div/input",
+    "index": "0"
+  },
+  "edit_user_username_input": {
+    "by": "xpath",
+    "value": "//input[@name='userName']",
+    "index": "0"
+  },
+  "authorize_edit_user_password_input": {
+    "by": "xpath",
+    "value": "//label[text()='Password']/parent::div[@class='input-field']/input",
+    "index": "0"
+  },
+  "submit_edit_user_btn": {
+    "by": "xpath",
+    "value": "//button[@title='ok']/span[text()='Submit']",
+    "index": "0"
+  },
+  "toast_message_div": {
+    "by": "xpath",
+    "value": "//span[contains(@class,'alert__content')]",
     "index": "0"
   }
 }

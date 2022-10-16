@@ -2,7 +2,9 @@
 Module: This is the common module which contains methods for common flows in AMEYO UI."""
 import datetime
 import os
+import random
 import sys
+import string
 import time
 
 sys.path.append(os.path.join(
@@ -34,3 +36,27 @@ class Common:
             self.action.explicit_wait(new_state_element)
             self.action.click_element(new_state_element)
         return True
+
+    @staticmethod
+    def generate_random_password():
+        """Generated random password."""
+        # select 1 lowercase
+        password = random.choice(string.ascii_lowercase)
+        # select 1 uppercase
+        password += random.choice(string.ascii_uppercase)
+        # select 1 digit
+        password += random.choice(string.digits)
+        # select 1 special symbol
+        password += random.choice(string.punctuation)
+        # generate other characters
+        password +=''.join(random.choice(string.ascii_letters + string.digits + string.punctuation) for i in range(5))
+        print("Generated password is: ", password)
+        return password
+
+    def wait_for_toast_to_appear_and_disappear(self):
+        """waits for toast to appear and disappear."""
+        try:
+            self.action.explicit_wait('toast_message_div', waittime=60)
+            self.action.explicit_wait('toast_message_div', ec='invisibility_of_element_located', waittime=10)
+        except Exception as err:
+            print('Error while waiting for toast message to appear: ',err)

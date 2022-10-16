@@ -204,7 +204,7 @@ class Ameyo:
         try:
             return self._return_result(self.user.verify_delete_user(user_type, admin_password, ref_data))
         except Exception as error:
-            return self._return_result(False, error, self.__capture_error(f"verify_delete_user{user_type}", error))
+            return self._return_result(False, error, self.__capture_error(f"verify_delete_user_{user_type}", error))
 
     def set_status(self):
         """This function will change agent status"""
@@ -229,3 +229,10 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("change_password", error))
+
+    def verify_update_user(self,user_type, admin_password, ref_data):
+        """Method to verify update of requested user."""
+        try:
+            return self._return_result(self.user.verify_update_user(user_type, admin_password, ref_data))
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"verify_update_user_{user_type}", error))

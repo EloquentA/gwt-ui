@@ -809,10 +809,10 @@ class Action:
         except Exception as err:
             raise AssertionError(f"Error in get_table_row_elements - Check table locator: {err}")
 
-    def get_table_cell_data(self, locator, row, col):
+    def get_table_cell_data(self, locator, row, col, raw_cell=False, raise_error=True):
         """Returns cell data of a table using row & col number.
         your xpath for table should be something like : //form[2]/table/tbody
-
+        raw_cell: If True, returns cell element
         """
         try:
             self.table = self._element_finder(locator)
@@ -827,14 +827,17 @@ class Action:
 
                 # check col count
                 if (len(self.colList) < col):
-                    raise AssertionError("Expected row no is not present in table")
+                    raise AssertionError("Expected col no is not present in table")
 
                 print("Query", "info", "get_table_cell_data - expected cell " \
                                        "data -  %s " % (str(self.colList[col].text)))
+                if raw_cell:
+                    return self.colList[col]
                 return self.colList[col].text
-        except:
-            raise AssertionError("Error in get_table_cell_data - Check table xpath" \
-                                 "or row count or col count")
+        except Exception as err:
+            if raise_error:
+                raise AssertionError("Error in get_table_cell_data - Check table xpath " \
+                                     f"or row count or col count: {err}")
 
     def get_table_cell_data_using_primaryId_modified(self, locator, primaryCol, primaryId, elementCol,
                                                      looseSearch=False):
