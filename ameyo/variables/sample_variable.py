@@ -29,8 +29,26 @@ CREDENTIALS = {
           "interaction": '',
           "chat": '',
           "voice": '',
-          "Video": ''
+          "Video": '',
+          "new_interaction": '',
+          "new_chat": '',
+          "new_voice": '',
+          "new_video": ''
         }
+  },
+  "change_executive": {
+    "username": '',
+    "password": '',
+    "campaign_details": {
+      "interaction": '',
+      "chat": '',
+      "voice": '',
+      "Video": '',
+      "new_interaction": '',
+      "new_chat": '',
+      "new_voice": '',
+      "new_video": ''
+    }
   },
   "supervisor": {
     "username": '',

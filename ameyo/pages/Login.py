@@ -37,6 +37,18 @@ class Login:
         self.action.is_presence_of_element_located('logout_btn')
         return True
 
+    def login_new_password(self, user, pwd) -> bool:
+        """Login to Ameyo system"""
+        self.action.explicit_wait('user_id_input')
+        self.action.explicit_wait('password_input')
+        self.action.input_text('user_id_input', user)
+        self.action.input_text('password_input', pwd)
+        self.action.click_element('login_btn')
+        self.close_force_login_pop_up()
+        self.action.is_presence_of_element_located('logout_btn')
+        return True
+
+
     def logout_from_campaign_selection_page(self, **kwargs) -> bool:
         """Logout from Ameyo system"""
         self.action.is_presence_of_element_located('logout_btn')

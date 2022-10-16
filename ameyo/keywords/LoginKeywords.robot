@@ -55,3 +55,10 @@ I logout from ameyo homepage
     ${result}=   call method    ${instance}    logout_from_ameyo_homepage
     I verify result    ${result}
 
+I login into Ameyo using new password
+    [Documentation]   This keyword logs-in to Ameyo portal with new password
+    [Arguments]  ${instance}
+    ${result}=   call method    ${instance}    ameyo_login_new_password    ${CREDENTIALS['change_executive']['username']}    Robo@12345
+    I verify result    ${result}
+
+

@@ -68,6 +68,13 @@ class Ameyo:
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("ameyo_login", error))
 
+    def ameyo_login_new_password(self, user, pwd):
+        """Method to login"""
+        try:
+            return self._return_result(self.login.login_new_password(user, pwd))
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("ameyo_login_new_password", error))
+
     def logout_from_campaign_selection_page(self):
         """Method to logout from campaign selection page."""
         try:
@@ -191,9 +198,34 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"dispose_and_dial", error))
+
     def verify_delete_user(self,user_type, admin_password, ref_data):
         """Method to verify deletion of requested user."""
         try:
             return self._return_result(self.user.verify_delete_user(user_type, admin_password, ref_data))
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"verify_delete_user{user_type}", error))
+
+    def set_status(self):
+        """This function will change agent status"""
+        try:
+            self.homepage.set_status()
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("set_status", error))
+
+    def change_campaign(self, kwargs):
+        """This function will change campaign"""
+        try:
+            self.homepage.change_campaign(kwargs)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("change_campaign", error))
+
+    def change_password(self, oldpass, newpass):
+        """Method to change the password of logged in user"""
+        try:
+            self.homepage.change_password(oldpass, newpass)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("change_password", error))

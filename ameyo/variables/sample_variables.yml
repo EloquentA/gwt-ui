@@ -25,8 +25,24 @@ CREDENTIALS:
     campaign_details:
       interaction: ''
       chat: ''
-      voice: ''
+      voice: 'finance_outbound'
       video: ''
+      new_interaction: ''
+      new_chat: ''
+      new_voice: 'finance_inbound'
+      new_video: ''
+  change_executive:
+    username: ''
+    password: ''
+    campaign_details:
+      interaction: ''
+      chat: ''
+      voice: 'finance_outbound'
+      video: ''
+      new_interaction: ''
+      new_chat: ''
+      new_voice: 'finance_inbound'
+      new_video: ''
   supervisor:
     username: ''
     password: ''

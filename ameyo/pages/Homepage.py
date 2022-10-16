@@ -167,3 +167,58 @@ class Homepage:
         self.save_and_dispose()
         self.open_close_dialer()
         return True
+
+    def change_campaign(self, kwargs) -> bool:
+        """This function will select campaign"""
+        self.action.click_element("preferences_drop_down_btn")
+        self.action.click_element("change_campaign_link")
+        if kwargs['new_interaction']:
+            self.action.click_element("dropdown_interaction")
+            self.action.input_text("textbox_search", kwargs['new_interaction'])
+            self.action.press_key("textbox_search", "ARROW_DOWN")
+            self.action.press_key("textbox_search", "ENTER")
+        if kwargs['new_chat']:
+            self.action.click_element("dropdown_chat")
+            self.action.input_text("textbox_search", kwargs['new_chat'])
+            self.action.press_key("textbox_search", "ARROW_DOWN")
+            self.action.press_key("textbox_search", "ENTER")
+        if kwargs['new_voice']:
+            self.action.click_element("voice_campaign_combobox")
+            self.action.input_text("textbox_search", kwargs['new_voice'])
+            self.action.press_key("textbox_search", "ARROW_DOWN")
+            self.action.press_key("textbox_search", "ENTER")
+        if kwargs['new_video']:
+            self.action.click_element("dropdown_video")
+            self.action.input_text("textbox_search", kwargs['new_video'])
+            self.action.press_key("textbox_search", "ARROW_DOWN")
+            self.action.press_key("textbox_search", "ENTER")
+        self.action.click_element("button_next")
+        self.action.element_should_contain_text("campaign_dropdown", 'finance_inbound')
+        return True
+
+    def change_password(self, oldpass, newpass) -> bool:
+        """Change Password of a logged in Agent"""
+        self.action.explicit_wait('active_phone_icon', waittime=120)
+        self.action.click_element("preferences_drop_down_btn")
+        self.action.click_element("change_pass_link")
+        self.action.input_text('current_password', oldpass)
+        self.action.explicit_wait('current_password', waittime=120)
+        self.action.input_text('new_password', newpass)
+        self.action.explicit_wait('new_password', waittime=120)
+        self.action.input_text('confirm_password', newpass)
+        self.action.click_element("update_button")
+        return True
+
+    def set_status(self) -> bool:
+        """Change Agent Status from Just logged to available and to any break reason"""
+        self.action.explicit_wait('active_phone_icon', waittime=120)
+        self.common.change_status('Available', 'available_status')
+        self.action.element_should_contain_text("status_dropdown_link", 'Available')
+        self.common.change_status('Break', 'break_status')
+        self.action.element_should_contain_text("status_dropdown_link", 'Break')
+        self.common.change_status('Available', 'available_status')
+        self.action.element_should_contain_text("status_dropdown_link", 'Available')
+        self.common.change_status('Snack', 'snack_status')
+        self.action.element_should_contain_text("status_dropdown_link", 'Snack')
+        return True
+

@@ -43,3 +43,21 @@ dispose and dial
     ${result}=   call method    ${instance}    dispose_and_dial    ${DISPOSITION}
     ...          ${dispose_type}    ${dial_position}
     I verify result    ${result}
+
+I set status
+    [Documentation]   This keyword will set agent status
+    [Arguments]  ${instance}
+    ${result}=   call method    ${instance}    set_status
+    I verify result    ${result}
+
+I change campaign
+    [Documentation]   This keyword will change campaign
+    [Arguments]  ${instance}
+    ${result}=   call method    ${instance}    change_campaign    ${CREDENTIALS['change_executive']['campaign_details']}
+    I verify result    ${result}
+
+I change password
+    [Documentation]   This keyword changes password for logged in user
+    [Arguments]  ${instance}    ${old_password}    ${new_password}
+    ${result}=   call method    ${instance}    change_password    ${old_password}    ${new_password}
+    I verify result    ${result}
