@@ -367,6 +367,14 @@ class General:
             return data
 
     @staticmethod
+    def json_to_yaml(json_file, yml_file):
+        with open(json_file, 'r') as file:
+            configuration = json.load(file)
+
+        with open(yml_file, 'w+') as yaml_file:
+            yaml.dump(configuration, yaml_file)
+
+    @staticmethod
     def uncurl_from_curl(command):
         """
         Uncurl the curl command and return args for request command

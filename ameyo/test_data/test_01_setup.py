@@ -3,6 +3,7 @@ __author__ = "Developed by EA"
 import pytest
 import time
 import json
+import yaml
 import os
 
 
@@ -32,20 +33,22 @@ class TestSetup:
 
         test_data = TestSetup.read_json("test_data.json")
         calling.update({"test_data": test_data})
+
         for cc in ameyo.get_all_cc().json():
             if cc['contactCenterName'] == calling['test_data']['ccn']:
-                pytest.skip(msg=f"Contact Center {calling['test_data']['ccn']} already Exists !!")
+                ameyo.logger.info(f"Contact Center {calling['test_data']['ccn']} already Exists, deleting it")
+                ameyo.delete_cc(contactCenterId=cc['contactCenterId'])
+                ameyo.logger.info(f"CC {cc['contactCenterName']} Deleted Successfully :)")
+                break
+        # Create Contact Center
+        ameyo.create_cc(contactCenterName=calling['test_data']['ccn']).json()
+
+        # Check if cc has been created
+        for cc in ameyo.get_all_cc().json():
+            if cc['contactCenterName'] == calling['test_data']['ccn']:
                 break
         else:
-            # Create Contact Center
-            ameyo.create_cc(contactCenterName=calling['test_data']['ccn']).json()
-
-            # Check if cc has been created
-            for cc in ameyo.get_all_cc().json():
-                if cc['contactCenterName'] == calling['test_data']['ccn']:
-                    break
-            else:
-                raise Exception(f"Cannot Find CC {calling['test_data']['ccn']} !!")
+            raise Exception(f"Cannot Find CC {calling['test_data']['ccn']} !!")
 
     def test_02_create_user_with_multi_cc_manager(self, ameyo, calling):
         """
@@ -364,8 +367,23 @@ class TestSetup:
         """
         Login logout admin
         :param ameyo:
-        :param role:
+        :param calling:
         :return:
         """
 
         ameyo.user_logout(sessionId=ameyo.adminToken)
+
+    def test_12_generate_yaml_test_data(self, ameyo, calling):
+        """
+        Convert test data from JSON to YAML for UI automation consumption
+        :param ameyo:
+        :param calling:
+        :return:
+        """
+        path = os.getcwd()
+        # test_data_dir = os.path.join(path)
+        test_data_dir = os.path.join(path, "ameyo", "test_data")
+        json_file = os.path.join(test_data_dir, "test_data.json")
+        yaml_file = os.path.join(test_data_dir, "test_data.yaml")
+        ameyo.json_to_yaml(json_file, yaml_file)
+
