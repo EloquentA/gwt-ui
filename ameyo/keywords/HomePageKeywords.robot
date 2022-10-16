@@ -9,8 +9,20 @@ Resource          ./VerifyResult.robot
 *** Keywords ***
 Manual Dial Only
     [Documentation]   This keyword does a manual dial only call to given number
-    [Arguments]  ${instance}    ${CALLING_NUMBER}
-    ${result}=   call method    ${instance}    manual_dial_only    ${CALLING_NUMBER}
+    [Arguments]  ${instance}    ${CALLING_NUMBER}    ${campaign_name}
+    ${result}=   call method    ${instance}    manual_dial_only    ${CALLING_NUMBER}    ${campaign_name}
+    I verify result    ${result}
+
+Create and Dial Call
+    [Documentation]   This keyword will store the number to ameyo and then dial call
+    [Arguments]  ${instance}    ${calling_number}    ${customer_name}    ${campaign_name}
+    ${result}=   call method    ${instance}    create_and_dial_call    ${calling_number}    ${customer_name}    ${campaign_name}
+    I verify result    ${result}
+
+Manual Preview Dial
+    [Documentation]   This keyword will preview saved ameyo number and dial call
+    [Arguments]  ${instance}    ${saved_calling_number}    ${customer_name}    ${campaign_name}
+    ${result}=   call method    ${instance}    manual_preview_dial    ${saved_calling_number}    ${customer_name}    ${campaign_name}
     I verify result    ${result}
 
 Validate logout disabled during call

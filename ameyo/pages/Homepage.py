@@ -18,12 +18,13 @@ class Homepage:
         self.action = Action(web_browser)
         self.common = common
 
-    def manual_dial_only(self, calling_number):
+    def manual_dial_only(self, calling_number, campaign_name):
         """Method to manual dial only call to calling number."""
         self.common.change_status('Available', 'available_status')
         self.action.explicit_wait('active_phone_icon', waittime=120)
-        self.action.explicit_wait('phone_icon', ec='element_to_be_clickable')
-        self.action.click_element('phone_icon')
+        if self.action.is_presence_of_element_located('telephony_panel_hidden'):
+            self.action.explicit_wait('phone_icon', ec='element_to_be_clickable')
+            self.action.click_element('phone_icon')
         self.action.explicit_wait('search_for_customer_input', ec='element_to_be_clickable')
         self.action.input_text('search_for_customer_input', calling_number)
         self.action.click_element('call_btn')
@@ -31,6 +32,61 @@ class Homepage:
         self.action.explicit_wait('dial_only_btn')
         self.action.click_element('dial_only_btn')
         self.action.explicit_wait('call_status', ec='text_to_be_present_in_element', msg_to_verify='Connected')
+        self.action.element_should_contain_text('calling_number_dialer', str(calling_number))
+        self.action.element_should_contain_text('campaign_on_telephony_screen', campaign_name)
+        self.action.element_should_contain_text('call_type_on_telephony_screen', 'Manual Dial')
+        self.action.explicit_wait('end_call_btn')
+        self.action.is_presence_of_element_located('end_call_btn')
+        return True
+
+    def create_and_dial_call(self, calling_number, customer_name, campaign_name):
+        """Method to save number in ameyo and then call on that number."""
+
+        self.common.change_status('Available', 'available_status')
+        self.action.explicit_wait('active_phone_icon', waittime=120)
+        if self.action.is_presence_of_element_located('telephony_panel_hidden'):
+            self.action.explicit_wait('phone_icon', ec='element_to_be_clickable')
+            self.action.click_element('phone_icon')
+        self.action.explicit_wait('search_for_customer_input', ec='element_to_be_clickable')
+        self.action.input_text('search_for_customer_input', calling_number)
+        self.action.click_element('call_btn')
+        self.action.alert_action()
+        self.action.explicit_wait('create_and_dial_btn')
+        self.action.click_element('create_and_dial_btn')
+        self.action.click_element('phone_icon')
+        self.action.input_text('cust_info_name_input', customer_name)
+        self.action.input_text('cust_info_phone1_input', calling_number)
+        self.action.explicit_wait('create_contact_btn')
+        self.action.click_element('create_contact_btn')
+        self.action.explicit_wait('call_status', ec='text_to_be_present_in_element', msg_to_verify='Connected')
+        self.action.element_should_contain_text('calling_number_dialer', str(calling_number))
+        self.action.element_should_contain_text('campaign_on_telephony_screen', campaign_name)
+        self.action.element_should_contain_text('call_type_on_telephony_screen', 'Manual Dial')
+        self.action.explicit_wait('end_call_btn')
+        self.action.is_presence_of_element_located('end_call_btn')
+        return True
+
+    def manual_preview_dial(self, saved_phone_number, saved_customer_name, campaign_name):
+        """Validate manual preview dialing for saved number"""
+        self.common.change_status('Available', 'available_status')
+        self.action.explicit_wait('active_phone_icon', waittime=120)
+        if self.action.is_presence_of_element_located('telephony_panel_hidden'):
+            self.action.explicit_wait('phone_icon', ec='element_to_be_clickable')
+            self.action.click_element('phone_icon')
+        self.action.explicit_wait('search_for_customer_input', ec='element_to_be_clickable')
+        self.action.input_text('search_for_customer_input', saved_phone_number)
+        self.action.click_element('view_btn')
+        self.action.element_should_contain_text('call_type_on_telephony_screen', 'Preview')
+        self.action.is_presence_of_element_located('remaining_time_autodial')
+        self.action.is_presence_of_element_located('cancel_btn')
+        self.action.is_presence_of_element_located('preview_alternate_phone_input')
+        self.action.explicit_wait('preview_dial_call_btn')
+        self.action.click_element('preview_dial_call_btn')
+        self.action.explicit_wait('call_status', ec='text_to_be_present_in_element', msg_to_verify='Connected')
+        self.action.element_should_contain_text('calling_number_dialer', str(saved_phone_number))
+        self.action.element_should_contain_text('customer_name_dialer', saved_customer_name)
+        self.action.element_should_contain_text('campaign_on_telephony_screen', campaign_name)
+        self.action.element_should_contain_text('call_type_on_telephony_screen', 'Manual Dial')
         self.action.explicit_wait('end_call_btn')
         self.action.is_presence_of_element_located('end_call_btn')
         return True
@@ -49,6 +105,7 @@ class Homepage:
         # Waiting for 30seconds- call auto dispose time
         time.sleep(30)
         self.action.is_presence_of_element_located('call_btn')
+        self.action.click_element('phone_icon')
         return True
 
     def select_quick_disposition(self, dispose_value):

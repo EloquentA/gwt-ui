@@ -2,7 +2,9 @@
   "phone_icon":{"by":"xpath", "value":"//i[@class='mdi mdi-phone']", "index":"0"},
   "search_for_customer_input":{"by":"xpath", "value":"//input[@placeholder='Search for customer']", "index":"0"},
   "call_btn":{"by":"xpath", "value":"//button[@id='automationIdCallButton']", "index":"0"},
+  "view_btn":{"by":"xpath", "value":"//button[contains(@id,'ViewButton')]", "index":"0"},
   "dial_only_btn":{"by":"xpath", "value":"//button/span[text()='Dial only']", "index":"0"},
+  "create_and_dial_btn":{"by":"xpath", "value":"//button/span[text()='Create and Dial']", "index":"0"},
   "end_call_btn":{"by":"xpath", "value":"//button[@title='End Call']/span[text()='End Call']", "index":"0"},
   "preferences_drop_down_btn":{"by":"xpath", "value":"//a[contains(@class,'setting-wrapper__dropdown-button')]", "index":"0"},
   "active_phone_icon": {"by":"xpath", "value":"//div[contains(@class,' active')]/i[contains(@class,'phone')]", "index":"0"},
@@ -23,5 +25,17 @@
   "btn_sale":{"by":"xpath", "value":"//*[@automationid='Sale']", "index":"0"},
   "btn_foreign_language":{"by":"xpath", "value":"//*[@automationid='Foreign Language']", "index":"0"},
   "btn_abrupt_disconnection":{"by":"xpath", "value":"//*[@automationid='Abrupt disconnection']", "index":"0"},
-  "btn_agent_volume_too_low":{"by":"xpath", "value":"//*[@automationid='Agent volume too low']", "index":"0"}
+  "btn_agent_volume_too_low":{"by":"xpath", "value":"//*[@automationid='Agent volume too low']", "index":"0"},
+  "campaign_on_telephony_screen":{"by":"xpath", "value":"//div//span[contains(text(),'Campaign')]//following-sibling::strong", "index":"0"},
+  "call_type_on_telephony_screen":{"by":"xpath", "value":"//div//span[contains(text(),'Call Type')]//following-sibling::strong", "index":"0"},
+  "cust_info_name_input":{"by":"xpath", "value":"//div[@class='input-field']/label[contains(text(),'name')]/parent::div/input[@type='text']", "index":"0"},
+  "cust_info_phone1_input":{"by":"xpath", "value":"//div[@class='input-field']/label[contains(text(),'phone1')]/parent::div/input[@type='text']", "index":"0"},
+  "create_contact_btn":{"by":"xpath", "value":"//button/span[text()='Create']", "index":"0"},
+  "telephony_panel_hidden":{"by":"xpath", "value":"//div[contains(@class,'hide-call-wrapper')]", "index":"0"},
+  "preview_dial_call_btn":{"by":"xpath", "value":"//button/span[text()='call']", "index":"0"},
+  "remaining_time_autodial":{"by":"xpath", "value":"//div//span[contains(text(),'Remaining Time')]//parent::div//parent::div//preceding-sibling::div//span", "index":"0"},
+  "cancel_btn":{"by":"xpath", "value":"//button/span[text()='Cancel']", "index":"0"},
+  "preview_alternate_phone_input":{"by":"xpath", "value":"//div[contains(@class,'alternateCallNumber')]//input[contains(@placeholder,'phone')]", "index":"0"},
+  "calling_number_dialer":{"by":"xpath", "value":"//div[contains(@class,'number-info row')]//a[contains(@class,'CTD-widget')]/span", "index":"0"},
+  "customer_name_dialer":{"by":"xpath", "value":"//div[contains(@class,'customerName')]//span[contains(@class,'customerName')]", "index":"0"}
 }

@@ -137,13 +137,29 @@ class Ameyo:
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("select_campaign", error))
 
-    def manual_dial_only(self, calling_number):
+    def manual_dial_only(self, calling_number, campaign_name):
         """Method to manual dial only"""
         try:
-            self.homepage.manual_dial_only(calling_number)
+            self.homepage.manual_dial_only(calling_number, campaign_name)
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("manual_dial_only", error))
+
+    def create_and_dial_call(self, calling_number, customer_name, campaign_name):
+        """Method to create contact in ameyo and dial call"""
+        try:
+            self.homepage.create_and_dial_call(calling_number, customer_name, campaign_name)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("create_and_dial_call", error))
+
+    def manual_preview_dial(self, saved_calling_number, saved_customer_name, campaign_name):
+        """Method to preview saved contact in ameyo and dial call"""
+        try:
+            self.homepage.manual_preview_dial(saved_calling_number, saved_customer_name, campaign_name)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("manual_preview_dial", error))
 
     def validate_logout_disabled_when_call_in_progress(self):
         """Method to validate logout functionality disabled when call in progress"""
