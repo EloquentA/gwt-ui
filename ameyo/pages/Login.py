@@ -34,7 +34,7 @@ class Login:
         self.action.input_text('password_input', kwargs['password'])
         self.action.click_element('login_btn')
         self.close_force_login_pop_up()
-        self.action.is_presence_of_element_located('logout_btn')
+        assert self.action.is_presence_of_element_located('logout_btn'), "Logout button not located after login."
         return True
 
     def login_new_password(self, user, pwd) -> bool:
@@ -45,13 +45,12 @@ class Login:
         self.action.input_text('password_input', pwd)
         self.action.click_element('login_btn')
         self.close_force_login_pop_up()
-        self.action.is_presence_of_element_located('logout_btn')
+        assert self.action.is_presence_of_element_located('logout_btn'), "Logout button not located after login."
         return True
-
 
     def logout_from_campaign_selection_page(self, **kwargs) -> bool:
         """Logout from Ameyo system"""
-        self.action.is_presence_of_element_located('logout_btn')
+        assert self.action.is_presence_of_element_located('logout_btn'), "Logout button not located."
         self.action.click_element('logout_btn')
         self.common.close_alert_if_exists()
         return True
