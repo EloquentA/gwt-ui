@@ -184,10 +184,11 @@ class Ameyo:
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("end_call_and_auto_dispose", error))
 
-    def verify_create_user(self, ref_data, user_type):
+    def verify_create_user(self,user_type):
         """Method to verify creation of requested user."""
         try:
-            return self._return_result(self.user.verify_create_user(ref_data, user_type))
+            is_passed, user_id_text = self.user.verify_create_user(user_type)
+            return self._return_result(is_passed, '', '', user_id_text)
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"verify_create_user_{user_type}", error))
 
@@ -199,10 +200,10 @@ class Ameyo:
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"dispose_and_dial", error))
 
-    def verify_delete_user(self,user_type, admin_password, ref_data):
+    def verify_delete_user(self,user_type, admin_password, userid_text):
         """Method to verify deletion of requested user."""
         try:
-            return self._return_result(self.user.verify_delete_user(user_type, admin_password, ref_data))
+            return self._return_result(self.user.verify_delete_user(user_type, admin_password, userid_text))
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"verify_delete_user_{user_type}", error))
 
@@ -230,9 +231,9 @@ class Ameyo:
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("change_password", error))
 
-    def verify_update_user(self,user_type, admin_password, ref_data):
+    def verify_update_user(self,user_type, admin_password, userid_text):
         """Method to verify update of requested user."""
         try:
-            return self._return_result(self.user.verify_update_user(user_type, admin_password, ref_data))
+            return self._return_result(self.user.verify_update_user(user_type, admin_password, userid_text))
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"verify_update_user_{user_type}", error))

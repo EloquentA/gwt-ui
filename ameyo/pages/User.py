@@ -6,6 +6,7 @@ import sys
 import time
 
 from selenium.webdriver.common.by import By
+from uuid import uuid4
 
 sys.path.append(os.path.join(
     os.path.dirname((os.path.dirname(os.path.dirname(__file__)))), "libs", "web_action")
@@ -35,11 +36,6 @@ class User:
         while self.get_total_user_records() != expected_records and time.time() - current_time <= 60:
             time.sleep(3)
 
-    @staticmethod
-    def _get_user_id_text(ref_data, user_type):
-        """Gets user id text"""
-        return f"aaa_{ref_data.get('userid_prefix')}_{'_'.join(user_type.split(' '))}"
-
     def get_total_user_records(self):
         """Gets total user records."""
         records_str = self.action.get_text('total_user_records')
@@ -63,11 +59,11 @@ class User:
         self._wait_for_searched_user_record_to_load(expected_records)
         return True
 
-    def create_user(self, ref_data, user_type):
+    def create_user(self,user_type):
         """Creates requested user."""
         self.open_user_tab()
-        user_name_text = f"aaa_{ref_data.get('username_prefix')}_{'_'.join(user_type.split(' '))}"
-        userid_text = self._get_user_id_text(ref_data, user_type)
+        user_name_text = f"aaa_{'_'.join(user_type.split(' '))}_name"
+        userid_text = f"aaa_{'_'.join(user_type.split(' '))}_{str(uuid4())[:4]}_id"
         password = self.common.generate_random_password()
         self.action.click_element('create_user_btn')
         self.action.explicit_wait('create_user_id_input')
@@ -75,7 +71,7 @@ class User:
         self.action.input_text('user_name_input', user_name_text)
         self.action.input_text('create_password_input', password)
         self.action.input_text('confirm_password_input', password)
-        self.action.input_text('phone_number_input', ref_data.get('phone_number'))
+        self.action.input_text('phone_number_input', 9999999999)
         self._wait_for_dropdown_to_load(user_type)
         self.action.click_element('user_type_dropdown')
         self.action.input_text('user_type_dropdown_search', user_type)
@@ -84,9 +80,9 @@ class User:
         self.common.wait_for_toast_to_appear_and_disappear()
         return userid_text
 
-    def verify_create_user(self,ref_data, user_type):
+    def verify_create_user(self,user_type):
         """Verifies creating user persona."""
-        user_id_text = self.create_user(ref_data, user_type)
+        user_id_text = self.create_user(user_type)
         self.action.input_text('user_table_search_input', user_id_text)
         self.action.press_key('user_table_search_input', 'ENTER')
         self._wait_for_searched_user_record_to_load()
@@ -94,7 +90,7 @@ class User:
         user_table_user_type = self.action.get_table_cell_data('user_table_tbody', row=0, col=3)
         assert user_table_user_id == user_id_text, f'Expected: {user_id_text} user not found in the user table rows, found: {user_table_data}'
         assert user_table_user_type == user_type, f'Expected: {user_type} user type not found in the user table rows, found: {user_table_user_type}'
-        return True
+        return True, user_id_text
 
     def delete_user(self, userid_text, admin_password, user_type):
         """Deletes requested user."""
@@ -111,9 +107,8 @@ class User:
         self.common.wait_for_toast_to_appear_and_disappear()
         return True
 
-    def verify_delete_user(self, user_type, admin_password, ref_data):
+    def verify_delete_user(self, user_type, admin_password, userid_text):
         """Method to verify deletion of requested user."""
-        userid_text = self._get_user_id_text(ref_data, user_type)
         self.delete_user(userid_text, admin_password, user_type)
         # Re-verify if user was deleted
         self.search_user(userid_text, expected_records=0)
@@ -127,9 +122,7 @@ class User:
         """Opens update user form."""
         self.open_user_tab()
         self.search_user(userid_text, expected_records=1)
-        edit_action_cell = self.action.get_table_cell_data('user_table_tbody', row=0, col=-1, raw_cell=True)
-        edit_action_link = edit_action_cell.find_element(By.TAG_NAME,'a')
-        edit_action_link.click()
+        self.action.click_element('edit_user_link')
         self.action.explicit_wait('edit_user_password_input')
         return self.action.get_element_attribute('edit_user_username_input', 'value') + '_updated'
 
@@ -147,9 +140,8 @@ class User:
         self.common.wait_for_toast_to_appear_and_disappear()
         return edited_username
 
-    def verify_update_user(self, user_type, admin_password, ref_data):
+    def verify_update_user(self, user_type, admin_password, userid_text):
         """Method to verify update of requested user."""
-        userid_text = self._get_user_id_text(ref_data, user_type)
         edited_username_expected = self.update_user(userid_text, admin_password)
         edited_username = self.open_update_user_form(userid_text)
         self.action.click_element('cancel_edit_user_btn')

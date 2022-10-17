@@ -133,5 +133,10 @@
     "by": "xpath",
     "value": "//span[contains(@class,'alert__content')]",
     "index": "0"
+  },
+  "edit_user_link": {
+    "by": "xpath",
+    "value": "//td/div[@class='widget-cell']/a",
+    "index": "0"
   }
 }
