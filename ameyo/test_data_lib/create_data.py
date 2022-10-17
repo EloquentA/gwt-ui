@@ -3,6 +3,9 @@ __author__ = "Developed by EA"
 from urllib.parse import urljoin
 from datetime import datetime
 import time
+import csv
+import json
+from pathlib import Path
 
 from ameyo.test_data_lib.wrapper import Wrapper
 
@@ -1390,6 +1393,110 @@ class DataCreationAPIs(Wrapper):
         self.rest.raise_for_status(response)
         return response
 
+    def delete_lead(self, **kwargs):
+        """
+        Delete Lead in supervisor
+        """
+        leadId = kwargs.get('leadId', None)
+        sessionId = kwargs.get('sessionId', self.supervisorToken)
+        self.check_required_args([leadId, sessionId])
 
+        response = self.rest.send_request(**{
+            'method': 'DELETE',
+            'url': urljoin(self.creds.url, f"ameyorestapi/cc/processLeads/{leadId}"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        return response
+
+    def get_all_leads_for_campaign(self, **kwargs):
+        """
+        Get lead data for a campaign
+        """
+        campaignId = kwargs.get('campaignId', None)
+        processId = kwargs.get('processId', None)
+        sessionId = kwargs.get('sessionId', self.supervisorToken)
+        self.check_required_args([campaignId, processId, sessionId])
+
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'url': urljoin(self.creds.url, "ameyorestapi/manageConfig/getAllContactLeadListData"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'params': {
+                'campaignId': campaignId,
+                'processId': processId
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        return response
+
+    def create_customer_csv(self, **kwargs):
+        """
+        Create Customer CSV
+        """
+        rows = list()
+        count = kwargs.get('count', 100)
+        for i in range(count):
+            first_name = self.faker.first_name()
+            last_name = self.faker.last_name()
+            name = f"{first_name} {last_name}"
+            email = f"{first_name}.{last_name}@ameyo.com"
+            phone = self.faker.msisdn()[3:]
+            rows.append([name, email, phone])
+
+        name = Path(__file__).parent.parent / 'customers.csv'
+        header = ['name', 'email', 'phone1']
+        if not isinstance(rows, list):
+            raise Exception(f"Rows Should be list !!")
+
+        with open(name, 'w') as csvFile:
+            csvWriter = csv.writer(csvFile)
+            csvWriter.writerow(header)  # Write header
+            csvWriter.writerows(rows)  # write Rows
+
+        return name
+
+    def upload_csv_to_lead(self, **kwargs):
+        """
+        Uploads a csv(containing customer data) to the lead
+        """
+        processId = kwargs.get('processId', None)
+        leadId = kwargs.get('leadIds', None)
+        csvPath = kwargs.get('csvPath', None)
+        sessionId = kwargs.get('sessionId', self.supervisorToken)
+        self.check_required_args([processId, leadId, csvPath, sessionId])
+
+        update = kwargs.get("update", True)
+        migrate = kwargs.get("migrate", False)
+        churn = kwargs.get("churn", False)
+        headerMapping = json.dumps(kwargs.get("headerMapping", {
+            "twitter": "", "timezone": "", "facebook": "", "phone2": "", "name": "", "phone3": "",
+            "phone4": "", "phone5": "", "email": "", "phone1": ""
+        }))
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, "upload/servlet.gupld"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'files': {'file': ('customers.csv', open(csvPath, 'rb'), "application/vnd.ms-excel")},
+            'params': {
+                'uploadType': 'contactsLead',
+                "processId": processId,
+                "update.customer": update,
+                "migrate.customer": migrate,
+                "churn.customer": churn,
+                "leadId": leadId,
+                "serverHostUrl": self.creds.url,
+                "headerMapping": headerMapping,
+            },
+            "data": {"authorizationToken": sessionId},
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        return response
 
 

@@ -224,7 +224,7 @@ class TestSetup:
             processIds.append(Process['processId'])
         calling.update({'processIds': processIds})
 
-    def test_07_create_campaign(self, ameyo, calling):
+    def test_07_create_campaigns(self, ameyo, calling):
         """
         Create Campaign
         :param ameyo:
@@ -232,10 +232,12 @@ class TestSetup:
         """
 
         process_ids_list = sorted(calling['processIds'])
-        campaign_names_list = calling['test_data']['campaign_names']
-        proc_campgn_dict = dict(zip(process_ids_list, campaign_names_list))
+        inbound_campaigns_list = calling['test_data']['inbound_campaigns']
+        outbound_campaigns_list = calling['test_data']['outbound_campaigns']
+        proc_inbound_campgn_dict = dict(zip(process_ids_list, inbound_campaigns_list))
+        proc_outbound_campgn_dict = dict(zip(process_ids_list, outbound_campaigns_list))
         campaignIds = []
-        for process_id, campaign_name in proc_campgn_dict.items():
+        for process_id, campaign_name in proc_inbound_campgn_dict.items():
             campaignName = f"{campaign_name}"
             # Check if Existing, Skip in case
             for Campaign in ameyo.get_all_campaigns().json():
@@ -245,7 +247,27 @@ class TestSetup:
                     break
             response = ameyo.create_campaign(**{
                         "processId": process_id,
-                        "campaignType": calling['test_data']['campaign_type_outbound_voice'],
+                        "campaignType": calling['test_data']['campaign_type_inbound'],
+                        "campaignName": campaignName,
+                        "description": f"{campaignName} Description",
+                    })
+            campaignId = response.json()['campaignId']
+            campaignIds.append(campaignId)
+
+            Campaigns = ameyo.get_all_campaigns().json()
+            if campaignName not in [x['campaignName'] for x in Campaigns]:
+                raise Exception(f"Campaign {campaignName} is not Present !!")
+        for process_id, campaign_name in proc_outbound_campgn_dict.items():
+            campaignName = f"{campaign_name}"
+            # Check if Existing, Skip in case
+            for Campaign in ameyo.get_all_campaigns().json():
+                if Campaign['campaignName'] == campaignName:
+                    ameyo.logger.info(f"Delete Existing Campaign {campaignName} ...")
+                    ameyo.delete_campaign(campaignId=Campaign['campaignId'])
+                    break
+            response = ameyo.create_campaign(**{
+                        "processId": process_id,
+                        "campaignType": calling['test_data']['campaign_type_outbound'],
                         "campaignName": campaignName,
                         "description": f"{campaignName} Description",
                     })
@@ -293,7 +315,8 @@ class TestSetup:
         :return:
         """
 
-        campaign_names_list = calling['test_data']['campaign_names']
+        inbound_campaigns_list = calling['test_data']['inbound_campaigns']
+        outbound_campaigns_list = calling['test_data']['outbound_campaigns']
         campaign_ids_list = calling['campaignIds']
 
         for campaign_id in campaign_ids_list:
@@ -330,7 +353,50 @@ class TestSetup:
             })
             time.sleep(1)
 
-    def test_10_login_agents(self, ameyo, calling):
+    def test_10_assign_supervisor_to_campaign(self, ameyo, calling):
+        """
+        Assign Supervisor user to Campaign
+        :param ameyo:
+        :return:
+        """
+        multi_cc_created_users_list = calling['test_data']['multi_cc_created_users']
+        for cc in ameyo.get_all_cc().json():
+            if cc['contactCenterName'] == calling['test_data']['ccn']:
+                break
+        else:
+            raise Exception(f"Cannot Find CC {calling['test_data']['ccn']} !!")
+        ccId = cc['contactCenterId']
+
+        users = ameyo.get_all_users_assigned_to_cc(ccId=ccId, sessionId=ameyo.adminToken).json()
+        for count, Campaign in enumerate(ameyo.get_all_campaigns(sessionId=ameyo.adminToken).json()):
+            response = ameyo.get_all_campaign_users(campaignId=Campaign['campaignId'],
+                                                    sessionId=ameyo.adminToken)
+            assigned = [x['userId'] for x in response.json()]
+
+            contactCenterUserIds, privilegePlanIds, userIds, contactCenterUserTypes = [], [], [], []
+            for User in [x for x in users if
+                         x['systemUserType'] == 'Supervisor' and
+                         x['userId'] == multi_cc_created_users_list[1]['name']]:
+                if User['userId'] not in assigned:
+                    contactCenterUserIds.append(User['ccUserId'])
+                    privilegePlanIds.append(User['privilegePlanId'])
+                    userIds.append(User['userId'])
+                    contactCenterUserTypes.append(User['systemUserType'])
+
+            if all([contactCenterUserIds, privilegePlanIds, userIds, contactCenterUserTypes]) is False:
+                continue
+
+            # assign agent to Campaign
+            ameyo.assign_agent_to_campaign(**{
+                'campaignId': Campaign['campaignId'],
+                'contactCenterUserIds': contactCenterUserIds,
+                'privilegePlanIds': privilegePlanIds,
+                'userIds': userIds,
+                'contactCenterUserTypes': contactCenterUserTypes,
+                'sessionId': ameyo.adminToken,
+            })
+
+    def test_11_login_agents(self, ameyo, calling):
         """
         Login Agents, change password and logout
         :param ameyo:
@@ -338,9 +404,9 @@ class TestSetup:
         :return:
         """
 
-        campaign_names_list = calling['test_data']['campaign_names']
+        inbound_campaigns_list = calling['test_data']['inbound_campaigns']
         agents_list = calling['test_data']['agents']
-        campgn_agents_dict = dict(zip(campaign_names_list, agents_list))
+        campgn_agents_dict = dict(zip(inbound_campaigns_list, agents_list))
 
         for cc in ameyo.get_all_cc().json():
             if cc['contactCenterName'] == calling['test_data']['ccn']:
@@ -363,7 +429,140 @@ class TestSetup:
         else:
             pass
 
-    def test_11_logout_admin(self, ameyo, calling):
+    def test_12_create_new_lead(self, ameyo, calling):
+        """
+        Create a new Lead
+        :param ameyo:
+        :return:
+        """
+
+        multi_cc_created_users_list = calling['test_data']['multi_cc_created_users']
+        process_ids_list = sorted(calling['processIds'])
+        lead_names_list = calling['test_data']['lead_names']
+        proc_lead_dict = dict(zip(process_ids_list, lead_names_list))
+        leadIds = []
+        for cc in ameyo.get_all_cc().json():
+            if cc['contactCenterName'] == calling['test_data']['ccn']:
+                ccId = cc['contactCenterId']
+                break
+        else:
+            raise Exception(f"{calling['test_data']['ccn']} not found !!")
+
+        if ameyo.supervisorToken is None:
+            ameyo.supervisorToken = ameyo.user_login(userId=f"{multi_cc_created_users_list[1]['name']}").json()[
+                'userSessionInfo']['sessionId']
+
+        Users = list(filter(
+            lambda a: a['systemUserType'] in ['Supervisor'],
+            ameyo.get_all_users_assigned_to_cc(ccId=ccId).json()
+        ))
+
+        for process_id, lead_name in proc_lead_dict.items():
+            lead_name = f"{lead_name}"
+            for lead in ameyo.get_all_leads_for_process(processId=process_id).json():
+                if lead['leadName'] == lead_name:
+                    ameyo.logger.debug(f"Lead Already Exists, deleting it...")
+                    ameyo.delete_lead(leadId=lead['leadId'], sessionId=ameyo.supervisorToken)
+                for user in Users:
+                    response = ameyo.add_lead(**{
+                        'leadName': lead_name,
+                        'processId': process_id,
+                        'ownerUserId': user['userId']
+                    }).json()
+                    leadIds.append(response['leadId'])
+                    # for lead in ameyo.get_all_leads_for_process(processId=process_id).json():
+                    #     if lead['leadName'] == lead_name:
+                    #         leadIds.append(lead['leadId'])
+                    #         break
+
+                for lead in ameyo.get_all_leads_for_process(processId=process_id).json():
+                    if lead['leadName'] == lead_name:
+                        break
+                else:
+                    raise Exception(f"New Created Lead not Found !!")
+        calling.update({"leadIds": leadIds})
+
+    def test_13_assign_lead_to_campaign(self, ameyo, calling):
+        """
+        Assign Lead to Campaign
+        :param ameyo:
+        :return:
+        """
+        campaign_ids_list = calling['campaignIds']
+        lead_ids_list = sorted(calling['leadIds'])
+
+        for campaign_id in campaign_ids_list:
+            ameyo.assign_lead_to_campaign(campaignContextId=campaign_id, leadIds=lead_ids_list)
+
+    def test_14_upload_lead_csv(self, ameyo, request, calling):
+        """
+        Uploads a csv (containing customer data) to the lead
+        :param ameyo:
+        :param request:
+        :return:
+        """
+        process_ids_list = sorted(calling['processIds'])
+        lead_ids_list = sorted(calling['leadIds'])
+        for process_id in process_ids_list:
+            for Lead in ameyo.get_all_leads_for_process(processId=process_id).json():
+                csvPath = ameyo.create_customer_csv(count=request.config.option.leads)
+                response = ameyo.upload_csv_to_lead(**{
+                    "processId": Lead['processId'],
+                    "leadIds": Lead['leadId'],
+                    'csvPath': csvPath
+                })
+                assert "failed" not in response.text.lower(), "Upload Failed !!"
+                assert "invalid" not in response.text.lower(), "Upload File is Invalid !!"
+
+    def test_15_enable_lead_for_process(self, ameyo, calling):
+        """
+        Enables lead for a process
+        :param ameyo:
+        :param request:
+        :return:
+        """
+        process_ids_list = sorted(calling['processIds'])
+        for process_id in process_ids_list:
+            for Lead in ameyo.get_all_leads_for_process(processId=process_id).json():
+                response = ameyo.enable_lead_for_process(**{
+                    "leadId": Lead['leadId'],
+                    "enabled": True,
+                })
+                is_enabled = ameyo.is_lead_enabled_for_process(processId=process_id,
+                                                               lead_name=Lead["leadName"])
+                assert is_enabled, f"Lead <{Lead['leadName']}> can not be enabled for <{process_id}>"
+
+    def test_16_enable_lead_for_campaign(self, ameyo, calling):
+        """
+        Enables lead for a campaign
+        :param ameyo:
+        :param request:
+        :return:
+        """
+        process_ids_list = sorted(calling['processIds'])
+        for process_id in process_ids_list:
+            for Campaign in ameyo.get_all_campaigns().json():
+                for Lead in ameyo.get_all_leads_for_campaign(processId=process_id,
+                                                             campaignId=Campaign['campaignId']).json()[
+                    'leadManagementContactLeadListBeans']:
+                    leadName = Lead["leadName"]
+                    campaignLeadId = Lead["campaignLeadId"]
+                    leadDialingConfigurationEnabled = True
+                    response = ameyo.enable_lead_for_campaign(**{
+                        "leadId": Lead['leadId'],
+                        "leadName": leadName,
+                        "campaignLeadId": campaignLeadId,
+                        "campaignId": Campaign['campaignId'],
+                        "leadDialingConfigurationEnabled": leadDialingConfigurationEnabled
+                    })
+                    leads = ameyo.get_all_leads_for_campaign(processId=process_id,
+                                                             campaignId=Campaign['campaignId']).json()[
+                        'leadManagementContactLeadListBeans']
+                    lead = [x for x in leads if x["leadName"] == leadName][0]
+                    assert lead[
+                        "isEnable"], f"Lead <{Lead['leadName']}> can not be enabled for <{Campaign['campaignName']}>"
+
+    def test_17_logout_admin(self, ameyo, calling):
         """
         Login logout admin
         :param ameyo:
@@ -373,7 +572,17 @@ class TestSetup:
 
         ameyo.user_logout(sessionId=ameyo.adminToken)
 
-    def test_12_generate_yaml_test_data(self, ameyo, calling):
+    def test_18_logout_supervisor(self, ameyo, calling):
+        """
+        logout supervisor
+        :param ameyo:
+        :param calling:
+        :return:
+        """
+
+        ameyo.user_logout(sessionId=ameyo.supervisorToken)
+
+    def test_19_generate_yaml_test_data(self, ameyo, calling):
         """
         Convert test data from JSON to YAML for UI automation consumption
         :param ameyo:
