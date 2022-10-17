@@ -7,10 +7,6 @@ BROWSER_CONFIG:
   server: ''
 CALLING_NUMBER: ''
 CLOSE_TESTRAIL_RUN: true
-CREATE_USER_DATA:
-  phone_number: 9999999999
-  userid_prefix: test_user_id
-  username_prefix: username_prefix
 CREDENTIALS:
   admin:
     password: ''
@@ -24,8 +20,7 @@ CREDENTIALS:
       new_video: ''
       new_voice: finance_inbound
       video: ''
-      voice_inbound: finance_inbound
-      voice_outbound: finance_outbound
+      voice: finance_outbound
     password: ''
     username: ''
   executive:
@@ -37,8 +32,7 @@ CREDENTIALS:
       new_video: ''
       new_voice: finance_inbound
       video: ''
-      voice_inbound: finance_inbound
-      voice_outbound: finance_outbound
+      voice: finance_outbound
     password: ''
     username: ''
   multi_cc_manager:

@@ -29,8 +29,7 @@
 			"campaign_details": {
 				"interaction": "",
 				"chat": "",
-				"voice_inbound": "finance_inbound",
-				"voice_outbound": "finance_outbound",
+				"voice": "finance_outbound",
 				"video": "",
 				"new_interaction": "",
 				"new_chat": "",
@@ -44,8 +43,7 @@
 			"campaign_details": {
 				"interaction": "",
 				"chat": "",
-				"voice_inbound": "finance_inbound",
-				"voice_outbound": "finance_outbound",
+				"voice": "finance_outbound",
 				"video": "",
 				"new_interaction": "",
 				"new_chat": "",
@@ -66,11 +64,6 @@
 	},
 	"CALLING_NUMBER": "",
 	"DESIRED_STATE": "",
-	"CREATE_USER_DATA": {
-		"phone_number": 9999999999,
-		"username_prefix": "username_prefix",
-		"userid_prefix": "test_user_id"
-	},
 	"DISPOSITION": {
 		"disposition": "telecom.issues",
 		"sub_disposition": "Already hungup",
