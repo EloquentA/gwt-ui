@@ -8,3 +8,4 @@ paramiko>=2.10.3
 urllib3>=1.26.9
 Faker>=13.3.4
 pytest>=7.1.1
+allure_robotframework==2.11.1

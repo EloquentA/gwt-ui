@@ -55,3 +55,24 @@ To run automation command please ensure virtual environment is activated and abo
 
 ### Python debugger
 `import sys, pdb; pdb.Pdb(stdout=sys.__stdout__).set_trace()`
+
+### Allure report for Robot runs
+`Install allure_robotframework: 
+pip3 install allure_robotframework`
+
+`Run Robot test case(s)/suite(s) with --listener arg as mentioned below:
+ python3 -m robot --variablefile ./ameyo/variables/sample_variables.yml --listener allure_robotframework ./ameyo/tests/TS001_LoginSuite/TC001_Login.robot`
+
+`Download latest allure-commandline from "https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/".
+FOr e.g. Download "allure-commandline-2.19.0.zip" from "https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.9.0/"
+Extract the Zip and add to PATH in bash_profile file, below is an e.g. on mac:
+
+1. vim ~/.bash_profile
+2. Add **export PATH="/Users/dummy/Desktop/allure-2.19.0/bin:$PATH"** line in the end and save the bash_profile file.
+3. source ~/.bash_profile
+`
+
+Run  below command to generate allure report from Robot runs:****
+
+**allure serve ./output/allure**
+
