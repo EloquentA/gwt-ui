@@ -1,5 +1,83 @@
 {
+	"PROJECT": "ameyo",
+	"BROWSER_CONFIG": {
+		"name": "chrome",
+		"is_remote_driver": false,
+		"server": "",
+		"port": ""
+	},
+	"SKIP_POST_RUN_CLEANUP": true,
+	"AMEYO_URL": "https://vapt.ameyo.net:8443/app/",
+	"TESTRAIL_REPORTING": false,
+	"TESTRAIL_RUN_URL": "/index.php?/runs/view/{run_id}&group_by=cases:section_id&group_order=asc",
+	"CLOSE_TESTRAIL_RUN": true,
+	"AUTOMATION_NAME": "Ameyo UI Robot Automation Run",
+	"RUN_AS": "executive",
 	"ccn": "E2E_0001",
+	"CREDENTIALS": {
+		"multi_cc_manager": {
+			"username": "",
+			"password": ""
+		},
+		"admin": {
+			"username": "",
+			"password": ""
+		},
+		"executive": {
+			"username": "",
+			"password": "",
+			"campaign_details": {
+				"interaction": "",
+				"chat": "",
+				"voice_inbound": "finance_inbound",
+				"voice_outbound": "finance_outbound",
+				"video": "",
+				"new_interaction": "",
+				"new_chat": "",
+				"new_voice": "finance_inbound",
+				"new_video": ""
+			}
+		},
+		"change_executive": {
+			"username": "",
+			"password": "",
+			"campaign_details": {
+				"interaction": "",
+				"chat": "",
+				"voice_inbound": "finance_inbound",
+				"voice_outbound": "finance_outbound",
+				"video": "",
+				"new_interaction": "",
+				"new_chat": "",
+				"new_voice": "finance_inbound",
+				"new_video": ""
+			}
+		},
+		"supervisor": {
+			"username": "",
+			"password": "",
+			"campaign_details": {
+				"interaction": "",
+				"chat": "",
+				"voice": "",
+				"video": ""
+			}
+		}
+	},
+	"CALLING_NUMBER": "",
+	"DESIRED_STATE": "",
+	"CREATE_USER_DATA": {
+		"phone_number": 9999999999,
+		"username_prefix": "username_prefix",
+		"userid_prefix": "test_user_id"
+	},
+	"DISPOSITION": {
+		"disposition": "telecom.issues",
+		"sub_disposition": "Already hungup",
+		"disposition_note": "Automation dispose",
+		"dial_number": "123456",
+		"quick_disposition": "Sale"
+	},
 	"multi_cc_created_users": [{
 			"name": "E2E_0001_ADMIN_USER",
 			"isRoot": true,

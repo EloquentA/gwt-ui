@@ -384,6 +384,6 @@ class TestSetup:
         # test_data_dir = os.path.join(path)
         test_data_dir = os.path.join(path, "ameyo", "test_data")
         json_file = os.path.join(test_data_dir, "test_data.json")
-        yaml_file = os.path.join(test_data_dir, "test_data.yaml")
+        yaml_file = os.path.join(test_data_dir, "sample_variables.yml")
         ameyo.json_to_yaml(json_file, yaml_file)
 
