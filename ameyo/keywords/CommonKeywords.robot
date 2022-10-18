@@ -15,6 +15,18 @@ I open ameyo home page
     ${result}=   call method    ${instance}    open_home_page    ${url}
     I verify result    ${result}
 
+I open ameyo home page in separate tab
+    [Documentation]   This keyword opens Ameyo home page in separate tab
+    [Arguments]  ${instance}
+    ${result}=   call method    ${instance}    open_home_page_in_separate_tab    ${AMEYO_URL}
+    I verify result    ${result}
+
+I switch to requested tab
+    [Documentation]   This keyword switches to requested tab, by default switches to last tab
+    [Arguments]  ${instance}    ${req_tab}=-1
+    ${result}=   call method    ${instance}    switch_to_tab    ${req_tab}
+    I verify result    ${result}
+
 I close browser window
     [Documentation]   This keyword closes the browser
     [Arguments]  ${instance}

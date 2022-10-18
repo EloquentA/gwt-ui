@@ -52,6 +52,22 @@ class Ameyo:
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("open_home_page", error))
 
+    def open_home_page_in_separate_tab(self, url):
+        """Opens home page in separate tab."""
+        try:
+            self.action.execute_javascript(f'''window.open("{url}","_blank");''')
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("open_home_page_in_separate_tab", error))
+
+    def switch_to_tab(self, req_tab=-1):
+        """Switches to requested tab. By default switches to last tab."""
+        try:
+            self.action.switch_to_window(int(req_tab))
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("switch_to_tab", error))
+
     def close_alert_if_present(self):
         """Closes alert if present"""
         try:
