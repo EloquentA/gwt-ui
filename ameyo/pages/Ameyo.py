@@ -18,6 +18,7 @@ from Common import Common
 from Login import Login
 from Homepage import Homepage
 from User import User
+from Monitor import Monitor
 
 
 class Ameyo:
@@ -34,6 +35,7 @@ class Ameyo:
         self.login = Login(self.web_browser, self.common)
         self.homepage = Homepage(self.web_browser, self.common)
         self.user = User(self.web_browser, self.common)
+        self.monitor = Monitor(self.web_browser, self.common, self.homepage)
 
     def __capture_error(self, method_name, error_msg):
         """Utility method to capture and report errors"""
@@ -253,3 +255,10 @@ class Ameyo:
             return self._return_result(self.user.verify_update_user(user_type, admin_password, userid_text))
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"verify_update_user_{user_type}", error))
+
+    def verify_snoop_action(self, campaign_details):
+        """Method to verify update of requested user."""
+        try:
+            return self._return_result(self.monitor.verify_snoop_action(campaign_details))
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"verify_snoop{user_type}", error))
