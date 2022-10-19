@@ -97,30 +97,22 @@ class Login:
             assert False, f'Invalid failure case requested for login: {username_type} and {password_type}'
         return True
 
-    def select_campaign(self, kwargs) -> bool:
+    def select_campaign(self, kwargs, voice_campaign_type="voice_outbound") -> bool:
         """This function will select campaign"""
         current_url = self.action.get_current_url()
         if 'agentConfiguration' in current_url:
             if kwargs['interaction']:
                 self.action.click_element("dropdown_interaction")
-                self.action.input_text("textbox_search", kwargs['interaction'])
-                self.action.press_key("textbox_search", "ARROW_DOWN")
-                self.action.press_key("textbox_search", "ENTER")
+                self.action.select_from_ul_dropdown_using_text('ul_campaign_selector', kwargs['interaction'])
             if kwargs['chat']:
                 self.action.click_element("dropdown_chat")
-                self.action.input_text("textbox_search", kwargs['chat'])
-                self.action.press_key("textbox_search", "ARROW_DOWN")
-                self.action.press_key("textbox_search", "ENTER")
-            if kwargs['voice']:
+                self.action.select_from_ul_dropdown_using_text('ul_campaign_selector', kwargs['chat'])
+            if kwargs[voice_campaign_type]:
                 self.action.click_element("dropdown_voice")
-                self.action.input_text("textbox_search", kwargs['voice'])
-                self.action.press_key("textbox_search", "ARROW_DOWN")
-                self.action.press_key("textbox_search", "ENTER")
+                self.action.select_from_ul_dropdown_using_text('ul_campaign_selector', kwargs[voice_campaign_type])
             if kwargs['video']:
                 self.action.click_element("dropdown_video")
-                self.action.input_text("textbox_search", kwargs['video'])
-                self.action.press_key("textbox_search", "ARROW_DOWN")
-                self.action.press_key("textbox_search", "ENTER")
+                self.action.select_from_ul_dropdown_using_text('ul_campaign_selector', kwargs['video'])
             self.action.click_element("button_next")
         else:
             print("Already on home page.", current_url)

@@ -6,6 +6,7 @@ BROWSER_CONFIG:
   port: ''
 SKIP_POST_RUN_CLEANUP: True
 AMEYO_URL: 'https://vapt.ameyo.net:8443/app/'
+INBOUND_API_URL: 'https://vapt.ameyo.net:8786/inbound.php/?count=no_of_calls&toprefix=did_prefix&calleridprefix=calling_number'
 # Automatically updated to True if run triggered with testrail reporting
 TESTRAIL_REPORTING: False
 TESTRAIL_RUN_URL: "/index.php?/runs/view/{run_id}&group_by=cases:section_id&group_order=asc"
@@ -25,24 +26,28 @@ CREDENTIALS:
     campaign_details:
       interaction: ''
       chat: ''
-      voice: 'finance_outbound'
+      voice_outbound: 'finance_outbound'
+      voice_inbound: 'finance_inbound'
       video: ''
       new_interaction: ''
       new_chat: ''
       new_voice: 'finance_inbound'
       new_video: ''
+    inbound_queue: 'finance_support'
   change_executive:
     username: ''
     password: ''
     campaign_details:
       interaction: ''
       chat: ''
-      voice: 'finance_outbound'
+      voice_outbound: 'finance_outbound'
+      voice_inbound: 'finance_inbound'
       video: ''
       new_interaction: ''
       new_chat: ''
       new_voice: 'finance_inbound'
       new_video: ''
+    inbound_queue: 'finance_support'
   supervisor:
     username: ''
     password: ''
@@ -51,8 +56,8 @@ CREDENTIALS:
       chat: ''
       voice: ''
       video: ''
-CALLING_NUMBER: ''
-DESIRED_STATE: ''
+CALLING_NUMBER: 9999999999
+DESIRED_STATE: 'Available'
 DISPOSITION:
   disposition: 'telecom.issues'
   sub_disposition: 'Already hungup'

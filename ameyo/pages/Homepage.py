@@ -54,10 +54,7 @@ class Homepage:
         self.action.explicit_wait('create_and_dial_btn')
         self.action.click_element('create_and_dial_btn')
         self.action.click_element('phone_icon')
-        self.action.input_text('cust_info_name_input', customer_name)
-        self.action.input_text('cust_info_phone1_input', calling_number)
-        self.action.explicit_wait('create_contact_btn')
-        self.action.click_element('create_contact_btn')
+        self.create_customer_info_on_ameyo(customer_name, calling_number)
         self.action.explicit_wait('call_status', ec='text_to_be_present_in_element', msg_to_verify='Connected')
         self.action.element_should_contain_text('calling_number_dialer', str(calling_number))
         self.action.element_should_contain_text('campaign_on_telephony_screen', campaign_name)
@@ -65,6 +62,13 @@ class Homepage:
         self.action.explicit_wait('end_call_btn')
         self.action.is_presence_of_element_located('end_call_btn')
         return True
+
+    def create_customer_info_on_ameyo(self, customer_name, calling_number):
+        self.action.input_text('cust_info_name_input', customer_name)
+        self.action.input_text('cust_info_phone1_input', calling_number)
+        self.action.explicit_wait('create_contact_btn')
+        self.action.click_element('create_contact_btn')
+        assert self.common.validate_message_in_toast_popups("Customer Added successfully"), "Toast Message not as expected"
 
     def manual_preview_dial(self, saved_phone_number, saved_customer_name, campaign_name):
         """Validate manual preview dialing for saved number"""
@@ -91,6 +95,46 @@ class Homepage:
         self.action.is_presence_of_element_located('end_call_btn')
         return True
 
+    def validate_inbound_call(self, url, did_prefix, calling_number_prefix, campaign_name, queue_name):
+        """Accept and validate inbound call"""
+        self.common.change_status('Available', 'available_status')
+        self.action.explicit_wait('active_phone_icon', waittime=120)
+        self.common.hit_get_api_with_no_authentication(url, 3)
+        self.action.explicit_wait('inbound_accept_call_modal')
+        self.action.element_should_contain_text('inbound_call_message', 'There is an incoming call from')
+        self.action.element_should_contain_text('inbound_call_message', calling_number_prefix)
+        self.action.element_should_contain_text('inbound_call_dnis', did_prefix)
+        self.action.explicit_wait('call_status', ec='text_to_be_present_in_element', msg_to_verify='Ringing')
+        self.action.is_presence_of_element_located('inbound_call_accept_btn')
+        self.action.click_element('inbound_call_accept_btn')
+        self.action.explicit_wait('call_status', ec='text_to_be_present_in_element', msg_to_verify='Connected')
+        self.action.element_should_contain_text('calling_number_dialer', str(calling_number_prefix))
+        self.action.element_should_contain_text('campaign_on_telephony_screen', campaign_name)
+        self.action.element_should_contain_text('queue_on_telephony_screen', queue_name)
+        self.action.element_should_contain_text('call_type_on_telephony_screen', 'Inbound')
+        self.action.element_should_contain_text('did_on_telephony_screen', did_prefix)
+        self.action.explicit_wait('end_call_btn')
+        self.action.is_presence_of_element_located('end_call_btn')
+
+    def save_and_validate_customer_info_during_inbound_call(self, url, customer_name):
+        """Accept and validate inbound call"""
+        self.common.change_status('Available', 'available_status')
+        self.action.explicit_wait('active_phone_icon', waittime=120)
+        self.common.hit_get_api_with_no_authentication(url, 3)
+        self.action.explicit_wait('inbound_accept_call_modal')
+        self.action.is_presence_of_element_located('inbound_call_accept_btn')
+        self.action.click_element('inbound_call_accept_btn')
+        self.action.explicit_wait('call_status', ec='text_to_be_present_in_element', msg_to_verify='Connected', waittime=120)
+        inbound_customer_number = self.action.get_text('calling_number_dialer')
+        self.action.click_element('phone_icon_in_talk')
+        self.create_customer_info_on_ameyo(customer_name, inbound_customer_number)
+        self.action.click_element('phone_icon_in_talk')
+        self.action.element_should_contain_text('customer_name_dialer', customer_name)
+        self.action.element_should_contain_text('cust_info_name_label', customer_name)
+        self.action.element_should_contain_text('cust_info_phone1_label', inbound_customer_number)
+        self.action.explicit_wait('end_call_btn')
+        self.action.is_presence_of_element_located('end_call_btn')
+
     def validate_logout_disabled_when_call_in_progress(self):
         """Validate logout functionality disabled when call is in progress"""
         self.action.is_presence_of_element_located('preferences_drop_down_btn')
@@ -102,6 +146,7 @@ class Homepage:
         """End the call and validate call auto disposed in 30 seconds"""
         self.action.explicit_wait('end_call_btn')
         self.action.click_element('end_call_btn')
+        assert self.common.validate_message_in_toast_popups("End Call Successful"), "Toast Message not as expected"
         # Waiting for 30seconds- call auto dispose time
         time.sleep(30)
         self.action.is_presence_of_element_located('call_btn')
@@ -138,9 +183,11 @@ class Homepage:
     def save_and_dispose(self):
         """This function will select the disposition and sub disposition"""
         self.action.click_element('end_call_btn')
+        assert self.common.validate_message_in_toast_popups("End Call Successful"), "Toast Message not as expected"
         time.sleep(2)
         self.action.click_element('btn_already_hungup')
         self.action.click_element('btn_save_and_dispose')
+        assert self.common.validate_message_in_toast_popups("Disposed successfully"), "Toast Message not as expected"
 
     def open_close_dialer(self):
         """This function will open and close dialer"""
@@ -151,6 +198,7 @@ class Homepage:
         """This function will cover dispose and dial call flow"""
         if dial_position.lower() == 'dial_after_call_cut':
             self.action.click_element('end_call_btn')
+            assert self.common.validate_message_in_toast_popups("End Call Successful"), "Toast Message not as expected"
             time.sleep(2)
         if dial_position.lower() == 'dial_before_call_cut':
             self.action.click_element('btn_disposition_down_arrow')
@@ -221,4 +269,18 @@ class Homepage:
         self.common.change_status('Snack', 'snack_status')
         self.action.element_should_contain_text("status_dropdown_link", 'Snack')
         return True
+
+    def select_disposition_save_and_dispose(self, disposition_type, sub_disposition):
+        """This action will select the dispositions and sub disposition from dropdown and click on Save and Dispose"""
+        self.action.explicit_wait('end_call_btn')
+        self.action.click_element('end_call_btn')
+        assert self.common.validate_message_in_toast_popups("End Call Successful"), "Toast Message not as expected"
+        self.action.explicit_wait('dropdown_disposition')
+        self.action.click_element('dropdown_disposition')
+        self.action.select_from_ul_dropdown_using_text('select_dropdown_list', disposition_type)
+        self.action.click_element('dropdown_sub_disposition')
+        self.action.select_from_ul_dropdown_using_text('select_dropdown_list', sub_disposition)
+        self.action.input_text('text_disposition_note', 'Disposition Note')
+        self.action.click_element('btn_save_and_dispose')
+        assert self.common.validate_message_in_toast_popups("Disposed successfully"), "Toast Message not as expected"
 

@@ -6,6 +6,7 @@ import random
 import sys
 import string
 import time
+import requests
 
 sys.path.append(os.path.join(
     os.path.dirname((os.path.dirname(os.path.dirname(__file__)))), "libs", "web_action")
@@ -60,3 +61,21 @@ class Common:
             self.action.explicit_wait('toast_message_div', ec='invisibility_of_element_located', waittime=10)
         except Exception as err:
             print('Error while waiting for toast message to appear: ',err)
+
+    def hit_get_api_with_no_authentication(self, url, no_of_retries):
+        """Hits GET API and validates success response"""
+        for attempt in range(no_of_retries):
+            resp = requests.get(url)
+            if resp.status_code == 200:
+                break
+
+    def validate_message_in_toast_popups(self, expected_message):
+        """Gets the text for all the popups present and validates the expected message present or not"""
+        time.sleep(1)
+        elements = self.action.get_element('toast_message_popup')
+        toast_text_list = [element.text for element in elements]
+        self.action.explicit_wait('toast_message_popup', ec='invisibility_of_element_located', waittime=60)
+        print(toast_text_list)
+        if expected_message in toast_text_list:
+            return True
+        return False

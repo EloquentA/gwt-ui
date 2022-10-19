@@ -24,7 +24,7 @@ TC - Unable to logout while user is on call
     [Tags]  smoke    testid=AP-15999-2    regression
     I login into Ameyo    ${instance1}    ${RUN_AS}
     select campaign    ${instance1}    ${RUN_AS}
-    Manual Dial Only    ${instance1}    ${CALLING_NUMBER}
+    Manual Dial Only    ${instance1}    ${CALLING_NUMBER}    ${CREDENTIALS['${RUN_AS}']['campaign_details']['voice_outbound']}
     Validate logout disabled during call    ${instance1}
 
 TC - Dispose the call and logout from Ameyo

@@ -1,5 +1,6 @@
 {
   "phone_icon":{"by":"xpath", "value":"//i[@class='mdi mdi-phone']", "index":"0"},
+  "phone_icon_in_talk":{"by":"xpath", "value":"//i[@class='mdi mdi-phone-in-talk']", "index":"0"},
   "search_for_customer_input":{"by":"xpath", "value":"//input[@placeholder='Search for customer']", "index":"0"},
   "call_btn":{"by":"xpath", "value":"//button[@id='automationIdCallButton']", "index":"0"},
   "view_btn":{"by":"xpath", "value":"//button[contains(@id,'ViewButton')]", "index":"0"},
@@ -44,6 +45,8 @@
   "call_type_on_telephony_screen":{"by":"xpath", "value":"//div//span[contains(text(),'Call Type')]//following-sibling::strong", "index":"0"},
   "cust_info_name_input":{"by":"xpath", "value":"//div[@class='input-field']/label[contains(text(),'name')]/parent::div/input[@type='text']", "index":"0"},
   "cust_info_phone1_input":{"by":"xpath", "value":"//div[@class='input-field']/label[contains(text(),'phone1')]/parent::div/input[@type='text']", "index":"0"},
+  "cust_info_name_label":{"by":"xpath", "value":"//div[@class='info-label']/span[contains(text(),'name')]//parent::div/following-sibling::span", "index":"0"},
+  "cust_info_phone1_label":{"by":"xpath", "value":"//div[@class='info-label']/span[contains(text(),'phone1')]//parent::div/following-sibling::span", "index":"0"},
   "create_contact_btn":{"by":"xpath", "value":"//button/span[text()='Create']", "index":"0"},
   "telephony_panel_hidden":{"by":"xpath", "value":"//div[contains(@class,'hide-call-wrapper')]", "index":"0"},
   "preview_dial_call_btn":{"by":"xpath", "value":"//button/span[text()='call']", "index":"0"},
@@ -51,5 +54,13 @@
   "cancel_btn":{"by":"xpath", "value":"//button/span[text()='Cancel']", "index":"0"},
   "preview_alternate_phone_input":{"by":"xpath", "value":"//div[contains(@class,'alternateCallNumber')]//input[contains(@placeholder,'phone')]", "index":"0"},
   "calling_number_dialer":{"by":"xpath", "value":"//div[contains(@class,'number-info row')]//a[contains(@class,'CTD-widget')]/span", "index":"0"},
-  "customer_name_dialer":{"by":"xpath", "value":"//div[contains(@class,'customerName')]//span[contains(@class,'customerName')]", "index":"0"}
+  "customer_name_dialer":{"by":"xpath", "value":"//a[contains(@class,'oncall__customerName--click')]//span", "index":"0"},
+  "inbound_accept_call_modal":{"by":"xpath", "value":"//div[contains(@class,'modal-header')]//*[text()='Accept Call']", "index":"0"},
+  "inbound_call_message":{"by":"xpath", "value":"//*[contains(@class,'accept-reject-call-message__label')]", "index":"0"},
+  "inbound_call_dnis":{"by":"xpath", "value":"//*[contains(@class,'accept-reject-call-message__detail') and contains(text(), 'DNIS')]", "index":"0"},
+  "inbound_call_accept_btn":{"by":"xpath", "value":"//button/span[text()='Accept']", "index":"0"},
+  "did_on_telephony_screen":{"by":"xpath", "value":"//div//span[contains(text(),'DID')]//following-sibling::strong", "index":"0"},
+  "queue_on_telephony_screen":{"by":"xpath", "value":"//div//span[contains(text(),'Queue')]//following-sibling::strong", "index":"0"},
+  "toast_message_popup":{"by":"xpath", "value":"//span[contains(@class,'alert__content')]", "index":"-1"},
+  "select_dropdown_list":{"by":"xpath", "value":"//ul[contains(@class,'select2-results__options')]", "index":"0"}
 }

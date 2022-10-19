@@ -6,9 +6,10 @@ Resource          ../LoginKeywords.robot
 # This section is specific to this testcase - for setup and teardown
 *** Keywords ***
 Root Initialization
+    [Arguments]    ${voice_campaign_type}=voice_outbound
     ${obj_instance1}=  Get library instance    Client1
     Set Global Variable	${instance1}  ${obj_instance1}
-    Ameyo setup    ${instance1}    ${RUN_AS}
+    Ameyo setup    ${instance1}    ${RUN_AS}    ${voice_campaign_type}
 
 Root Cleanup
     Ameyo teardown    ${instance1}
@@ -29,17 +30,20 @@ Login Cleanup
     END
 
 Suite Initialization
-    [Arguments]    ${req_run_as}
+    [Arguments]    ${req_run_as}    ${voice_campaign_type}=voice_outbound    ${override}=${FALSE}
     ${current_instance1} =    Get Variable Value    ${instance1}
     Set Global Variable	${is_parent_setup}  """${current_instance1}""" != 'None'
     IF  not ${is_parent_setup}
         ${obj_instance1}=  Get library instance    Client1
         Set Global Variable	${instance1}  ${obj_instance1}
-        Ameyo setup  ${instance1}    ${req_run_as}
+        Ameyo setup  ${instance1}    ${req_run_as}    ${voice_campaign_type}
+    ELSE IF    ${override}
+        I logout from ameyo homepage    ${instance1}
+        Ameyo setup    ${instance1}    ${req_run_as}    ${voice_campaign_type}
     ELSE
         # If some other persona has been requested in common suite setup, login with requested persona
         Run Keyword If    '${req_run_as}' != '${RUN_AS}'    I logout from ameyo homepage    ${instance1}
-        Run Keyword If    '${req_run_as}' != '${RUN_AS}'    Ameyo setup    ${instance1}    ${req_run_as}
+        Run Keyword If    '${req_run_as}' != '${RUN_AS}'    Ameyo setup    ${instance1}    ${req_run_as}    ${voice_campaign_type}
     END
 
 Suite Cleanup

@@ -41,11 +41,11 @@ I close alert if present
 
 Ameyo setup
     [Documentation]   This keyword sets up setup for every suite
-    [Arguments]  ${instance}    ${req_run_as}
+    [Arguments]  ${instance}    ${req_run_as}    ${voice_campaign_type}=voice_outbound
     I open ameyo home page    ${instance}
     I close alert if present   ${instance}
     I login into Ameyo    ${instance}    ${req_run_as}
-    select campaign    ${instance}    ${req_run_as}
+    select campaign    ${instance}    ${req_run_as}    ${voice_campaign_type}
 
 Ameyo teardown
     [Documentation]   This keyword does teardown setup for every suite

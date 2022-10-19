@@ -150,12 +150,12 @@ class Ameyo:
         # get the final screenshot file path
         return file_storage_path + os.sep + file_name
 
-    def select_campaign(self, kwargs, run_as):
+    def select_campaign(self, kwargs, run_as, voice_campaign_type="voice_outbound"):
         """This function will select campaign"""
         try:
             kwargs = kwargs.get(run_as).get('campaign_details')
             if kwargs is not None:
-                self.login.select_campaign(kwargs)
+                self.login.select_campaign(kwargs, voice_campaign_type)
             else:
                 print(f'Select campaign is not applicable for user type: {run_as}')
             return self._return_result()
@@ -201,6 +201,14 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("end_call_and_auto_dispose", error))
+
+    def end_call_and_save_and_dispose(self):
+        """Method to end the call and save and dispose"""
+        try:
+            self.homepage.save_and_dispose()
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("end_call_and_save_and_dispose", error))
 
     def verify_create_user(self,user_type):
         """Method to verify creation of requested user."""
@@ -255,6 +263,30 @@ class Ameyo:
             return self._return_result(self.user.verify_update_user(user_type, admin_password, userid_text))
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"verify_update_user_{user_type}", error))
+
+    def validate_inbound_call(self, url, did_prefix, calling_number_prefix, campaign_name, queue_name):
+        """Method to preview saved contact in ameyo and dial call"""
+        try:
+            self.homepage.validate_inbound_call(url, did_prefix, calling_number_prefix, campaign_name, queue_name)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("validate_inbound_call", error))
+
+    def save_and_validate_customer_info_during_inbound_call(self, url, customer_name):
+        """Method to save customer info during inbound call and validate stored info"""
+        try:
+            self.homepage.save_and_validate_customer_info_during_inbound_call(url, customer_name)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("save_and_validate_customer_info_during_inbound_call", error))
+
+    def select_disposition_save_and_dispose(self, disposition_type, sub_disposition_type):
+        """Method to select the dispositions and sub disposition from dropdown and click on Save and Dispose"""
+        try:
+            self.homepage.select_disposition_save_and_dispose(disposition_type, sub_disposition_type)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("select_disposition_save_and_dispose", error))
 
     def verify_snoop_action(self, campaign_details):
         """Method to verify update of requested user."""
