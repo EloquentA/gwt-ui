@@ -10,8 +10,7 @@ sys.path.append(os.path.join(
                 )
 from action import Action
 
-
-class Homepage:
+class AgentHomepage:
     """Homepage functionality class"""
 
     def __init__(self, web_browser, common):

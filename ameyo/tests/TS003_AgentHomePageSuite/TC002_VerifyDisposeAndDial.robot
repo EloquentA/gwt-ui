@@ -10,7 +10,7 @@ Suite Teardown    Suite Cleanup
 Resource          ../../keywords/SetupTeardown.robot
 Resource          ../../keywords/LoginKeywords.robot
 Resource          ../../keywords/CommonKeywords.robot
-Resource          ../../keywords/HomePageKeywords.robot
+Resource          ../../keywords/AgentHomePageKeywords.robot
 
 # Main library file which contains methods to perform some functionality
 Library           ../../pages/Ameyo.py    browser_config=${BROWSER_CONFIG}    project=${PROJECT}    run_as=${RUN_AS}    WITH NAME    Client1

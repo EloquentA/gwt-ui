@@ -8,7 +8,6 @@ Suite Teardown    Suite Cleanup
 
 # Keywords Definition file
 Resource          ../../keywords/SetupTeardown.robot
-Resource          ../../keywords/UserKeywords.robot
 Resource          ../../keywords/CommonKeywords.robot
 Resource          ../../keywords/LoginKeywords.robot
 Resource          ../../keywords/MonitoringKeywords.robot

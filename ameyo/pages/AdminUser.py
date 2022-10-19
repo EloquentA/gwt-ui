@@ -13,8 +13,7 @@ sys.path.append(os.path.join(
                 )
 from action import Action
 
-
-class User:
+class AdminUser:
     """User functionality class"""
     def __init__(self, web_browser, common):
         self.action = Action(web_browser)

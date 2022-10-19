@@ -16,8 +16,8 @@ from action import Action
 from web_browser import WebBrowser
 from Common import Common
 from Login import Login
-from Homepage import Homepage
-from User import User
+from AgentHomepage import AgentHomepage
+from AdminUser import AdminUser
 from Monitor import Monitor
 
 
@@ -33,9 +33,9 @@ class Ameyo:
 
         self.action = Action(self.web_browser)
         self.login = Login(self.web_browser, self.common)
-        self.homepage = Homepage(self.web_browser, self.common)
-        self.user = User(self.web_browser, self.common)
-        self.monitor = Monitor(self.web_browser, self.common, self.homepage)
+        self.agenthomepage = AgentHomepage(self.web_browser, self.common)
+        self.adminuser = AdminUser(self.web_browser, self.common)
+        self.monitor = Monitor(self.web_browser, self.common, self.agenthomepage)
 
     def __capture_error(self, method_name, error_msg):
         """Utility method to capture and report errors"""
@@ -165,7 +165,7 @@ class Ameyo:
     def manual_dial_only(self, calling_number, campaign_name):
         """Method to manual dial only"""
         try:
-            self.homepage.manual_dial_only(calling_number, campaign_name)
+            self.agenthomepage.manual_dial_only(calling_number, campaign_name)
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("manual_dial_only", error))
@@ -173,7 +173,7 @@ class Ameyo:
     def create_and_dial_call(self, calling_number, customer_name, campaign_name):
         """Method to create contact in ameyo and dial call"""
         try:
-            self.homepage.create_and_dial_call(calling_number, customer_name, campaign_name)
+            self.agenthomepage.create_and_dial_call(calling_number, customer_name, campaign_name)
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("create_and_dial_call", error))
@@ -181,7 +181,7 @@ class Ameyo:
     def manual_preview_dial(self, saved_calling_number, saved_customer_name, campaign_name):
         """Method to preview saved contact in ameyo and dial call"""
         try:
-            self.homepage.manual_preview_dial(saved_calling_number, saved_customer_name, campaign_name)
+            self.agenthomepage.manual_preview_dial(saved_calling_number, saved_customer_name, campaign_name)
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("manual_preview_dial", error))
@@ -189,7 +189,7 @@ class Ameyo:
     def validate_logout_disabled_when_call_in_progress(self):
         """Method to validate logout functionality disabled when call in progress"""
         try:
-            self.homepage.validate_logout_disabled_when_call_in_progress()
+            self.agenthomepage.validate_logout_disabled_when_call_in_progress()
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("validate_logout_disabled_when_call_in_progress", error))
@@ -197,7 +197,7 @@ class Ameyo:
     def end_call_and_auto_dispose(self):
         """Method to end the call and validate its auto disposed in 30 seconds"""
         try:
-            self.homepage.end_call_and_auto_dispose()
+            self.agenthomepage.end_call_and_auto_dispose()
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("end_call_and_auto_dispose", error))
@@ -205,7 +205,7 @@ class Ameyo:
     def end_call_and_save_and_dispose(self):
         """Method to end the call and save and dispose"""
         try:
-            self.homepage.save_and_dispose()
+            self.agenthomepage.save_and_dispose()
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("end_call_and_save_and_dispose", error))
@@ -213,7 +213,7 @@ class Ameyo:
     def verify_create_user(self,user_type):
         """Method to verify creation of requested user."""
         try:
-            is_passed, user_id_text = self.user.verify_create_user(user_type)
+            is_passed, user_id_text = self.adminuser.verify_create_user(user_type)
             return self._return_result(is_passed, '', '', user_id_text)
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"verify_create_user_{user_type}", error))
@@ -221,7 +221,7 @@ class Ameyo:
     def dispose_and_dial(self, dispose_dial_config, dispose_type, dial_position):
         """This function will cover dispose and dial"""
         try:
-            self.homepage.dispose_and_dial(dispose_dial_config, dispose_type, dial_position)
+            self.agenthomepage.dispose_and_dial(dispose_dial_config, dispose_type, dial_position)
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"dispose_and_dial", error))
@@ -229,14 +229,14 @@ class Ameyo:
     def verify_delete_user(self,user_type, admin_password, userid_text):
         """Method to verify deletion of requested user."""
         try:
-            return self._return_result(self.user.verify_delete_user(user_type, admin_password, userid_text))
+            return self._return_result(self.adminuser.verify_delete_user(user_type, admin_password, userid_text))
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"verify_delete_user_{user_type}", error))
 
     def set_status(self):
         """This function will change agent status"""
         try:
-            self.homepage.set_status()
+            self.agenthomepage.set_status()
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("set_status", error))
@@ -244,7 +244,7 @@ class Ameyo:
     def change_campaign(self, kwargs):
         """This function will change campaign"""
         try:
-            self.homepage.change_campaign(kwargs)
+            self.agenthomepage.change_campaign(kwargs)
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("change_campaign", error))
@@ -252,7 +252,7 @@ class Ameyo:
     def change_password(self, oldpass, newpass):
         """Method to change the password of logged in user"""
         try:
-            self.homepage.change_password(oldpass, newpass)
+            self.agenthomepage.change_password(oldpass, newpass)
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("change_password", error))
@@ -260,14 +260,14 @@ class Ameyo:
     def verify_update_user(self,user_type, admin_password, userid_text):
         """Method to verify update of requested user."""
         try:
-            return self._return_result(self.user.verify_update_user(user_type, admin_password, userid_text))
+            return self._return_result(self.adminuser.verify_update_user(user_type, admin_password, userid_text))
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"verify_update_user_{user_type}", error))
 
     def validate_inbound_call(self, url, did_prefix, calling_number_prefix, campaign_name, queue_name):
         """Method to preview saved contact in ameyo and dial call"""
         try:
-            self.homepage.validate_inbound_call(url, did_prefix, calling_number_prefix, campaign_name, queue_name)
+            self.agenthomepage.validate_inbound_call(url, did_prefix, calling_number_prefix, campaign_name, queue_name)
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("validate_inbound_call", error))
@@ -275,7 +275,7 @@ class Ameyo:
     def save_and_validate_customer_info_during_inbound_call(self, url, customer_name):
         """Method to save customer info during inbound call and validate stored info"""
         try:
-            self.homepage.save_and_validate_customer_info_during_inbound_call(url, customer_name)
+            self.agenthomepage.save_and_validate_customer_info_during_inbound_call(url, customer_name)
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("save_and_validate_customer_info_during_inbound_call", error))
@@ -283,7 +283,7 @@ class Ameyo:
     def select_disposition_save_and_dispose(self, disposition_type, sub_disposition_type):
         """Method to select the dispositions and sub disposition from dropdown and click on Save and Dispose"""
         try:
-            self.homepage.select_disposition_save_and_dispose(disposition_type, sub_disposition_type)
+            self.agenthomepage.select_disposition_save_and_dispose(disposition_type, sub_disposition_type)
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("select_disposition_save_and_dispose", error))
