@@ -1499,4 +1499,1116 @@ class DataCreationAPIs(Wrapper):
         self.rest.raise_for_status(response)
         return response
 
+    def get_routing_policies_for_campaign(self, **kwargs):
+        """
+        Create Routing for Campaign
+        :param kwargs:
+        :return:
+        """
+        campaignId = kwargs.get('campaignId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([campaignId, sessionId])
+
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'url': urljoin(
+                self.creds.url, f"ameyorestapi/voice/basicCallContextDeterminationPolicies/"
+                                f"getAllBasicCallContextDeterminationPolicyByCampaignId"
+            ),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'params': {'campaignId': campaignId}
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        for _item in response.json():
+            self.is_key_there_in_dict([
+                'policyId', 'campaignId', 'policyName', 'policyType', 'campaignCallContextIds', 'dateAdded',
+                'dateModified'
+            ], _item)
+        return response
+
+    def create_routing_policy_for_campaign(self, **kwargs):
+        """
+        Create Routing for Campaign
+        :param kwargs:
+        :return:
+        """
+        campaignId = kwargs.get('campaignId', None)
+        campaignCallContextIds = kwargs.get('campaignCallContextIds', None)
+        if not isinstance(campaignCallContextIds, list):
+            campaignCallContextIds = [campaignCallContextIds]
+        policyName = kwargs.get('policyName', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        policyType = kwargs.get('policyType', 'basic.single.call.context.type')
+        self.check_required_args([campaignId, campaignCallContextIds, policyName, sessionId])
+
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, f"ameyorestapi/voice/basicCallContextDeterminationPolicies"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "campaignId": campaignId, "policyType": policyType, "policyName": policyName,
+                "campaignCallContextIds": campaignCallContextIds
+            }
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict([
+            'policyId', 'campaignId', 'policyName', 'policyType', 'campaignCallContextIds', 'dateAdded',
+            'dateModified'
+        ], response.json())
+        return response
+
+    def delete_routing_policy(self, **kwargs):
+        """
+        Delete Routing Policy
+        :param kwargs:
+        :return:
+        """
+        policyId = kwargs.get('policyId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([policyId, sessionId])
+
+        response = self.rest.send_request(**{
+            'method': 'DELETE',
+            'url': urljoin(self.creds.url, f"ameyorestapi/voice/basicCallContextDeterminationPolicies/{policyId}"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        return response
+
+
+    def update_manual_dial_profile(self, **kwargs):
+        """
+        Update Manual Dial Profile
+        :param kwargs:
+        :return:
+        """
+        campaignId = kwargs.get('campaignId', None)
+        policyId = kwargs.get('policyId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([campaignId, policyId, sessionId])
+
+        setUpTimeout = kwargs.get('setUpTimeout', 60)
+        ringTimeout = kwargs.get('ringTimeout', 45)
+        useMinutesProfiler = kwargs.get('useMinutesProfiler', False)
+
+        response = self.rest.send_request(**{
+            'method': 'PUT',
+            'url': urljoin(self.creds.url, f"ameyorestapi/voice/manualDialProfiles/{campaignId}"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "policyId": policyId,
+                "setUpTimeout": setUpTimeout,
+                "ringTimeout": ringTimeout,
+                "useMinutesProfiler": useMinutesProfiler
+            }
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict([
+            'policyId', 'useMinutesProfiler', 'setUpTimeout', 'ringTimeout'
+        ], response.json())
+        return response
+
+
+    def get_conference_dial_profile(self, **kwargs):
+        """
+        Get Conference Dial Profile
+        :param kwargs:
+        :return:
+        """
+        campaignId = kwargs.get('campaignId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([campaignId, sessionId])
+
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'url': urljoin(self.creds.url, f"ameyorestapi/voice/conferenceDialProfiles/{campaignId}"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict([
+            'policyId', 'campaignId', 'useMinutesProfiler', 'setUpTimeout', 'ringTimeout'
+        ], response.json())
+        return response
+
+
+    def update_conference_dial_profile(self, **kwargs):
+        """
+        Update Conference Dial Profile
+        :param kwargs:
+        :return:
+        """
+        campaignId = kwargs.get('campaignId', None)
+        policyId = kwargs.get('policyId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([campaignId, policyId, sessionId])
+
+        setUpTimeout = kwargs.get('setUpTimeout', 60)
+        ringTimeout = kwargs.get('ringTimeout', 45)
+        useMinutesProfiler = kwargs.get('useMinutesProfiler', False)
+
+        response = self.rest.send_request(**{
+            'method': 'PUT',
+            'url': urljoin(self.creds.url, f"ameyorestapi/voice/conferenceDialProfiles/{campaignId}"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "policyId": policyId,
+                "setUpTimeout": setUpTimeout,
+                "ringTimeout": ringTimeout,
+                "useMinutesProfiler": useMinutesProfiler
+            }
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict([
+            'policyId', 'campaignId', 'useMinutesProfiler', 'setUpTimeout', 'ringTimeout'
+        ], response.json())
+        return response
+
+
+    def get_auto_dial_profile(self, **kwargs):
+        """
+        Get Auto Dial Profile
+        :param kwargs:
+        :return:
+        """
+        campaignId = kwargs.get('campaignId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([campaignId, sessionId])
+
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'url': urljoin(self.creds.url, f"ameyorestapi/voice/autoDialProfiles/{campaignId}"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict([
+            'policyId', 'campaignId', 'useMinutesProfiler', 'setUpTimeout', 'ringTimeout'
+        ], response.json())
+        return response
+
+
+    def update_auto_dial_profile(self, **kwargs):
+        """
+        Update Auto Dial Profile
+        :param kwargs:
+        :return:
+        """
+        campaignId = kwargs.get('campaignId', None)
+        policyId = kwargs.get('policyId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([campaignId, policyId, sessionId])
+
+        setUpTimeout = kwargs.get('setUpTimeout', 60)
+        ringTimeout = kwargs.get('ringTimeout', 45)
+        useMinutesProfiler = kwargs.get('useMinutesProfiler', False)
+
+        response = self.rest.send_request(**{
+            'method': 'PUT',
+            'url': urljoin(self.creds.url, f"ameyorestapi/voice/autoDialProfiles/{campaignId}"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "policyId": policyId,
+                "setUpTimeout": setUpTimeout,
+                "ringTimeout": ringTimeout,
+                "useMinutesProfiler": useMinutesProfiler
+            }
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict([
+            'policyId', 'setUpTimeout', 'useMinutesProfiler', 'ringTimeout'
+        ], response.json())
+        return response
+
+    def update_default_atd_for_campaign(self, **kwargs):
+        """
+        Get all data tables for a process
+        RPC Call: updateDefaultATDForCampiagn
+        """
+        atdId = kwargs.get('atdId', None)
+        campaignId = kwargs.get('campaignId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([atdId, campaignId, sessionId])
+
+        shouldAssignUserInAtd = kwargs.get('shouldAssignUserInAtd', False)
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, "ameyorestapi/customerManager/updateDefaultAtdForCampaign"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "atdId": atdId,
+                "campaignId": campaignId,
+                "shouldAssignUserInAtd": shouldAssignUserInAtd
+            }
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict([
+            'campaignId', 'default_atd_id', 'shouldAssignUsersInDefaultATD', 'id'
+        ], response.json())
+        return response
+
+    def set_column_mapping_for_campaign(self, **kwargs):
+        """
+        Set Column Mapping for Campaign
+        RPC Call: setColumnMappingForCampaign
+        """
+        columnMappingId = kwargs.get('columnMappingId', None)
+        campaignId = kwargs.get('campaignId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([columnMappingId, campaignId, sessionId])
+
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, "ameyorestapi/cc/setColumnMappingForCampaign"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "columnMappingId": columnMappingId,
+                "campaignId": campaignId,
+            }
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        return response
+
+    def get_disposition_classes(self, **kwargs):
+        """
+        Get all Disposition Classes
+        RPC Call: getAllDispositionClasses (OK)
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([sessionId])
+        response = None
+        for i in range(5):
+            try:
+                self.logger.info(f"iteration: {i}")
+                response = self.rest.send_request(**{
+                    'method': 'GET',
+                    'url': urljoin(self.creds.url, f"ameyorestapi/cc/dispositionClasses/getAllDispositionClasses"),
+                    'headers': {"sessionId": sessionId, "correlation": self.uuid},
+                })
+                self.logger.info(f"response code: {response.status_code}")
+                if response.status_code == 200:
+                    break
+            except:
+                self.logger.info(f"I am in except for iteration {i} of getAllDispositionClasses")
+                self.logger.info(f"Potential bug in getAllDispositionClasses")
+                time.sleep(5)
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        for _item in response.json():
+            self.is_key_there_in_dict(['dispositionClassId', 'dispositionClassName', 'dispositionCodes'], _item)
+        return response
+
+    def get_disposition_classes_for_campaign(self, **kwargs):
+        """
+        Get all Disposition Classes
+        RPC Call: getAllDispositionClasses (OK)
+        :param kwargs:
+        :return:
+        """
+        campaignContextId = kwargs.get('campaignContextId', None)
+        sessionId = kwargs.get('sessionId', self.executiveToken)
+        self.check_required_args([campaignContextId, sessionId])
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'params': {'campaignContextId': campaignContextId},
+            'url': urljoin(self.creds.url, f"ameyorestapi/cc/dispositionClasses/getDispositionClassesForCampaign"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        for _item in response.json():
+            self.is_key_there_in_dict(['dispositionClassId', 'dispositionClassName', 'dispositionCodes'], _item)
+        return response
+
+    def get_disposition_plans(self, **kwargs):
+        """
+        Get all Disposition Plans
+        RPC Call: getAllDispositionPlans, getAllDispositionPlanDetails (OK)
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([sessionId])
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'url': urljoin(self.creds.url, f"ameyorestapi/cc/dispositionPlans"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        for _item in response.json():
+            self.is_key_there_in_dict(['dispositionPlanName', 'dispositionCodeIds', 'dispositionPlanId'], _item)
+        return response
+
+    def get_disposition_plans_for_campaign(self, **kwargs):
+        """
+        Get all Disposition Plans for Campaign
+        RPC Call: getAllDispositionPlans, getDispositionPlanForCampaign (OK)
+        :param kwargs:
+        :return:
+        """
+        campaignId = kwargs.get('campaignId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([campaignId, sessionId])
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'params': {'campaignId': campaignId},
+            'url': urljoin(self.creds.url, f"ameyorestapi/cc/dispositionPlans/getDispositionPlanForCampaign"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict(['dispositionPlanName', 'dispositionCodeIds', 'dispositionPlanId'], response.json())
+        return response
+
+    def create_disposition_code(self, **kwargs):
+        """
+        Create Disposition Code
+        RPC Call: createDispositionCode (OK)
+        :param kwargs:
+        :return:
+        """
+        dispositionCodeName = kwargs.get('dispositionCodeName', None)
+        dispositionClassId = kwargs.get('dispositionClassId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([dispositionCodeName, dispositionClassId, sessionId])
+
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, "ameyorestapi/cc/dispositionCodes"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "dispositionCodeName": dispositionCodeName,
+                "dispositionClassId": dispositionClassId
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict(['dispositionCodeId', 'dispositionCodeName', 'dispositionClassId'], response.json())
+        return response
+
+    def create_disposition_class(self, **kwargs):
+        """
+        Create Disposition Classes
+        RPC Call: createDispositionClass (OK)
+        :param kwargs:
+        :return:
+        """
+        dispositionClassName = kwargs.get('dispositionClassName', None)
+        dispositionCodes = kwargs.get('dispositionCodes', None)
+        if not isinstance(dispositionCodes, list):
+            dispositionCodes = [dispositionCodes]
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([dispositionClassName, dispositionCodes, sessionId])
+
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, "ameyorestapi/cc/dispositionClasses"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "dispositionClassName": dispositionClassName,
+                "dispositionCodes": dispositionCodes
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict([
+            'dispositionClassName', 'dispositionCodes'
+        ], response.json())
+        return response
+
+    def update_disposition_class(self, **kwargs):
+        """
+        Update Disposition Classes
+        RPC Call: createDispositionClass (OK)
+        :param kwargs:
+        :return:
+        """
+        dispositionClassName = kwargs.get('dispositionClassName', None)
+        dispositionCodes = kwargs.get('dispositionCodes', None)
+        dispositionClassId = kwargs.get('dispositionClassId', None)
+        if not isinstance(dispositionCodes, list):
+            dispositionCodes = [dispositionCodes]
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([dispositionClassName, dispositionCodes, sessionId])
+
+        response = self.rest.send_request(**{
+            'method': 'PUT',
+            'url': urljoin(self.creds.url, "ameyorestapi/cc/dispositionClasses"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "dispositionClassName": dispositionClassName,
+                "dispositionCodes": dispositionCodes,
+                'dispositionClassId': dispositionClassId
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict([
+            'dispositionClassName', 'dispositionCodes'
+        ], response.json())
+        return response
+
+    def get_disposition_classes(self, **kwargs):
+        """
+        Get all Disposition Classes
+        RPC Call: getAllDispositionClasses (OK)
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([sessionId])
+        response = None
+        for i in range(5):
+            try:
+                self.logger.info(f"iteration: {i}")
+                response = self.rest.send_request(**{
+                    'method': 'GET',
+                    'url': urljoin(self.creds.url, f"ameyorestapi/cc/dispositionClasses/getAllDispositionClasses"),
+                    'headers': {"sessionId": sessionId, "correlation": self.uuid},
+                })
+                self.logger.info(f"response code: {response.status_code}")
+                if response.status_code == 200:
+                    break
+            except:
+                self.logger.info(f"I am in except for iteration {i} of getAllDispositionClasses")
+                self.logger.info(f"Potential bug in getAllDispositionClasses")
+                time.sleep(5)
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        for _item in response.json():
+            self.is_key_there_in_dict(['dispositionClassId', 'dispositionClassName', 'dispositionCodes'], _item)
+        return response
+
+    def get_disposition_classes_for_campaign(self, **kwargs):
+        """
+        Get all Disposition Classes
+        RPC Call: getAllDispositionClasses (OK)
+        :param kwargs:
+        :return:
+        """
+        campaignContextId = kwargs.get('campaignContextId', None)
+        sessionId = kwargs.get('sessionId', self.executiveToken)
+        self.check_required_args([campaignContextId, sessionId])
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'params': {'campaignContextId': campaignContextId},
+            'url': urljoin(self.creds.url, f"ameyorestapi/cc/dispositionClasses/getDispositionClassesForCampaign"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        for _item in response.json():
+            self.is_key_there_in_dict(['dispositionClassId', 'dispositionClassName', 'dispositionCodes'], _item)
+        return response
+
+    def get_disposition_plans(self, **kwargs):
+        """
+        Get all Disposition Plans
+        RPC Call: getAllDispositionPlans, getAllDispositionPlanDetails (OK)
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([sessionId])
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'url': urljoin(self.creds.url, f"ameyorestapi/cc/dispositionPlans"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        for _item in response.json():
+            self.is_key_there_in_dict(['dispositionPlanName', 'dispositionCodeIds', 'dispositionPlanId'], _item)
+        return response
+
+    def get_disposition_plans_for_campaign(self, **kwargs):
+        """
+        Get all Disposition Plans for Campaign
+        RPC Call: getAllDispositionPlans, getDispositionPlanForCampaign (OK)
+        :param kwargs:
+        :return:
+        """
+        campaignId = kwargs.get('campaignId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([campaignId, sessionId])
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'params': {'campaignId': campaignId},
+            'url': urljoin(self.creds.url, f"ameyorestapi/cc/dispositionPlans/getDispositionPlanForCampaign"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict(['dispositionPlanName', 'dispositionCodeIds', 'dispositionPlanId'], response.json())
+        return response
+
+    def create_disposition_code(self, **kwargs):
+        """
+        Create Disposition Code
+        RPC Call: createDispositionCode (OK)
+        :param kwargs:
+        :return:
+        """
+        dispositionCodeName = kwargs.get('dispositionCodeName', None)
+        dispositionClassId = kwargs.get('dispositionClassId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([dispositionCodeName, dispositionClassId, sessionId])
+
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, "ameyorestapi/cc/dispositionCodes"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "dispositionCodeName": dispositionCodeName,
+                "dispositionClassId": dispositionClassId
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict(['dispositionCodeId', 'dispositionCodeName', 'dispositionClassId'], response.json())
+        return response
+
+    def create_disposition_class(self, **kwargs):
+        """
+        Create Disposition Classes
+        RPC Call: createDispositionClass (OK)
+        :param kwargs:
+        :return:
+        """
+        dispositionClassName = kwargs.get('dispositionClassName', None)
+        dispositionCodes = kwargs.get('dispositionCodes', None)
+        if not isinstance(dispositionCodes, list):
+            dispositionCodes = [dispositionCodes]
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([dispositionClassName, dispositionCodes, sessionId])
+
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, "ameyorestapi/cc/dispositionClasses"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "dispositionClassName": dispositionClassName,
+                "dispositionCodes": dispositionCodes
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict([
+            'dispositionClassName', 'dispositionCodes'
+        ], response.json())
+        return response
+
+    def update_disposition_class(self, **kwargs):
+        """
+        Update Disposition Classes
+        RPC Call: createDispositionClass (OK)
+        :param kwargs:
+        :return:
+        """
+        dispositionClassName = kwargs.get('dispositionClassName', None)
+        dispositionCodes = kwargs.get('dispositionCodes', None)
+        dispositionClassId = kwargs.get('dispositionClassId', None)
+        if not isinstance(dispositionCodes, list):
+            dispositionCodes = [dispositionCodes]
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([dispositionClassName, dispositionCodes, sessionId])
+
+        response = self.rest.send_request(**{
+            'method': 'PUT',
+            'url': urljoin(self.creds.url, "ameyorestapi/cc/dispositionClasses"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "dispositionClassName": dispositionClassName,
+                "dispositionCodes": dispositionCodes,
+                'dispositionClassId': dispositionClassId
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict([
+            'dispositionClassName', 'dispositionCodes'
+        ], response.json())
+        return response
+
+    def get_disposition_codes_for_campaign(self, **kwargs):
+        """
+        Get Disposition Codes for a given Campaign
+        RPC Call: TODO
+        :param kwargs:
+        :return:
+        """
+        campaignId = kwargs.get('campaignId', None)
+        sessionId = kwargs.get('sessionId', self.supervisorToken)
+        self.check_required_args([campaignId, sessionId])
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'params': {"campaignId": campaignId},
+            'url': urljoin(self.creds.url, f"ameyorestapi/cc/dispositionCodes/getByCampaign"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid}
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        for _item in response.json():
+            self.is_key_there_in_dict(['dispositionCodeId', 'dispositionCodeName', 'dispositionClassId'], _item)
+        return response
+
+    def get_disposition_codes(self, **kwargs):
+        """
+        Get all Disposition Codes
+        RPC Call: getAllDispositionCodes (OK)
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([sessionId])
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'url': urljoin(self.creds.url, f"ameyorestapi/cc/dispositionCodes/getAllDispositionCodes"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        for _item in response.json():
+            self.is_key_there_in_dict(['dispositionCodeId', 'dispositionCodeName', 'dispositionClassId'], _item)
+        return response
+
+    def create_disposition_plan(self, **kwargs):
+        """
+        Create Disposition Classes
+        RPC Call: createDispositionPlan (OK)
+        :param kwargs:
+        :return:
+        """
+        dispositionPlanName = kwargs.get('dispositionPlanName', None)
+        dispositionCodeIds = kwargs.get('dispositionCodeIds', None)
+        if not isinstance(dispositionCodeIds, list):
+            dispositionCodeIds = [dispositionCodeIds]
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([dispositionPlanName, dispositionCodeIds, sessionId])
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, "ameyorestapi/cc/dispositionPlans"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "dispositionPlanName": dispositionPlanName,
+                "dispositionCodeIds": dispositionCodeIds
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict([
+            'dispositionPlanName', 'dispositionCodeIds'
+        ], response.json())
+        return response
+
+    def assign_disposition_plan_to_campaign(self, **kwargs):
+        """
+        Assign Disposition plan to Campaign
+        RPC Call: setDispositionPlanForCampaign (OK)
+        :param kwargs:
+        :return:
+        """
+        dispositionPlanId = kwargs.get('dispositionPlanId', None)
+        campaignId = kwargs.get('campaignId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([dispositionPlanId, campaignId, sessionId])
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, "ameyorestapi/cc/setDispositionPlanForCampaign"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "dispositionPlanId": dispositionPlanId,
+                "campaignId": campaignId
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict(['dispositionPlanId', 'campaignId'], response.json())
+        return response
+
+    def assign_user_to_atd(self, **kwargs):
+        """
+        Assign User to Agent Table Definition
+        RPC Call: assignUsersToAgentTableDefinition
+        :param kwargs:
+        :return:
+        """
+        campaignId = kwargs.get('campaignId', None)
+        atdId = kwargs.get('atdId', None)
+        userIds = kwargs.get('userIds', None)
+        if not isinstance(userIds, list):
+            userIds = [userIds]
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([campaignId, atdId, userIds, sessionId])
+
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, f'ameyorestapi/customerManager/assignUserToATD'),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "campaignId": campaignId,
+                "atdId": atdId,
+                "userIds": userIds
+            }
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        for _item in response.json():
+            self.is_key_there_in_dict([
+                'campaignId', 'agentTableDefinitionId', 'campaignContextUserATDId', 'campaignContextUserId',
+                'responseType', 'userId',
+            ], _item)
+        return response
+
+    def get_data_table_for_process(self, **kwargs):
+        """
+        Get all data tables for a process
+        RPC Call: getDataTableForProcess
+        """
+        processId = kwargs.get('processId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([processId, sessionId])
+
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'params': {'processId': processId},
+            'url': urljoin(self.creds.url, "ameyorestapi/cc/dataTables/getDataTableForProcess"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict(['dataTableName', 'dataTableId', 'tableDefinitionId', 'campaignId'], response.json())
+        return response
+
+    def update_default_atd_for_campaign(self, **kwargs):
+        """
+        Get all data tables for a process
+        RPC Call: updateDefaultATDForCampiagn
+        """
+        atdId = kwargs.get('atdId', None)
+        campaignId = kwargs.get('campaignId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([atdId, campaignId, sessionId])
+
+        shouldAssignUserInAtd = kwargs.get('shouldAssignUserInAtd', False)
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, "ameyorestapi/customerManager/updateDefaultAtdForCampaign"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "atdId": atdId,
+                "campaignId": campaignId,
+                "shouldAssignUserInAtd": shouldAssignUserInAtd
+            }
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict([
+            'campaignId', 'default_atd_id', 'shouldAssignUsersInDefaultATD', 'id'
+        ], response.json())
+        return response
+
+    def get_all_queue(self, **kwargs):
+        """
+        Get all Campaign queue
+        :param kwargs:
+        :return:
+        """
+        campaignId = kwargs.get('campaignId', None)
+        info = kwargs.get('info', False)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([campaignId, info, sessionId])
+
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'url': urljoin(self.creds.url, "ameyorestapi/cc/agentQueues/getByCampaign"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'params': {
+                "campaignId": campaignId,
+                "info": info
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        for _item in response.json():
+            self.is_key_there_in_dict(['queueName', 'description', 'queueType'], _item)
+        return response
+
+    def create_queue(self, **kwargs):
+        """
+        Create Queue for campaign
+        :param kwargs:
+        :return:
+        """
+        campaignId = kwargs.get('campaignId', None)
+        queueName = kwargs.get('queueName', None)
+        description = kwargs.get('description', None)
+        userIdList = kwargs.get('userIdList', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([campaignId, sessionId, queueName, userIdList])
+
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, "ameyorestapi/cc/agentQueues"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "queueName": queueName,
+                "campaignId": campaignId,
+                "queueType": "resource.request.queue.fifo.type",
+                "resourceSchedulerType": "resource.scheduler.lru.type",
+                "queuePriority": 1,
+                "transferrable": True,
+                "description": description,
+                "userIdList": userIdList
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.is_key_there_in_dict([
+            'agentQueueId', 'campaignId', 'queueName', 'queueType', 'resourceSchedulerType', 'queuePriority',
+            'description', 'transferrable', 'skillIds', 'userIdList', 'dateAdded', 'dateModified', 'moreInfo'
+        ], response.json())
+        return response
+
+    def get_users_in_queue(self, **kwargs):
+        """
+        Get Users in Queue
+        :param kwargs:
+        :return:
+        """
+        agentQueueId = kwargs.get('agentQueueId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([agentQueueId, sessionId])
+
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'url': urljoin(self.creds.url, "ameyorestapi/cc/agentQueueUsers/getByAgentQueue"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'params': {
+                "agentQueueId": agentQueueId,
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        for _item in response.json():
+            self.is_key_there_in_dict([
+                'agentQueueUserId', 'agentQueueId', 'campaignUserId', 'campaignId', 'userId', 'assigned',
+                'privilegePlanId', 'user'
+            ], _item)
+        return response
+
+    def un_assign_agent_from_queue(self, **kwargs):
+        """
+        Un-assign agent from Queue
+        :param kwargs:
+        :return:
+        """
+        agentQueueId = kwargs.get('agentQueueId', None)
+        agentQueueUserIds = kwargs.get('agentQueueUserIds', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([agentQueueId, sessionId, agentQueueUserIds])
+
+        if not isinstance(agentQueueUserIds, list):
+            agentQueueUserIds = [agentQueueUserIds]
+
+        response = self.rest.send_request(**{
+            'method': 'PUT',
+            'url': urljoin(self.creds.url, "ameyorestapi/cc/agentQueueUsers/unassignUsersFromAgentQueue"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "agentQueueId": agentQueueId,
+                "agentQueueUserIds": agentQueueUserIds,
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        return response
+
+    def update_queue_data(self, **kwargs):
+        """
+        Update the queue description
+        """
+        queueId = kwargs.get('queueId', None)
+        queueName = kwargs.get('queueName', None)
+        description = kwargs.get('description', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([sessionId, queueName, description, queueId])
+
+        response = self.rest.send_request(**{
+            'method': 'PUT',
+            'url': urljoin(self.creds.url, f"ameyorestapi/cc/agentQueues/{queueId}"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "queueName": queueName,
+                "queueType": "resource.request.queue.fifo.type",
+                "resourceSchedulerType": "resource.scheduler.lru.type",
+                "queuePriority": 1,
+                "transferrable": True,
+                "description": description,
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.is_key_there_in_dict([
+            'agentQueueId', 'campaignId', 'queueName', 'queueType', 'resourceSchedulerType', 'queuePriority',
+            'description', 'transferrable', 'skillIds', 'userIdList', 'dateAdded', 'dateModified', 'moreInfo'
+        ], response.json())
+        return response
+
+    def assign_agent_to_queue(self, **kwargs):
+        """
+        Again assign agent to queue
+        :param kwargs:
+        :return:
+        """
+        agentQueueId = kwargs.get('agentQueueId', None)
+        campaignContextUserIds = kwargs.get('campaignContextUserIds', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([agentQueueId, campaignContextUserIds, sessionId])
+
+        if not isinstance(campaignContextUserIds, list):
+            campaignContextUserIds = [campaignContextUserIds]
+
+        response = self.rest.send_request(**{
+            'method': 'PUT',
+            'url': urljoin(self.creds.url, "ameyorestapi/cc/agentQueueUsers/assignUsersToAgentQueue"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "agentQueueId": agentQueueId,
+                "campaignContextUserIds": campaignContextUserIds,
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        for _item in response.json():
+            self.is_key_there_in_dict([
+                'agentQueueUserId', 'agentQueueId', 'campaignUserId', 'campaignId', 'userId', 'assigned',
+                'privilegePlanId', 'user'
+            ], _item)
+        return response
+    
+    def enable_lead_for_process(self, **kwargs):
+        """
+        Enables/Disables Lead for a process
+        """
+        leadId = kwargs.get('leadId', None)
+        enabled = kwargs.get('enabled', None)
+        sessionId = kwargs.get('sessionId', self.supervisorToken)
+        self.check_required_args([enabled, leadId, sessionId])
+
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, "ameyorestapi/cc/enableDisableLead"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                'enabled': enabled,
+                'leadId': leadId
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        return response
+
+    def enable_lead_for_campaign(self, **kwargs):
+        """
+        Enables Lead for a Campaign
+        """
+        leadName = kwargs.get('leadName', None)
+        campaignLeadId = kwargs.get('campaignLeadId', None)
+        campaignId = kwargs.get('campaignId', None)
+        leadId = kwargs.get('leadId', None)
+        leadDialingConfigurationEnabled = kwargs.get('leadDialingConfigurationEnabled', None)
+
+        sessionId = kwargs.get('sessionId', self.supervisorToken)
+        self.check_required_args([leadName, campaignLeadId, campaignId, leadId, leadDialingConfigurationEnabled])
+        payload = {
+            "leadBeanWrapper": {
+                "campaignLeadDetails": [
+                    {
+                        "leadName": leadName,
+                        "campaignLeadId": campaignLeadId,
+                        "campaignId": campaignId,
+                        "timeZone": "",
+                        "leadDialingConfigurationEnabled": leadDialingConfigurationEnabled,
+                        "priority": 1,
+                        "weightage": 1,
+                        "maxAttempt": 10,
+                        "tagName": None,
+                        "leadDialingEnabledAtAllTime": True,
+                        "enabled": False,
+                        "leadId": leadId
+                    }
+                ]
+            },
+            "leadNameVsleadIdMap": {
+                leadName: leadId,
+            },
+            "campaignLeadIdVsAssignedQueueId": {
+                campaignLeadId: None,
+            },
+            "campaignLeadIdVsUnassignedQueueId": {
+                campaignLeadId: None,
+            },
+            "leadIdVsUserMappingName": {
+                leadId: ""
+            }
+        }
+
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, "ameyorestapi/voice/setUpdatedCampaignLeadDetails"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': payload,
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        return response
+
+
+
+
+
+
 
