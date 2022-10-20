@@ -1,0 +1,92 @@
+{
+  "supervisor_monitor_tab": {
+    "by": "xpath",
+    "value": "//a[@automationid='supervisorMonitorTab']",
+    "index": "0"
+  },
+  "supervisor_menu_icon": {
+    "by": "xpath",
+    "value": "//i[@automationid='supervisorMenuIcon']",
+    "index": "0"
+  },
+  "supervisor_search_campaign_input": {
+    "by": "xpath",
+    "value": "//button/i[text()='search']/parent::button/preceding-sibling::div/input[@placeholder='Search']",
+    "index": "0"
+  },
+  "supervisor_campaign_search_list": {
+    "by": "xpath",
+    "value": "//div[@class='collapsible-body']/ul",
+    "index": "0"
+  },
+  "agent_list_table": {
+     "by": "xpath",
+    "value": "//table[contains(@class,'table-widget')]/tbody",
+    "index": "0"
+  },
+  "snoop_btn": {
+     "by": "xpath",
+    "value": "//button[@automationid='snoopBtn']",
+    "index": "0"
+  },
+  "barge_btn": {
+     "by": "xpath",
+    "value": "//button[@automationid='bargeBtn']",
+    "index": "0"
+  },
+  "whisper_btn": {
+     "by": "xpath",
+    "value": "//button[@automationid='whisperBtn']",
+    "index": "0"
+  },
+  "conference_btn": {
+     "by": "xpath",
+    "value": "//button[@automationid='conferenceBtn']",
+    "index": "0"
+  },
+  "disconnect_btn": {
+     "by": "xpath",
+    "value": "//button[@automationid='hangupBtn']",
+    "index": "0"
+  },
+  "force_logout_btn": {
+     "by": "xpath",
+    "value": "//button[@automationid='forceLogoutBtn']",
+    "index": "0"
+  },
+  "call_type": {
+     "by": "xpath",
+    "value": "//div[@class='key-value']/span[text()='Call Type:']",
+    "index": "0"
+  },
+  "hold_resume_call_btn": {
+     "by": "xpath",
+    "value": "//button[@automationid='holdResumeCallBtn']",
+    "index": "0"
+  },
+  "mute_call_btn": {
+     "by": "xpath",
+    "value": "//button[@automationid='muteCallBtn']",
+    "index": "0"
+  },
+  "confer_call_btn": {
+     "by": "xpath",
+    "value": "//button[@automationid='conferCallBtn']",
+    "index": "0"
+  },
+  "transfer_call_btn": {
+    "by": "xpath",
+    "value": "//button[@automationid='tarnsferCallBtn']",
+    "index": "0"
+  },
+  "end_confer_btn": {
+     "by": "xpath",
+    "value": "//button[@automationid='endConferBtn']",
+    "index": "0"
+  },
+  "end_call_confer_btn": {
+     "by": "xpath",
+    "value": "//button[@automationid='endCallConferBtn']",
+    "index": "0"
+  }
+}

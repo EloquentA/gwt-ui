@@ -27,6 +27,12 @@ I switch to requested tab
     ${result}=   call method    ${instance}    switch_to_tab    ${req_tab}
     I verify result    ${result}
 
+I close requested tab
+    [Documentation]   This keyword closes requested tab
+    [Arguments]  ${instance}    ${req_tab}    ${failure}=True
+    ${result}=   call method    ${instance}    close_tab    ${req_tab}
+    Run Keyword If    ${failure}    I verify result    ${result}
+
 I close browser window
     [Documentation]   This keyword closes the browser
     [Arguments]  ${instance}

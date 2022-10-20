@@ -70,6 +70,14 @@ class Ameyo:
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("switch_to_tab", error))
 
+    def close_tab(self, req_tab):
+        """Closes requested tab."""
+        try:
+            self.action.close_requested_window(int(req_tab))
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("close_tab", error))
+
     def close_alert_if_present(self):
         """Closes alert if present"""
         try:
@@ -288,9 +296,16 @@ class Ameyo:
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("select_disposition_save_and_dispose", error))
 
-    def verify_snoop_action(self, campaign_details):
-        """Method to verify update of requested user."""
+    def verify_snoop_action(self, campaign_details, executive_username):
+        """Method to verify snoop functionality."""
         try:
-            return self._return_result(self.monitor.verify_snoop_action(campaign_details))
+            return self._return_result(self.monitor.verify_snoop_action(campaign_details, executive_username))
         except Exception as error:
-            return self._return_result(False, error, self.__capture_error(f"verify_snoop{user_type}", error))
+            return self._return_result(False, error, self.__capture_error(f"verify_snoop_action", error))
+
+    def verify_barge_action(self, campaign_details, executive_username):
+        """Method to verify barge functionality."""
+        try:
+            return self._return_result(self.monitor.verify_barge_action(campaign_details, executive_username))
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"verify_barge_action", error))

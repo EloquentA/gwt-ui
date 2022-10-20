@@ -4,7 +4,7 @@ Documentation     Ameyo User test cases
 
 # Suite Setup and Teardown
 Suite Setup       Suite Initialization    admin
-Suite Teardown    Suite Cleanup
+Suite Teardown    Suite Cleanup    admin
 
 # Keywords Definition file
 Resource          ../../keywords/SetupTeardown.robot
@@ -14,7 +14,7 @@ Resource          ../../keywords/LoginKeywords.robot
 
 
 # Main library file which contains methods to perform some functionality
-Library           ../../pages/Ameyo.py    browser_config=${BROWSER_CONFIG}    project=${PROJECT}    run_as=${RUN_AS}    WITH NAME    Client1
+Library           ../../pages/Ameyo.py    browser_config=${BROWSER_CONFIG}    project=${PROJECT}    run_as=admin    WITH NAME    Client1
 
 *** Test Cases ***
 TC - Create executive user

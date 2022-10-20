@@ -409,6 +409,19 @@ class Action:
         self.window_list = self.browserdriver.window_handles
         self.browserdriver.switch_to.window(self.window_list[window])
 
+    def close_requested_window(self, window):
+        """
+          close_requested_window(1)
+          close_requested_window(2)
+
+          the index number is the index of tab based on the order of tab opening
+
+        """
+        self.browserdriver = self._browser.get_current_browser()
+        self.window_list = self.browserdriver.window_handles
+        self.browserdriver.switch_to.window(self.window_list[window])
+        self.browserdriver.close()
+
     def scroll(self, locator, position=1000):
         """Scrolls from top to desired position at bottom
            locator is the id or class of scroll bar not exactly xpath
@@ -1002,14 +1015,7 @@ class Action:
         """
         Verifies that element identified by `locator` is enabled or not.
         """
-        self.elemlist = self._browser.elements_finder(locator)
-        if (len(self.elemlist) == 1):
-            if not self.elemlist[0].is_enabled():
-                return False
-            else:
-                return True
-        else:
-            return True
+        return self._is_enabled(locator)
 
     def text_present(self, text):
         """

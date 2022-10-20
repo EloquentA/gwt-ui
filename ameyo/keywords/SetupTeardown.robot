@@ -47,6 +47,13 @@ Suite Initialization
     END
 
 Suite Cleanup
+    [Arguments]    ${req_run_as}=${RUN_AS}
     IF  not ${is_parent_setup}
         Ameyo teardown  ${instance1}
+    ELSE
+        # Close second tab if present
+        I close requested tab    ${instance1}    1    ${FALSE}
+        # If some other persona has been requested in common suite setup, login with original persona on suite cleanup
+        Run Keyword If    '${req_run_as}' != '${RUN_AS}'    I logout from ameyo homepage    ${instance1}
+        Run Keyword If    '${req_run_as}' != '${RUN_AS}'    Ameyo setup    ${instance1}    ${RUN_AS}
     END

@@ -1,10 +1,10 @@
 *** Settings ***
-Documentation     Ameyo Supercisor test cases to verify snoop, barge, whisper, conference, and force-logout functionalities.
+Documentation     Ameyo Supervisor test cases to verify snoop, barge, whisper, conference, and force-logout functionalities.
 ...               Developed By - Developer by EA
 
 # Suite Setup and Teardown
-Suite Setup       Suite Initialization    supervisor
-Suite Teardown    Suite Cleanup
+Suite Setup       Suite Initialization For Monitoring
+Suite Teardown    Suite Cleanup    executive
 
 # Keywords Definition file
 Resource          ../../keywords/SetupTeardown.robot
@@ -14,12 +14,14 @@ Resource          ../../keywords/MonitoringKeywords.robot
 
 
 # Main library file which contains methods to perform some functionality
-Library           ../../pages/Ameyo.py    browser_config=${BROWSER_CONFIG}    project=${PROJECT}    run_as=supervisor    WITH NAME    Client1
+Library           ../../pages/Ameyo.py    browser_config=${BROWSER_CONFIG}    project=${PROJECT}    run_as=executive    WITH NAME    Client1
 
 *** Test Cases ***
-TC - Verify barge for supervisor user
+TC - Verify snoop for supervisor user
     [Tags]  smoke    testid=AP-16016-1    regression
-    I open ameyo home page in separate tab    ${instance1}
-    I switch to requested tab   ${instance1}
-#    Ameyo setup    ${instance1}    executive
     I verify snoop    ${instance1}    supervisor
+
+# TODO: WIP
+#TC - Verify barge for supervisor user
+#    [Tags]  smoke    testid=AP-16016-1    regression
+#    I verify barge    ${instance1}    supervisor
