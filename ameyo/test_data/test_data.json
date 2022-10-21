@@ -14,6 +14,11 @@
 	"AUTOMATION_NAME": "Ameyo UI Robot Automation Run",
 	"RUN_AS": "executive",
 	"ccn": "E2E_1",
+	"tpv_name": "Ameyo",
+	"tpv_number": 1800018000,
+	"local_ivr_name": "Ameyo_IVR",
+	"ivr_src_number": "",
+	"ivr_dst_number": "",
 	"CREDENTIALS": {
 		"multi_cc_manager": {
 			"username": "",

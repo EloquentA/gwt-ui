@@ -118,6 +118,8 @@ inbound_campaigns:
 - PROCESS_08_CAMPAIGN_IN
 - PROCESS_09_CAMPAIGN_IN
 - PROCESS_10_CAMPAIGN_IN
+ivr_dst_number: ''
+ivr_src_number: ''
 lead_names:
 - PROCESS_01_LEAD
 - PROCESS_02_LEAD
@@ -129,6 +131,7 @@ lead_names:
 - PROCESS_08_LEAD
 - PROCESS_09_LEAD
 - PROCESS_10_LEAD
+local_ivr_name: Ameyo_IVR
 multi_cc_created_users:
 - isRoot: true
   name: E2E_1_ADMIN_USER
@@ -156,3 +159,5 @@ process_names:
 - PROCESS_08
 - PROCESS_09
 - PROCESS_10
+tpv_name: Ameyo
+tpv_number: 1800018000

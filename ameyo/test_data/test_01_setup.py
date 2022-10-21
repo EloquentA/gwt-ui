@@ -1145,7 +1145,69 @@ class TestSetup:
                     "sessionId": ameyo.adminToken,
                 }).json()
 
-    def test_39_logout_users(self, ameyo, calling):
+    def test_39_create_tpv(self, ameyo, calling):
+        """
+        :param ameyo:
+        :return:
+        """
+        for cc in ameyo.get_all_cc().json():
+            if cc['contactCenterName'] == calling['ccname']:
+                break
+        else:
+            raise Exception(f"Cannot Find CC {calling['ccname']} !!")
+        ccId = cc['contactCenterId']
+
+        for Campaign in ameyo.get_all_campaigns(sessionId=ameyo.adminToken).json():
+            tpv_name = f"{calling['test_data']['tpv_name']}"
+            tpv_number = f"{calling['test_data']['tpv_number']}"
+            try:
+                response = ameyo.create_tpv_info(thirdPartyName=tpv_name, thirdPartyPhone=tpv_number,
+                                                 campaignId=Campaign['campaignId'],sessionId=ameyo.adminToken).json()
+                time.sleep(1)
+            except:
+                pass
+
+    def test_40_create_local_IVR(self, ameyo, calling):
+        """
+        :param ameyo:
+        :return:
+        """
+        for cc in ameyo.get_all_cc().json():
+            if cc['contactCenterName'] == calling['ccname']:
+                break
+        else:
+            raise Exception(f"Cannot Find CC {calling['ccname']} !!")
+        ccId = cc['contactCenterId']
+
+        CallContexts = list(filter(
+            lambda a: a['callContextName'] is not None and 'customer_' in a['callContextName'],
+            ameyo.get_cc_call_contexts(sessionId=ameyo.adminToken).json()
+        ))
+        for Count, Campaign in enumerate(ameyo.get_all_campaigns(sessionId=ameyo.adminToken).json()):
+            CallContext = CallContexts[Count % len(CallContexts)]
+            ameyo.logger.info(
+                f"Assigning <{CallContext['callContextName']}> "
+                f"to <{Campaign['campaignName']}> with id <{Campaign['campaignId']}>")
+            for assigned in ameyo.get_call_contexts_in_campaign(campaignId=Campaign['campaignId'],
+                                                                sessionId=ameyo.adminToken).json():
+                if 'campaignId' in assigned and assigned['campaignId'] == Campaign['campaignId']:
+                    if assigned['callContextId'] == CallContext['callContextId']:
+                        break
+            else:
+                local_ivr_name = f"{calling['test_data']['local_ivr_name']}"
+                ivr_src_number = f"{calling['test_data']['ivr_src_number']}"
+                ivr_dst_number = f"{calling['test_data']['ivr_dst_number']}"
+                ameyo.create_local_IVR(name=local_ivr_name,
+                                       contactCenterCallContextId=CallContext['contactCenterCallContextId'],
+                                       campaignId=Campaign['campaignId'],
+                                       dstPhone=ivr_dst_number,
+                                       srcPhone=ivr_src_number,
+                                       desc="LocalIVR",
+                                       sessionId=ameyo.adminToken).json()
+                ameyo.get_all_local_IVR_for_campaign(campaignId=Campaign['campaignId'],
+                                                    sessionId=ameyo.adminToken)
+
+    def test_41_logout_users(self, ameyo, calling):
         """
         Logout
         :param ameyo:
@@ -1156,7 +1218,7 @@ class TestSetup:
         ameyo.user_logout(sessionId=ameyo.supervisorToken)
         ameyo.supervisorToken = None
 
-    def test_40_generate_yaml_test_data(self, ameyo, calling):
+    def test_42_generate_yaml_test_data(self, ameyo, calling):
         """
         Convert test data from JSON to YAML for UI automation consumption
         :param ameyo:

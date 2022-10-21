@@ -2606,6 +2606,123 @@ class DataCreationAPIs(Wrapper):
         self.rest.raise_for_status(response)
         return response
 
+    def update_campaign_data(self, **kwargs):
+        """
+        Update Data for a Campaign
+        RPC Call: updateCampaignData
+        :param kwargs:
+        :return:
+        """
+        campaignName = kwargs.get('campaignName', None)
+        campaignId = kwargs.get('campaignId', None)
+        description = kwargs.get('description', f'{campaignName} Description')
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([campaignName, campaignId, description, sessionId])
+
+        response = self.rest.send_request(**{
+            'method': 'PUT',
+            'url': urljoin(self.creds.url, f"ameyorestapi/cc/campaigns/{campaignId}"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "campaignName": campaignName,
+                "description": description,
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict([
+            'campaignName', 'campaignId', 'description'], response.json())
+        return response
+
+    def create_tpv_info(self, **kwargs):
+        """
+        Create TPV info
+        :param kwargs:
+        :return:
+        """
+        thirdPartyName = kwargs.get('thirdPartyName', None)
+        thirdPartyPhone = kwargs.get('thirdPartyPhone', None)
+        campaignId = kwargs.get('campaignId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+
+        self.check_required_args([thirdPartyName, thirdPartyPhone, sessionId, campaignId])
+
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, "ameyorestapi/voice/tpvInfos"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "thirdPartyName": thirdPartyName, "thirdPartyPhone": thirdPartyPhone, "campaignId": campaignId
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict(['tpvInfoId', 'campaignId', 'thirdPartyName', 'thirdPartyPhone'], response.json())
+        return response
+
+    def create_local_IVR(self, **kwargs):
+        """
+        Create local IVR
+        :param kwargs:
+        :return:
+        """
+        name = kwargs.get('name', None)
+        contactCenterCallContextId = kwargs.get('contactCenterCallContextId', None)
+        isOverrideDstPhone = kwargs.get('isOverrideDstPhone', False)
+        dstPhone = kwargs.get('dstPhone', None)
+        isOverrideSrcPhone = kwargs.get('isOverrideSrcPhone', False)
+        srcPhone = kwargs.get('srcPhone', None)
+        desc = kwargs.get('desc', None)
+        campaignId = kwargs.get('campaignId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+
+        self.check_required_args([name, contactCenterCallContextId, dstPhone, srcPhone, desc, campaignId, sessionId])
+
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, "ameyorestapi/cc/localIVRs"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "name": name, "contactCenterCallContextId": contactCenterCallContextId, "campaignId": campaignId,
+                "isOverrideDstPhone": isOverrideDstPhone, "dstPhone": dstPhone, "isOverrideSrcPhone": isOverrideSrcPhone,
+                "srcPhone": srcPhone, "desc": desc
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict(['id', 'campaignId', 'name', 'contactCenterCallContextId',
+                                   'isOverrideDstPhone', 'dstPhone', 'isOverrideSrcPhone',
+                                   'srcPhone'], response.json())
+        return response
+
+    def get_all_local_IVR_for_campaign(self, **kwargs):
+        """
+        get_all_local_IVR_for_campaign
+        :param kwargs:
+        RPC: getAllLocalIVRForCampaign
+        :return:
+        """
+        campaignId = kwargs.get('campaignId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([sessionId, campaignId])
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'params': {'campaignId': campaignId},
+            'url': urljoin(self.creds.url, f"ameyorestapi/cc/getAllLocalIVRForCampaign"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        for _item in response.json():
+            self.is_key_there_in_dict([
+                'campaignId', 'id', 'name', 'contactCenterCallContextId', 'isOverrideDstPhone',
+                'userName', 'dstPhone', 'isOverrideSrcPhone', 'srcPhone', 'desc'
+            ], _item)
+        return response
 
 
 
