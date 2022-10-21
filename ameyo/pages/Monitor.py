@@ -25,18 +25,22 @@ class Monitor:
 
     def set_up_campaign(self, campaign_details):
         """Sets up campaign to monitor for in monitoring page."""
+        current_campaign = self.action.get_text('current_selected_campaign_tab')
         campign = campaign_details.get(campaign_details.get('monitor_with'))
         if campign is None:
             assert False, f'Please provide campiagn to monitor with as a key (like "voice_outbound") in campaign details: {campaign_details}'
-        self.action.explicit_wait('supervisor_menu_icon')
-        self.action.explicit_wait('supervisor_monitor_tab', ec='element_to_be_clickable')
-        self.action.click_element('supervisor_monitor_tab')
-        self.action.explicit_wait('supervisor_menu_icon', ec='element_to_be_clickable')
-        self.action.click_element('supervisor_menu_icon')
-        self.action.explicit_wait('supervisor_search_campaign_input', 30)
-        self.action.input_text('supervisor_search_campaign_input', campign)
-        self.action.explicit_wait('supervisor_campaign_search_list', ec='element_to_be_clickable')
-        self.action.select_from_ul_dropdown_using_text('supervisor_campaign_search_list', campign)
+        if campign == current_campaign:
+            print("Requested campaign already selected: ", current_campaign)
+            return campign
+        self.action.explicit_wait('menu_icon')
+        self.action.explicit_wait('monitor_tab', ec='element_to_be_clickable')
+        self.action.click_element('monitor_tab')
+        self.action.explicit_wait('menu_icon', ec='element_to_be_clickable')
+        self.action.click_element('menu_icon')
+        self.action.explicit_wait('search_campaign_input', 30)
+        self.action.input_text('search_campaign_input', campign)
+        self.action.explicit_wait('campaign_search_list', ec='element_to_be_clickable')
+        self.action.select_from_ul_dropdown_using_text('campaign_search_list', campign)
         return campign
 
     def open_actions(self, executive_username, retries=0):
@@ -70,8 +74,8 @@ class Monitor:
             self.action.click_element('quit_confer_btn')
         if action_type != 'disconnect':
             self.action.click_element('disconnect_btn')
-        self.action.click_element('supervisor_monitor_tab')
-        self.action.click_element('close_supervisor_actions')
+        self.action.click_element('monitor_tab')
+        self.action.click_element('close_actions')
         # sleep to dispose call
         time.sleep(50)
         self.action.switch_to_window(0)

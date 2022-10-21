@@ -59,6 +59,17 @@ CREDENTIALS:
       video: ''
       # To perform monitoring test cases out of: interaction, chat, voice or video
       monitor_with: 'voice_outbound'
+  analyst:
+    username: ''
+    password: ''
+    campaign_details:
+      interaction: ''
+      chat: ''
+      voice_outbound: 'finance_outbound'
+      voice_inbound: 'finance_inbound'
+      video: ''
+      # To perform monitoring test cases out of: interaction, chat, voice or video
+      monitor_with: 'voice_outbound'
 CALLING_NUMBER: 9999999999
 DESIRED_STATE: 'Available'
 DISPOSITION:

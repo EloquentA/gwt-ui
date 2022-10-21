@@ -1,20 +1,20 @@
 {
-  "supervisor_monitor_tab": {
+  "monitor_tab": {
     "by": "xpath",
     "value": "//a[@automationid='supervisorMonitorTab']",
     "index": "0"
   },
-  "supervisor_menu_icon": {
+  "menu_icon": {
     "by": "xpath",
     "value": "//i[@automationid='supervisorMenuIcon']",
     "index": "0"
   },
-  "supervisor_search_campaign_input": {
+  "search_campaign_input": {
     "by": "xpath",
     "value": "//button/i[text()='search']/parent::button/preceding-sibling::div/input[@placeholder='Search']",
     "index": "0"
   },
-  "supervisor_campaign_search_list": {
+  "campaign_search_list": {
     "by": "xpath",
     "value": "//div[@class='collapsible-body']/ul",
     "index": "0"
@@ -99,7 +99,7 @@
     "value": "//i[@class='fontello fontellodisposition material-icons']",
     "index": "0"
   },
-  "close_supervisor_actions": {
+  "close_actions": {
     "by": "xpath",
     "value": "//i[@class='floating-panel-close material-icons']",
     "index": "0"
@@ -137,6 +137,11 @@
   "logout_confirmation_btn":  {
     "by": "id",
     "value": "automationButton1",
+    "index": "0"
+  },
+  "current_selected_campaign_tab": {
+    "by": "xpath",
+    "value": "//a[@automationid='supervisorCampaignTab']",
     "index": "0"
   }
 }
