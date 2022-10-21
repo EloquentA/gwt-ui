@@ -56,7 +56,7 @@
   },
   "call_type": {
      "by": "xpath",
-    "value": "//div[@class='key-value']/span[text()='Call Type:']",
+    "value": "//div[@class='key-value']/span[text()='Call Type:']/following-sibling::strong",
     "index": "0"
   },
   "hold_resume_call_btn": {
@@ -76,7 +76,7 @@
   },
   "transfer_call_btn": {
     "by": "xpath",
-    "value": "//button[@automationid='tarnsferCallBtn']",
+    "value": "//button[@automationid='transferCallBtn']",
     "index": "0"
   },
   "end_confer_btn": {
@@ -87,6 +87,56 @@
   "end_call_confer_btn": {
      "by": "xpath",
     "value": "//button[@automationid='endCallConferBtn']",
+    "index": "0"
+  },
+  "dtmf_btn": {
+    "by": "xpath",
+    "value": "//i[text()='apps']",
+    "index": "0"
+  },
+  "disposition_btn": {
+    "by": "xpath",
+    "value": "//i[@class='fontello fontellodisposition material-icons']",
+    "index": "0"
+  },
+  "close_supervisor_actions": {
+    "by": "xpath",
+    "value": "//i[@class='floating-panel-close material-icons']",
+    "index": "0"
+  },
+ "reason_for_logout_textarea": {
+    "by": "xpath",
+    "value": "//h4[text()='Reason for force logout ?']/parent::div/parent::div/following-sibling::div//textarea",
+    "index": "0"
+  },
+ "save_reason_for_logout_btn": {
+    "by": "xpath",
+    "value": "//button[@title='ok']/span[text()='Save']",
+    "index": "0"
+  },
+  "workbench_tab": {
+    "by": "xpath",
+    "value": "//a[@automationid='workbenchTab']",
+    "index": "0"
+  },
+  "accept_conference_call": {
+     "by": "xpath",
+    "value": "//button/span[text()='Accept']",
+    "index": "0"
+  },
+  "quit_confer_btn": {
+    "by": "xpath",
+    "value": "//button[@automationid='quitConferBtn']",
+    "index": "0"
+  },
+  "switch_to_workbench_btn":  {
+    "by": "xpath",
+    "value": "//button/span[text()='Switch Now']",
+    "index": "0"
+  },
+  "logout_confirmation_btn":  {
+    "by": "id",
+    "value": "automationButton1",
     "index": "0"
   }
 }

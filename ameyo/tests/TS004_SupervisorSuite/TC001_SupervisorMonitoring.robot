@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation     Ameyo Supervisor test cases to verify snoop, barge, whisper, conference, and force-logout functionalities.
+Documentation     Ameyo Supervisor test cases to verify snoop, barge, whisper, conference, disconnect, and force-logout functionalities.
 ...               Developed By - Developer by EA
 
 # Suite Setup and Teardown
@@ -21,7 +21,25 @@ TC - Verify snoop for supervisor user
     [Tags]  smoke    testid=AP-16016-1    regression
     I verify snoop    ${instance1}    supervisor
 
-# TODO: WIP
-#TC - Verify barge for supervisor user
-#    [Tags]  smoke    testid=AP-16016-1    regression
-#    I verify barge    ${instance1}    supervisor
+TC - Verify barge for supervisor user
+    [Tags]  smoke    testid=AP-16016-1    regression
+    I verify barge    ${instance1}    supervisor
+
+TC - Verify whisper for supervisor user
+    [Tags]  smoke    testid=AP-16016-1    regression
+    I verify whisper    ${instance1}    supervisor
+
+TC - Verify conference for supervisor user
+    [Tags]  smoke    testid=AP-16016-1    regression
+    I verify conference    ${instance1}    supervisor
+
+TC - Verify disconnect for supervisor user
+    [Tags]  smoke    testid=AP-16016-1    regression
+    I verify disconnect    ${instance1}    supervisor
+
+TC - Verify force logout for supervisor user
+    [Tags]  smoke    testid=AP-16016-1    regression
+    I verify force logout    ${instance1}    supervisor
+    I switch to requested tab   ${instance1}    0
+    # Re-instante original state
+    Ameyo setup   ${instance1}    ${RUN_AS}

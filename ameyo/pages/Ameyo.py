@@ -319,3 +319,30 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("change_user_mapper_policy_via_admin", error))
+    def verify_whisper_action(self, campaign_details, executive_username):
+        """Method to verify whisper functionality."""
+        try:
+            return self._return_result(self.monitor.verify_whisper_action(campaign_details, executive_username))
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"verify_whisper_action", error))
+
+    def verify_conference_action(self, campaign_details, executive_username):
+        """Method to verify conference functionality."""
+        try:
+            return self._return_result(self.monitor.verify_conference_action(campaign_details, executive_username))
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"verify_whisper_action", error))
+
+    def verify_disconnect_action(self, campaign_details, executive_username):
+        """Method to verify disconnect functionality."""
+        try:
+            return self._return_result(self.monitor.verify_disconnect_action(campaign_details, executive_username))
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"verify_disconnect_action", error))
+
+    def verify_force_logout_action(self, campaign_details, executive_username, home_url):
+        """Method to verify force logout functionality."""
+        try:
+            return self._return_result(self.monitor.verify_force_logout_action(campaign_details, executive_username, home_url))
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"verify_force_logout_action", error))
