@@ -1,0 +1,32 @@
+{
+  "settings_tab": {
+    "by": "xpath",
+    "value": "//a[contains(@id,'SettingsLink')]//span[text()='Settings']",
+    "index": "0"
+  },
+  "system_tab": {
+    "by": "xpath",
+    "value": "//a[contains(@class,'system-tab')]//span[text()='System']",
+    "index": "0"
+  },
+  "system_options_ul": {
+    "by": "xpath",
+    "value": "//ul[contains(@id,'systemOptions')]",
+    "index": "0"
+  },
+  "mapping_policy_dropdown": {
+    "by": "xpath",
+    "value": "//label[contains(text(),'User Mapping Policy')]//preceding-sibling::span//span[contains(@class,'selection__rendered')]",
+    "index": "0"
+  },
+  "mapping_policy_ul": {
+    "by": "xpath",
+    "value": "//ul[contains(@class,'select2-results__options')]",
+    "index": "0"
+  },
+  "apply_btn": {
+    "by": "xpath",
+    "value": "//button//span[text()='Apply']",
+    "index": "0"
+  }
+}

@@ -18,6 +18,7 @@ from Common import Common
 from Login import Login
 from AgentHomepage import AgentHomepage
 from AdminUser import AdminUser
+from AdminSystem import AdminSystem
 from Monitor import Monitor
 
 
@@ -35,6 +36,7 @@ class Ameyo:
         self.login = Login(self.web_browser, self.common)
         self.agenthomepage = AgentHomepage(self.web_browser, self.common)
         self.adminuser = AdminUser(self.web_browser, self.common)
+        self.adminsystem = AdminSystem(self.web_browser, self.common)
         self.monitor = Monitor(self.web_browser, self.common, self.agenthomepage)
 
     def __capture_error(self, method_name, error_msg):
@@ -309,3 +311,11 @@ class Ameyo:
             return self._return_result(self.monitor.verify_barge_action(campaign_details, executive_username))
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"verify_barge_action", error))
+
+    def change_user_mapper_policy_via_admin(self, mapper_policy_type):
+        """Method to change user mapper policy under Admin System Settings"""
+        try:
+            self.adminsystem.change_user_mapper_policy(mapper_policy_type)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("change_user_mapper_policy_via_admin", error))

@@ -67,3 +67,4 @@ DISPOSITION:
   disposition_note: 'Automation dispose'
   dial_number: '123456'
   quick_disposition: 'Sale'
+ADMIN_MAPPING_POLICY_TYPE: 'UserId based call leg details provider'
