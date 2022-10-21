@@ -2720,7 +2720,7 @@ class DataCreationAPIs(Wrapper):
         for _item in response.json():
             self.is_key_there_in_dict([
                 'campaignId', 'id', 'name', 'contactCenterCallContextId', 'isOverrideDstPhone',
-                'userName', 'dstPhone', 'isOverrideSrcPhone', 'srcPhone', 'desc'
+                'dstPhone', 'isOverrideSrcPhone', 'srcPhone', 'desc'
             ], _item)
         return response
 

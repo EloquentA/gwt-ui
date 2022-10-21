@@ -1188,24 +1188,19 @@ class TestSetup:
             ameyo.logger.info(
                 f"Assigning <{CallContext['callContextName']}> "
                 f"to <{Campaign['campaignName']}> with id <{Campaign['campaignId']}>")
-            for assigned in ameyo.get_call_contexts_in_campaign(campaignId=Campaign['campaignId'],
-                                                                sessionId=ameyo.adminToken).json():
-                if 'campaignId' in assigned and assigned['campaignId'] == Campaign['campaignId']:
-                    if assigned['callContextId'] == CallContext['callContextId']:
-                        break
-            else:
-                local_ivr_name = f"{calling['test_data']['local_ivr_name']}"
-                ivr_src_number = f"{calling['test_data']['ivr_src_number']}"
-                ivr_dst_number = f"{calling['test_data']['ivr_dst_number']}"
-                ameyo.create_local_IVR(name=local_ivr_name,
-                                       contactCenterCallContextId=CallContext['contactCenterCallContextId'],
-                                       campaignId=Campaign['campaignId'],
-                                       dstPhone=ivr_dst_number,
-                                       srcPhone=ivr_src_number,
-                                       desc="LocalIVR",
-                                       sessionId=ameyo.adminToken).json()
-                ameyo.get_all_local_IVR_for_campaign(campaignId=Campaign['campaignId'],
-                                                    sessionId=ameyo.adminToken)
+            local_ivr_name = f"{calling['test_data']['local_ivr_name']}"
+            ivr_src_number = f"{calling['test_data']['ivr_src_number']}"
+            ivr_dst_number = f"{calling['test_data']['ivr_dst_number']}"
+            ameyo.create_local_IVR(name=local_ivr_name,
+                                   contactCenterCallContextId=CallContext['contactCenterCallContextId'],
+                                   campaignId=Campaign['campaignId'],
+                                   dstPhone=ivr_dst_number,
+                                   srcPhone=ivr_src_number,
+                                   desc="LocalIVR",
+                                   sessionId=ameyo.adminToken).json()
+            response = ameyo.get_all_local_IVR_for_campaign(campaignId=Campaign['campaignId'],
+                                                            sessionId=ameyo.adminToken).json()
+            ameyo.logger.info(f"response for  <{CallContext['callContextName']}> is {response} ")
 
     def test_41_logout_users(self, ameyo, calling):
         """
