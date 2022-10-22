@@ -4,7 +4,7 @@ Documentation     Ameyo Login and campaign selection test cases
 
 # Suite Setup and Teardown
 Suite Setup       Suite Initialization    change_executive
-Suite Teardown    Login Cleanup
+Suite Teardown    Suite Cleanup
 
 # Keywords Definition file
 Resource          ../../keywords/SetupTeardown.robot
@@ -24,8 +24,10 @@ TC - Test Case to change campaign
     [Tags]  smoke    testid=AP-16013-2    regression
     I change campaign    ${instance1}
 
+#This will fail as the UI has a bug with change password rules.
 TC - Test Case to Change password
     [Tags]  smoke    testid=AP-16013-3    regression
+    #[Tags]    robot:skip
     I change password    ${instance1}    ${CREDENTIALS['change_executive']['password']}    Robo@12345
     I logout from ameyo homepage    ${instance1}
     I open ameyo home page    ${instance1}

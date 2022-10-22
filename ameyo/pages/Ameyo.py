@@ -346,3 +346,19 @@ class Ameyo:
             return self._return_result(self.monitor.verify_force_logout_action(campaign_details, executive_username, home_url))
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"verify_force_logout_action", error))
+
+    def hold_resume_call(self):
+        """Method to put the call on hold"""
+        try:
+            self.agenthomepage.hold_resume_call()
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("hold_resume_call", error))
+
+    def transfer_call_not_allowed_during_hold(self, calling_number):
+        """Method to transfer the call to phone and dial"""
+        try:
+            self.agenthomepage.transfer_call_not_allowed_during_hold(calling_number)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("transfer_call_not_allowed_during_hold", error))

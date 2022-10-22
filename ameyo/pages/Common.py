@@ -36,6 +36,7 @@ class Common:
             self.action.click_element('status_dropdown_link')
             self.action.explicit_wait(new_state_element)
             self.action.click_element(new_state_element)
+            self.action.explicit_wait('selected_agent_status', ec='text_to_be_present_in_element', msg_to_verify=desired_state)
         return True
 
     @staticmethod

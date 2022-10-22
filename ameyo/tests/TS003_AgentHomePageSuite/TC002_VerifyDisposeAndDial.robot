@@ -3,7 +3,7 @@ Documentation     Ameyo dispose and dial workflow
 ...               Developed By - Developer by EA
 Library    String
 # Suite Setup and Teardown
-Suite Setup       Suite Initialization    ${RUN_AS}
+Suite Setup       Suite Initialization    ${RUN_AS}    voice_outbound    ${TRUE}
 Suite Teardown    Suite Cleanup
 
 # Keywords Definition file

@@ -13,5 +13,6 @@
   "dropdown_video":{"by":"xpath", "value":"//*[@title='Select Video Chat Campaign']", "index":"0"},
   "textbox_search":{"by":"xpath", "value":"//*[@type='search']", "index":"0"},
   "dropdown_items":{"by":"xpath", "value":"//*[@role='treeitem']", "index":"-1"},
-  "button_next":{"by":"xpath", "value":"//*[@automationid='camapignSaveBtn']", "index":"0"}
+  "button_next":{"by":"xpath", "value":"//*[@automationid='camapignSaveBtn']", "index":"0"},
+  "cross_selected_campaign":{"by":"xpath", "value":"//li[@class='select2-selection__choice']/span[@role='presentation']", "index":"0"}
 }

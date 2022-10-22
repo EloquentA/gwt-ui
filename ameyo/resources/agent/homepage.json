@@ -62,5 +62,11 @@
   "did_on_telephony_screen":{"by":"xpath", "value":"//div//span[contains(text(),'DID')]//following-sibling::strong", "index":"0"},
   "queue_on_telephony_screen":{"by":"xpath", "value":"//div//span[contains(text(),'Queue')]//following-sibling::strong", "index":"0"},
   "toast_message_popup":{"by":"xpath", "value":"//span[contains(@class,'alert__content')]", "index":"-1"},
-  "select_dropdown_list":{"by":"xpath", "value":"//ul[contains(@class,'select2-results__options')]", "index":"0"}
+  "select_dropdown_list":{"by":"xpath", "value":"//ul[contains(@class,'select2-results__options')]", "index":"0"},
+  "button_status_normal":{"by":"xpath", "value":"//button[@title='Hold']", "index":"0"},
+  "transfer_phone_tab":{"by":"xpath", "value":"//*[@automationid='transferPhoneTab']", "index":"0"},
+  "transfer_phone_input_text":{"by":"xpath", "value":"//*[@automationid='transferPhoneInputTextBox']/input", "index":"0"},
+  "transfer_phone_btn":{"by":"xpath", "value":"//*[@automationid='transferToPhoneBtn']", "index":"0"},
+  "selected_campaign_verification":{"by":"xpath", "value":"//ul[@id='campaignDropDown']/li/span[contains(@class,'type')]/parent::li/following-sibling::li/span", "index":"-1"},
+  "selected_agent_status":{"by":"xpath", "value":"//*[@automationid='agentAvailibilityStatusDropdown']//span", "index":"0"}
 }

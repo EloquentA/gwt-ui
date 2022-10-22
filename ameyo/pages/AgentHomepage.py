@@ -215,60 +215,6 @@ class AgentHomepage:
         self.open_close_dialer()
         return True
 
-    def change_campaign(self, kwargs) -> bool:
-        """This function will select campaign"""
-        self.action.click_element("preferences_drop_down_btn")
-        self.action.click_element("change_campaign_link")
-        if kwargs['new_interaction']:
-            self.action.click_element("dropdown_interaction")
-            self.action.input_text("textbox_search", kwargs['new_interaction'])
-            self.action.press_key("textbox_search", "ARROW_DOWN")
-            self.action.press_key("textbox_search", "ENTER")
-        if kwargs['new_chat']:
-            self.action.click_element("dropdown_chat")
-            self.action.input_text("textbox_search", kwargs['new_chat'])
-            self.action.press_key("textbox_search", "ARROW_DOWN")
-            self.action.press_key("textbox_search", "ENTER")
-        if kwargs['new_voice']:
-            self.action.click_element("voice_campaign_combobox")
-            self.action.input_text("textbox_search", kwargs['new_voice'])
-            self.action.press_key("textbox_search", "ARROW_DOWN")
-            self.action.press_key("textbox_search", "ENTER")
-        if kwargs['new_video']:
-            self.action.click_element("dropdown_video")
-            self.action.input_text("textbox_search", kwargs['new_video'])
-            self.action.press_key("textbox_search", "ARROW_DOWN")
-            self.action.press_key("textbox_search", "ENTER")
-        self.action.click_element("button_next")
-        self.action.element_should_contain_text("campaign_dropdown", 'finance_inbound')
-        return True
-
-    def change_password(self, oldpass, newpass) -> bool:
-        """Change Password of a logged in Agent"""
-        self.action.explicit_wait('active_phone_icon', waittime=120)
-        self.action.click_element("preferences_drop_down_btn")
-        self.action.click_element("change_pass_link")
-        self.action.input_text('current_password', oldpass)
-        self.action.explicit_wait('current_password', waittime=120)
-        self.action.input_text('new_password', newpass)
-        self.action.explicit_wait('new_password', waittime=120)
-        self.action.input_text('confirm_password', newpass)
-        self.action.click_element("update_button")
-        return True
-
-    def set_status(self) -> bool:
-        """Change Agent Status from Just logged to available and to any break reason"""
-        self.action.explicit_wait('active_phone_icon', waittime=120)
-        self.common.change_status('Available', 'available_status')
-        self.action.element_should_contain_text("status_dropdown_link", 'Available')
-        self.common.change_status('Break', 'break_status')
-        self.action.element_should_contain_text("status_dropdown_link", 'Break')
-        self.common.change_status('Available', 'available_status')
-        self.action.element_should_contain_text("status_dropdown_link", 'Available')
-        self.common.change_status('Snack', 'snack_status')
-        self.action.element_should_contain_text("status_dropdown_link", 'Snack')
-        return True
-
     def select_disposition_save_and_dispose(self, disposition_type, sub_disposition):
         """This action will select the dispositions and sub disposition from dropdown and click on Save and Dispose"""
         self.action.explicit_wait('end_call_btn')
@@ -283,3 +229,88 @@ class AgentHomepage:
         self.action.click_element('btn_save_and_dispose')
         assert self.common.validate_message_in_toast_popups("Disposed successfully"), "Toast Message not as expected"
 
+    def hold_resume_call(self):
+        """Hold/Un-hold the call and validate the alert"""
+        self.action.explicit_wait('hold_button')
+        if self.action.is_presence_of_element_located('button_status_normal'):
+            self.action.click_element('hold_button')
+            assert self.common.validate_message_in_toast_popups("Call On Hold"), "Toast Message not as expected"
+            self.action.explicit_wait('call_status', ec='text_to_be_present_in_element', msg_to_verify='On Hold')
+        else:
+            self.action.click_element('hold_button')
+            assert self.common.validate_message_in_toast_popups("Call Resumed"), "Toast Message not as expected"
+            self.action.explicit_wait('call_status', ec='text_to_be_present_in_element', msg_to_verify='Connected')
+        return True
+
+    def transfer_call_not_allowed_during_hold(self, calling_number):
+        """To validate transfer call during call hold is not allowed"""
+        self.action.explicit_wait('transfer_call_btn')
+        self.action.click_element('transfer_call_btn')
+        self.action.explicit_wait('transfer_phone_tab')
+        self.action.click_element('transfer_phone_tab')
+        self.action.input_text('transfer_phone_input_text', calling_number)
+        self.action.explicit_wait('transfer_phone_btn', ec='element_to_be_clickable')
+        self.action.click_element('transfer_phone_btn')
+        assert self.common.validate_message_in_toast_popups("Call transfer to Phone failed"), "Toast Message not as expected"
+        self.action.click_element('transfer_call_btn')
+        return True
+
+    def change_campaign(self, kwargs) -> bool:
+        """This function will select campaign"""
+        self.action.click_element("preferences_drop_down_btn")
+        self.action.click_element("change_campaign_link")
+        if kwargs['new_interaction']:
+            self.action.click_element("dropdown_interaction")
+            self.action.select_from_ul_dropdown_using_text("ul_campaign_selector", kwargs['new_interaction'])
+            self.action.click_element("button_next")
+            elements = self.action.get_element('selected_campaign_verification')
+            campaign_list = [element.text for element in elements]
+            assert kwargs['new_video'] in campaign_list, "Campaign is not as expected"
+        if kwargs['new_chat']:
+            self.action.click_element("dropdown_chat")
+            self.action.select_from_ul_dropdown_using_text("ul_campaign_selector", kwargs['new_chat'])
+            self.action.click_element("button_next")
+            elements = self.action.get_element('selected_campaign_verification')
+            campaign_list = [element.text for element in elements]
+            assert kwargs['new_video'] in campaign_list, "Campaign is not as expected"
+        if kwargs['new_voice']:
+            self.action.explicit_wait("cross_selected_campaign")
+            self.action.click_element("cross_selected_campaign")
+            self.action.explicit_wait("ul_campaign_selector")
+            self.action.select_from_ul_dropdown_using_text("ul_campaign_selector", kwargs['new_voice'])
+            self.action.click_element("button_next")
+            elements = self.action.get_element('selected_campaign_verification')
+            campaign_list = [element.text for element in elements]
+            assert kwargs['new_video'] in campaign_list, "Campaign is not as expected"
+        if kwargs['new_video']:
+            self.action.click_element("dropdown_video")
+            self.action.select_from_ul_dropdown_using_text("ul_campaign_selector", kwargs['new_video'])
+            self.action.click_element("button_next")
+            elements = self.action.get_element('selected_campaign_verification')
+            campaign_list = [element.text for element in elements]
+            assert kwargs['new_video'] in campaign_list, "Campaign is not as expected"
+        return True
+
+    def change_password(self, oldpass, newpass) -> bool:
+        """Change Password of a logged in Agent"""
+        self.action.explicit_wait('active_phone_icon', waittime=120)
+        self.action.click_element("preferences_drop_down_btn")
+        self.action.click_element("change_pass_link")
+        self.action.input_text('current_password', oldpass)
+        self.action.explicit_wait('current_password', waittime=120)
+        self.action.input_text('new_password', newpass)
+        self.action.explicit_wait('new_password', waittime=120)
+        self.action.input_text('confirm_password', newpass)
+        self.action.click_element("update_button")
+        assert self.common.validate_message_in_toast_popups("Password updated successfully"), "Toast Message not as expected"
+        return True
+
+    def set_status(self) -> bool:
+        """Change Agent Status from Just logged to available and to any break reason"""
+        self.action.explicit_wait('active_phone_icon', waittime=120)
+        self.common.change_status('Available', 'available_status')
+        self.common.change_status('Break', 'break_status')
+        self.common.change_status('Available', 'available_status')
+        self.common.change_status('Snack', 'snack_status')
+        self.common.change_status('Available', 'available_status')
+        return True

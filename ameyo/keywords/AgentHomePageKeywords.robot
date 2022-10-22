@@ -85,3 +85,15 @@ Save and Dispose via Select Disposition
     [Arguments]  ${instance}    ${disposition_type}    ${sub_disposition_type}
     ${result}=   call method    ${instance}    select_disposition_save_and_dispose    ${disposition_type}    ${sub_disposition_type}
     I verify result    ${result}
+
+On hold unhold
+    [Documentation]   This keyword is used to show the fucntionality of holds/unhold feature on an ongoing call
+    [Arguments]  ${instance}
+    ${result}=   call method    ${instance}    hold_resume_call
+    I verify result    ${result}
+
+Transfer call not allowed during hold
+    [Documentation]   This keyword validates that transfer call is not allowed during call hold
+    [Arguments]  ${instance}    ${CALLING_NUMBER}
+    ${result}=   call method    ${instance}    transfer_call_not_allowed_during_hold    ${CALLING_NUMBER}
+    I verify result    ${result}
