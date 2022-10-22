@@ -2994,3 +2994,62 @@ class DataCreationAPIs(Wrapper):
         })
         self.rest.raise_for_status(response)
         return response
+
+
+    def get_crm_adapter_setting(self, **kwargs):
+        """
+        Get CRM adapter Settings for a Campaign
+        RPC Call: getCRMAdapterSetting
+        :return:
+        """
+        campaignId = kwargs.get('campaignId', None)
+        sessionId = kwargs.get('sessionId', self.executiveToken)
+        self.check_required_args([campaignId, sessionId])
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'params': {'campaignId': campaignId},
+            'url': urljoin(self.creds.url, f"ameyorestapi/cc/crmAdapterSettings/{campaignId}"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict([
+            'campaignName', 'campaignId'], response.json())
+        return response
+
+    def update_campaign_advanced_settings(self, **kwargs):
+        """
+        Update Campaign Advanced Settings
+        RPC Call: updateOutboundCampaignAdvancedSettings
+        :param kwargs:
+        :return:
+        """
+        campaignId = kwargs.get('campaignId ', None)
+        numLastCalls = kwargs.get('numLastCalls', None)
+        recordingFileFormat = kwargs.get('recordingFileFormat', "")
+        customerProviderType = kwargs.get('customerProviderType', "")
+        disposeFromCRMOnlyEnabled = kwargs.get('disposeFromCRMOnlyEnabled', True)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([
+            campaignId, numLastCalls, recordingFileFormat, customerProviderType, disposeFromCRMOnlyEnabled, sessionId
+        ])
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, f"ameyorestapi/voice/outboundVoiceCampaignSettings/"
+                                           f"updateOutboundCampaignAdvancedSettings"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "campaignId": campaignId,
+                "numLastCalls": numLastCalls,
+                "recordingFileFormat": recordingFileFormat,
+                "customerProviderType": customerProviderType,
+                "disposeFromCRMOnlyEnabled": disposeFromCRMOnlyEnabled
+            }
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict([
+            'campaignId', 'numLastCalls', 'disposeFromCRMOnlyEnabled', 'customerProviderType'], response.json())
+        return response
