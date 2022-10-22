@@ -461,8 +461,14 @@ class TestSetup:
         process_ids_list = sorted(calling['processIds'])
         inbound_campaigns_list = calling['test_data']['inbound_campaigns']
         outbound_campaigns_list = calling['test_data']['outbound_campaigns']
+        preview_dial_campaigns_list = calling['test_data']['preview_dial_campaigns']
+        predictive_dial_campaigns_list = calling['test_data']['predictive_dial_campaigns']
+        progressive_dial_campaigns_list = calling['test_data']['progressive_dial_campaigns']
         proc_inbound_campgn_dict = dict(zip(process_ids_list, inbound_campaigns_list))
         proc_outbound_campgn_dict = dict(zip(process_ids_list, outbound_campaigns_list))
+        proc_preview_dial_campgn_dict = dict(zip(process_ids_list, preview_dial_campaigns_list))
+        proc_predictive_dial_campgn_dict = dict(zip(process_ids_list, predictive_dial_campaigns_list))
+        proc_progressive_dial_campgn_dict = dict(zip(process_ids_list, progressive_dial_campaigns_list))
         campaignIds = []
         for process_id, campaign_name in proc_inbound_campgn_dict.items():
             campaignName = f"{campaign_name}"
@@ -479,6 +485,48 @@ class TestSetup:
             if campaignName not in [x['campaignName'] for x in Campaigns]:
                 raise Exception(f"Campaign {campaignName} is not Present !!")
         for process_id, campaign_name in proc_outbound_campgn_dict.items():
+            campaignName = f"{campaign_name}"
+            response = ameyo.create_campaign(**{
+                "processId": process_id,
+                "campaignType": calling['test_data']['campaign_type_outbound'],
+                "campaignName": campaignName,
+                "description": f"{campaignName} Description",
+            })
+            campaignId = response.json()['campaignId']
+            campaignIds.append(campaignId)
+
+            Campaigns = ameyo.get_all_campaigns().json()
+            if campaignName not in [x['campaignName'] for x in Campaigns]:
+                raise Exception(f"Campaign {campaignName} is not Present !!")
+        for process_id, campaign_name in proc_preview_dial_campgn_dict.items():
+            campaignName = f"{campaign_name}"
+            response = ameyo.create_campaign(**{
+                "processId": process_id,
+                "campaignType": calling['test_data']['campaign_type_outbound'],
+                "campaignName": campaignName,
+                "description": f"{campaignName} Description",
+            })
+            campaignId = response.json()['campaignId']
+            campaignIds.append(campaignId)
+
+            Campaigns = ameyo.get_all_campaigns().json()
+            if campaignName not in [x['campaignName'] for x in Campaigns]:
+                raise Exception(f"Campaign {campaignName} is not Present !!")
+        for process_id, campaign_name in proc_predictive_dial_campgn_dict.items():
+            campaignName = f"{campaign_name}"
+            response = ameyo.create_campaign(**{
+                "processId": process_id,
+                "campaignType": calling['test_data']['campaign_type_outbound'],
+                "campaignName": campaignName,
+                "description": f"{campaignName} Description",
+            })
+            campaignId = response.json()['campaignId']
+            campaignIds.append(campaignId)
+
+            Campaigns = ameyo.get_all_campaigns().json()
+            if campaignName not in [x['campaignName'] for x in Campaigns]:
+                raise Exception(f"Campaign {campaignName} is not Present !!")
+        for process_id, campaign_name in proc_progressive_dial_campgn_dict.items():
             campaignName = f"{campaign_name}"
             response = ameyo.create_campaign(**{
                 "processId": process_id,
@@ -870,6 +918,11 @@ class TestSetup:
                     continue
                 else:
                     leadIds.append(Lead['leadId'])
+                    # upload new customer data in lead
+                    data = ameyo.create_customer_data_to_upload(count=50)
+                    data.update({'campaignId': Campaign['campaignId']})
+                    data.update({'leadId': Lead["leadId"]})
+                    response = ameyo.upload_contacts(data=data)
 
             if len(leadIds) > 0:
                 ameyo.assign_lead_to_campaign(campaignContextId=Campaign['campaignId'], leadIds=leadIds,
@@ -923,7 +976,60 @@ class TestSetup:
                     assert lead[
                         "isEnable"], f"Lead <{Lead['leadName']}> can not be enabled for <{Campaign['campaignName']}>"
 
-    def test_32_create_agents(self, ameyo, calling):
+    def test_32_set_dialer_settings_in_campaigns(self, ameyo, calling):
+        """
+        Set dialer settings in campaigns
+        :param ameyo:
+        :return:
+        """
+        for Campaign in ameyo.get_all_campaigns(sessionId=ameyo.adminToken).json():
+            if Campaign['campaignName'] in calling['test_data']['predictive_dial_campaigns']:
+                ameyo.set_outbound_voice_campaign_setting(campaignId=Campaign['campaignId'],
+                                                          dialerAlgoType="Predictive")
+                ameyo.set_predictive_algo_setting(campaignId=Campaign['campaignId'],
+                                                  maxPacingRatio=4,
+                                                  callDropRatio=50,
+                                                  peakCallCount=4)
+                response = ameyo.get_outbound_voice_campaign_setting(campaignId=Campaign['campaignId'])
+                assert response.json()["dialerAlgoType"] == "Predictive", f"Dialer Algo could not be set" \
+                                                                          f" to Predictive.{response.text}"
+                response = ameyo.enable_auto_dial(campaignId=Campaign['campaignId'])
+                if isinstance(response, bool):
+                    assert response, "Auto dial can not be enabled"
+                else:
+                    assert response.ok, f"Auto dial can not be enabled !! {response.text}"
+                assert response.json()["dialerAlgoType"] == "Predictive", f"Dialer Algo could not be set" \
+                                                                          f" to Predictive.{response.text}"
+            elif Campaign['campaignName'] in calling['test_data']['progressive_dial_campaigns']:
+                ameyo.set_outbound_voice_campaign_setting(campaignId=Campaign['campaignId'],
+                                                          dialerAlgoType="Progressive")
+                ameyo.set_progressive_algo_setting(campaignId=Campaign['campaignId'])
+                response = ameyo.get_outbound_voice_campaign_setting(campaignId=Campaign['campaignId'])
+                assert response.json()[
+                           "dialerAlgoType"] == "Progressive", \
+                    f"Dialer Algo could not be set to Progressive.{response.text}"
+                response = ameyo.enable_auto_dial(campaignId=Campaign['campaignId'])
+                if isinstance(response, bool):
+                    assert response, "Auto dial can not be enabled"
+                else:
+                    assert response.ok, f"Auto dial can not be enabled !! {response.text}"
+            elif Campaign['campaignName'] in calling['test_data']['preview_dial_campaigns']:
+                ameyo.set_outbound_voice_campaign_setting(campaignId=Campaign['campaignId'],
+                                                          dialerAlgoType="Preview")
+                ameyo.set_preview_algo_setting(campaignId=Campaign['campaignId'])
+                response = ameyo.get_outbound_voice_campaign_setting(campaignId=Campaign['campaignId'])
+                assert response.json()[
+                           "dialerAlgoType"] == "Preview", \
+                    f"Dialer Algo could not be set to Preview.{response.text}"
+                response = ameyo.enable_auto_dial(campaignId=Campaign['campaignId'])
+                if isinstance(response, bool):
+                    assert response, "Auto dial can not be enabled"
+                else:
+                    assert response.ok, f"Auto dial can not be enabled !! {response.text}"
+            else:
+                pass
+
+    def test_33_create_agents(self, ameyo, calling):
         """
         Get Contact Center Agents
         :param ameyo:

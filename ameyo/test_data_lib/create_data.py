@@ -1,10 +1,11 @@
 __author__ = "Developed by EA"
 
-from urllib.parse import urljoin
 from datetime import datetime
 import time
 import csv
 import json
+import urllib
+from urllib.parse import urljoin
 from pathlib import Path
 
 from ameyo.test_data_lib.wrapper import Wrapper
@@ -2724,8 +2725,272 @@ class DataCreationAPIs(Wrapper):
             ], _item)
         return response
 
+    def create_customer_data_to_upload(self, **kwargs):
+        """
+        Create Customer data to upload
+        Uploading callback data is pending
+        """
+        upload_callback_record = kwargs.get("upload_callback_record", False)
+        data = {}
+        customer_records = list()
+        count = kwargs.get('count', 10)
+        for i in range(count):
+            customer_record = dict()
+            customer_record["customerRecord"] = dict()
+            customer_record["customerRecord"]["phone1"] = self.faker.msisdn()[3:]
+            customer_records.append(customer_record)
+
+        if upload_callback_record:
+            callback_data = dict()
+            callback_data["userId"] = "Agent_1"
+            callback_data["isSelfCallBack"] = True
+            callback_data["callBackPhone"] = "9654158622"
+            callback_data["callBackTime"] = "2022-01-27 18:30:00 PM"
+            callback_data["callBackPhone"] = "1292468"
+            callback_records = dict()
+            callback_records["callbackRecord"] = callback_data
+            customer_records.append(callback_records)
+
+        data["campaignId"] = None
+        data["customerAndCallbackRecords"] = customer_records
+        data["leadId"] = None
+        data["properties"] = {"update.customer": True, "migrate.customer": True}
+
+        return data
+
+    def upload_contacts(self, **kwargs):
+        """
+        Upload the contact to the system i.e. campaign
+        :param kwargs:
+        :return:
+        """
+        data = kwargs.get("data")
+        hashkey = kwargs.get("hashkey", self.webaccess_api_token)
+        self.check_required_args([data, hashkey])
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, f"ameyowebaccess/command"),
+            'headers': {
+                "requesting-host": "localhost", "policy-name": "token-based-authorization-policy",
+                "hash-key": hashkey, "content-type": "application/x-www-form-urlencoded"},
+            'params': {'command': "uploadContactAndAddCallback"},
+            'data': f'data={urllib.parse.quote(json.dumps(data))}',
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        return response
+
+    def set_preview_algo_setting(self, **kwargs):
+        """
+        Get all preview algo settings
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', self.supervisorToken)
+        campaignId = kwargs.get('campaignId', None)
+        leadUserDialing = kwargs.get('leadUserDialing', False)
+        self.check_required_args([sessionId, campaignId])
+        response = self.rest.send_request(**{
+            'method': 'PUT',
+            'url': urljoin(self.creds.url, f"ameyorestapi/voice/previewAlgoSettings/{campaignId}"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "peakCallCount": 20,
+                "leadUserDialing": leadUserDialing
+            },
+        })
+        self.rest.raise_for_status(response)
+        return response
+
+    def set_predictive_algo_setting(self, **kwargs):
+        """
+        Get all predictive algo settings
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', self.supervisorToken)
+        campaignId = kwargs.get('campaignId', None)
+        agentWaitTime = kwargs.get('agentWaitTime', 5)
+        callDropRatio = kwargs.get('callDropRatio', 5)
+        maxPacingRatio = kwargs.get('maxPacingRatio', 2)
+        peakCallCount = kwargs.get('peakCallCount', 20)
+        varianceFactor = kwargs.get('varianceFactor', 100)
+
+        self.check_required_args([sessionId, campaignId])
+        response = self.rest.send_request(**{
+            'method': 'PUT',
+            'url': urljoin(self.creds.url, f"ameyorestapi/voice/predictiveAlgoSettings/{campaignId}"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "agentWaitTime": agentWaitTime,
+                "callDropRatio": callDropRatio,
+                "maxPacingRatio": maxPacingRatio,
+                "peakCallCount": peakCallCount,
+                "varianceFactor": varianceFactor,
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict([
+            'agentWaitTime', 'callDropRatio', 'maxPacingRatio', 'peakCallCount', 'varianceFactor'
+        ], response.json())
+        return response
+
+    def set_progressive_algo_setting(self, **kwargs):
+        """
+        Get all progressive algo settings
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', self.supervisorToken)
+        campaignId = kwargs.get('campaignId', None)
+        peakCallCount = kwargs.get('peakCallCount', 20)
+
+        self.check_required_args([sessionId, campaignId])
+        response = self.rest.send_request(**{
+            'method': 'PUT',
+            'url': urljoin(self.creds.url, f"ameyorestapi/voice/progressiveAlgoSettings/{campaignId}"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "peakCallCount": peakCallCount,
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict([
+            'campaignId', 'peakCallCount'], response.json())
+        return response
+
+    def enable_auto_dial(self, **kwargs):
+        """
+        Enable auto dial -> sup token
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', self.supervisorToken)
+        campaignId = kwargs.get('campaignId', None)
+        self.check_required_args([sessionId, campaignId])
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, f"ameyorestapi/voice/startDialer"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "campaignId": campaignId,
+            },
+
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        if response.status_code == 512:
+            if response.json()["message"].startswith('["OutboundVoiceCampaign.dial.in.progress"'):
+                self.logger.info("Auto dial already enabled")
+                self.is_auto_dial_enabled = True
+                return True
+
+        self.rest.raise_for_status(response)
+        self.is_auto_dial_enabled = True
+        return response
+
+    def disable_auto_dial(self, **kwargs):
+        """
+        Disable auto dial -> sup token
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', self.supervisorToken)
+        campaignId = kwargs.get('campaignId', None)
+        self.check_required_args([sessionId, campaignId])
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, f"ameyorestapi/voice/stopDialer"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "campaignId": campaignId,
+            },
+
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        if response.status_code == 512:
+            if response.json()["message"].startswith('["OutboundVoiceCampaign.dialing.not.in.progress"'):
+                self.logger.info("Auto dial already disabled")
+                self.is_auto_dial_enabled = False
+                return True
+
+        self.rest.raise_for_status(response)
+        self.logger.info("Auto dial disabled")
+        self.is_auto_dial_enabled = False
+        return response
 
 
+    def set_outbound_voice_campaign_setting(self, **kwargs):
+        """
 
+        """
+        sessionId = kwargs.get('sessionId', self.supervisorToken)
+        campaignId = kwargs.get('campaignId', None)
+        dialerAlgoType = kwargs.get('dialerAlgoType', None)
+        self.check_required_args([sessionId, campaignId, dialerAlgoType])
+        payload = {
+            "dialerAlgoType": dialerAlgoType,
+            "acwConnected": 30,
+            "acwConnectedEnabled": False,
+            "acwNotConnected": 30,
+            "amdType": "DEFAULT",
+            "autoAnswer": True,
+            "beepDuration": 5,
+            "beepEnabled": False,
+            "callerId": "NODID",
+            "crmURL": "",
+            "customerProviderType": "campaign.based.customer.provider",
+            "dialOnTimeOut": 30,
+            "dialOnTimeOutEnabled": True,
+            "dialPhoneEnabled": True,
+            # "dialerAlgoType": "Predictive",
+            "dispositionURL": "",
+            "inheritAutoAnswerFromParent": False,
+            "isAMDEnabled": False,
+            "maxCallbackCount": 10,
+            "numOfLastCallsToMonitor": 200,
+            "peakCallCount": 100,
+            "previewURL": "",
+            "recordingFileFormat": "tg729",
+            "screenLogsEnabled": True,
+            "timeZoneMapper": "lead.based.campaign.timezone.mapper",
+            "voiceLogsEnabled": True,
+            "wrapTimeOut": 300
+        }
+        response = self.rest.send_request(**{
+            'method': 'PUT',
+            'url': urljoin(self.creds.url, f"ameyorestapi/voice/outboundVoiceCampaignSettings/{campaignId}"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid,
+                        'content-type': "application/json;charset=UTF-8"},
+            'json': payload,
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict([
+            'dialerAlgoType', 'customerProviderType', 'timeZoneMapper', 'peakCallCount', 'isAMDEnabled'
+        ], response.json())
+        return response
 
-
+    def get_outbound_voice_campaign_setting(self, **kwargs):
+        """
+        Get all outbound campaign setting
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', self.supervisorToken)
+        campaignId = kwargs.get('campaignId', None)
+        self.check_required_args([sessionId, campaignId])
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'url': urljoin(self.creds.url, f"ameyorestapi/voice/outboundVoiceCampaignSettings/{campaignId}"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        self.rest.raise_for_status(response)
+        return response
