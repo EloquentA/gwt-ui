@@ -20,6 +20,7 @@ from AgentHomepage import AgentHomepage
 from AdminUser import AdminUser
 from AdminSystem import AdminSystem
 from Monitor import Monitor
+from CallDetails import CallDetails
 
 
 class Ameyo:
@@ -38,6 +39,7 @@ class Ameyo:
         self.adminuser = AdminUser(self.web_browser, self.common)
         self.adminsystem = AdminSystem(self.web_browser, self.common)
         self.monitor = Monitor(self.web_browser, self.common, self.agenthomepage)
+        self.call_details = CallDetails(self.web_browser, self.common)
 
     def __capture_error(self, method_name, error_msg):
         """Utility method to capture and report errors"""
@@ -165,7 +167,7 @@ class Ameyo:
         try:
             kwargs = kwargs.get(run_as).get('campaign_details')
             if kwargs is not None:
-                self.login.select_campaign(kwargs, voice_campaign_type)
+                self.login.select_campaign(kwargs, run_as, voice_campaign_type)
             else:
                 print(f'Select campaign is not applicable for user type: {run_as}')
             return self._return_result()
@@ -362,3 +364,27 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("transfer_call_not_allowed_during_hold", error))
+
+    def schedule_callback(self, callback_config):
+        """This function will schedule a callback"""
+        try:
+            self.agenthomepage.schedule_callback(callback_config)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"schedule_call_back", error))
+
+    def verify_callback(self, kwargs):
+        """This function will cover callback scenario"""
+        try:
+            self.call_details.verify_callback(kwargs)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"verify_callback", error))
+
+    def verify_call_history(self, kwargs):
+        """This function will cover call history scenario"""
+        try:
+            self.call_details.verify_call_history(kwargs)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"verify_call_history", error))

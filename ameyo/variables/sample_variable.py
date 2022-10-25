@@ -70,3 +70,19 @@ DISPOSITION = {
   'dial_number': '123456',
   'quick_disposition': 'Sale'
 }
+CALLBACK = {
+  'disposition': 'schedule.callback',
+  'sub_disposition': 'Callback',
+  'disposition_note': 'Automation schedule',
+  'specify_time': '00:00:10',
+  'callback_type': 'self',
+  'specify_date': ''
+}
+CALLBACK_DETAILS = {
+  'campaign': 'finance_outbound',
+  'actions': 'Reschedule'
+}
+CALL_HISTORY = {
+  'campaign': 'finance_outbound',
+  'disposition': 'select_all'
+}

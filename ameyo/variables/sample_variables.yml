@@ -56,6 +56,7 @@ CREDENTIALS:
       chat: ''
       voice_outbound: 'finance_outbound'
       voice_inbound: 'finance_inbound'
+      voice: 'finance_outbound'
       video: ''
       # To perform monitoring test cases out of: interaction, chat, voice or video
       monitor_with: 'voice_outbound'
@@ -79,3 +80,16 @@ DISPOSITION:
   dial_number: '123456'
   quick_disposition: 'Sale'
 ADMIN_MAPPING_POLICY_TYPE: 'UserId based call leg details provider'
+CALLBACK:
+  disposition: 'schedule.callback'
+  sub_disposition: 'Callback'
+  disposition_note: 'Automation schedule'
+  specify_time: '00:00:10'
+  callback_type: 'self'
+  specify_date: ''
+CALLBACK_DETAILS:
+  campaign: 'finance_outbound'
+  actions: 'Reschedule'
+CALL_HISTORY:
+  campaign: 'finance_outbound'
+  disposition: 'select_all'

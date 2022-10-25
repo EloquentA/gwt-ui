@@ -97,3 +97,9 @@ Transfer call not allowed during hold
     [Arguments]  ${instance}    ${CALLING_NUMBER}
     ${result}=   call method    ${instance}    transfer_call_not_allowed_during_hold    ${CALLING_NUMBER}
     I verify result    ${result}
+
+schedule callback
+    [Documentation]   This keyword will cover call schedule flow
+    [Arguments]  ${instance}
+    ${result}=   call method    ${instance}    schedule_callback    ${CALLBACK}
+    I verify result    ${result}

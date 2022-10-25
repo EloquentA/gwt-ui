@@ -314,3 +314,29 @@ class AgentHomepage:
         self.common.change_status('Snack', 'snack_status')
         self.common.change_status('Available', 'available_status')
         return True
+
+    def schedule_callback(self, callback_config):
+        """This function will cover callback scenario"""
+        self.action.click_element('btn_disposition_down_arrow')
+        self.select_disposition(callback_config['disposition'], callback_config['sub_disposition'])
+        self.action.is_presence_of_element_located('end_call_btn')
+        self.action.click_element('end_call_btn')
+        time.sleep(2)
+        if callback_config['callback_type'] == 'self':
+            self.action.explicit_wait('checkbox_self_callback', ec='element_to_be_clickable')
+            self.action.click_element('checkbox_self_callback')
+        if callback_config['specify_time']:
+            day, hour, minute = callback_config['specify_time'].split(":")
+            self.action.explicit_wait('radio_btn_specify_time', ec='element_to_be_clickable')
+            # time.sleep(1)
+            self.action.click_element('radio_btn_specify_time')
+            # time.sleep(1)
+            # self.action.input_text("textbox_days", day)
+            self.action.input_text("textbox_hours", hour)
+            self.action.input_text("textbox_minutes", minute)
+        self.action.input_text("text_disposition_note", callback_config['disposition_note'])
+        # time.sleep(2)
+        self.action.click_element('btn_save_and_dispose')
+        time.sleep(1)
+        self.open_close_dialer()
+        return True
