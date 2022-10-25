@@ -822,6 +822,23 @@ class Action:
         except Exception as err:
             raise AssertionError(f"Error in get_table_row_elements - Check table locator: {err}")
 
+    def get_table_row_values(self, locator):
+        """Returns row elements from table."""
+        try:
+            table = self._element_finder(locator)
+            if table:
+                row_list = table.find_elements(By.TAG_NAME, 'tr')
+                row_details = dict()
+                for row in range(len(row_list)):
+                    row_values = []
+                    col_list = row_list[row].find_elements(By.TAG_NAME, 'td')
+                    for column in col_list:
+                        row_values.append(column.text)
+                    row_details[row] = row_values
+                return row_details
+        except Exception as err:
+            raise AssertionError(f"Error in get_table_row_elements - Check table locator: {err}")
+
     def get_table_cell_data(self, locator, row, col, raw_cell=False, raise_error=True):
         """Returns cell data of a table using row & col number.
         your xpath for table should be something like : //form[2]/table/tbody
@@ -1223,7 +1240,8 @@ class Action:
             "END": Keys.END,
             "HOME": Keys.HOME,
             "F12": Keys.F12,
-            "ALT": Keys.ALT
+            "ALT": Keys.ALT,
+            "PAGE_DOWN": Keys.PAGE_DOWN
 
         }
         key = map.get(key_code)

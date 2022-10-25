@@ -1,0 +1,20 @@
+{
+  "dropdown_voice_supervisor":{"by":"xpath", "value":"//*[@placeholder='Select Voice Campaign']", "index":"0"},
+  "checkbox_blended_group":{"by":"xpath", "value":"//*[@automationid='blendedGroupCheckBox']", "index":"0"},
+  "dropdown_video_supervisor":{"by":"xpath", "value":"//*[@value='Select Video Chat Campaign']", "index":"0"},
+  "call_details_tab":{"by":"xpath", "value":"//a//span[contains(text(),'Call Details')]", "index":"1"},
+  "call_history_tab":{"by":"xpath", "value":"//a//span[contains(text(),'Call History')]", "index":"0"},
+  "callback_tab":{"by":"xpath", "value":"//a//span[contains(text(),'Call Back')]", "index":"0"},
+  "btn_filter":{"by":"xpath", "value":"//*[@class='mdi mdi-filter']", "index":"1"},
+  "btn_filter_select_all":{"by":"xpath", "value":"//label[contains(text(),'Select All')]", "index":"0"},
+  "btn_filter_finance_outbound":{"by":"xpath", "value":"//label[contains(text(),'finance_outbound')]", "index":"0"},
+  "btn_filter_finance_inbound":{"by":"xpath", "value":"//label[contains(text(),'finance_inbound')]", "index":"0"},
+  "btn_apply_filter":{"by":"xpath", "value":"//span[contains(text(),'Apply')]", "index":"1"},
+  "table_data":{"by":"xpath", "value":"//*[@class='table-container']/div/table/tbody", "index":"1"},
+  "delete_callback":{"by":"xpath", "value":"//td[@data-title='Actions']/div/div/button/i", "index":"0"},
+  "text_delete_message":{"by":"xpath", "value":"//*[contains(text(),'Why do you want to delete callback?*')]/preceding-sibling::textarea", "index":"0"},
+  "btn_delete_popup":{"by":"xpath", "value":"//*[@class='modal-footer']/button/span[contains(text(),'Delete')]", "index":"0"},
+  "btn_listen":{"by":"xpath", "value":"//td[@data-title='Listen']/div/i", "index":"0"},
+  "audio_panel":{"by":"xpath", "value":"//audio[@controlslist='nodownload']", "index":"0"},
+  "close_audio": {"by":"xpath", "value":"//*[@class='audio-player audioPlayer--floating']/div/div/button/i[@class='mdi mdi-close']", "index":"0"}
+}

@@ -68,5 +68,11 @@
   "transfer_phone_input_text":{"by":"xpath", "value":"//*[@automationid='transferPhoneInputTextBox']/input", "index":"0"},
   "transfer_phone_btn":{"by":"xpath", "value":"//*[@automationid='transferToPhoneBtn']", "index":"0"},
   "selected_campaign_verification":{"by":"xpath", "value":"//ul[@id='campaignDropDown']/li/span[contains(@class,'type')]/parent::li/following-sibling::li/span", "index":"-1"},
-  "selected_agent_status":{"by":"xpath", "value":"//*[@automationid='agentAvailibilityStatusDropdown']//span", "index":"0"}
+  "selected_agent_status":{"by":"xpath", "value":"//*[@automationid='agentAvailibilityStatusDropdown']//span", "index":"0"},
+  "checkbox_self_callback": {"by":"xpath", "value":"//*[@automationid='selfCallbackCheckBox']/label", "index":"0"},
+  "radio_btn_specify_time": {"by":"xpath", "value":"//*[@automationid='specifyTimeRadioBtn']/label", "index":"0"},
+  "textbox_minutes": {"by":"xpath", "value":"//label[text()= 'Minutes']/preceding-sibling::div/input", "index":"0"},
+  "textbox_hours": {"by":"xpath", "value":"//label[text()= 'Hour(s)']/preceding-sibling::div/input", "index":"0"},
+  "textbox_days": {"by":"xpath", "value":"//label[text()= 'Days(s)']/preceding-sibling::div/input", "index":"0"},
+  "box_call_panel":{"by":"xpath", "value":"//*[@automationid='callPanelBox']", "index":"0"}
 }

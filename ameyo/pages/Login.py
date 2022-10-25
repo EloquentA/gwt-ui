@@ -97,23 +97,44 @@ class Login:
             assert False, f'Invalid failure case requested for login: {username_type} and {password_type}'
         return True
 
-    def select_campaign(self, kwargs, voice_campaign_type="voice_outbound") -> bool:
+    def make_campaign_selection(self, dropdown_locator, search_box_locator, value):
+        """This function will select campaign as per given inputs"""
+        self.action.click_element(dropdown_locator)
+        self.action.input_text(search_box_locator, value)
+        self.action.press_key(search_box_locator, "ARROW_DOWN")
+        self.action.press_key(search_box_locator, "ENTER")
+
+    def select_campaign(self, kwargs, user_type, voice_campaign_type="voice_outbound") -> bool:
         """This function will select campaign"""
         current_url = self.action.get_current_url()
-        if 'agentConfiguration' in current_url:
+        if user_type.lower() == 'executive':
+            if 'agentConfiguration' in current_url:
+                if kwargs['interaction']:
+                    self.action.click_element("dropdown_interaction")
+                    self.action.select_from_ul_dropdown_using_text('ul_campaign_selector', kwargs['interaction'])
+                if kwargs['chat']:
+                    self.action.click_element("dropdown_chat")
+                    self.action.select_from_ul_dropdown_using_text('ul_campaign_selector', kwargs['chat'])
+                if kwargs[voice_campaign_type]:
+                    self.action.click_element("dropdown_voice")
+                    self.action.select_from_ul_dropdown_using_text('ul_campaign_selector', kwargs[voice_campaign_type])
+                if kwargs['video']:
+                    self.action.click_element("dropdown_video")
+                    self.action.select_from_ul_dropdown_using_text('ul_campaign_selector', kwargs['video'])
+                self.action.click_element("button_next")
+            else:
+                print("Already on home page.", current_url)
+        elif user_type.lower() == 'supervisor':
+            self.action.click_element('workbench_tab')
             if kwargs['interaction']:
-                self.action.click_element("dropdown_interaction")
-                self.action.select_from_ul_dropdown_using_text('ul_campaign_selector', kwargs['interaction'])
+                self.make_campaign_selection('dropdown_interaction', 'textbox_search', kwargs['interaction'])
             if kwargs['chat']:
-                self.action.click_element("dropdown_chat")
-                self.action.select_from_ul_dropdown_using_text('ul_campaign_selector', kwargs['chat'])
-            if kwargs[voice_campaign_type]:
-                self.action.click_element("dropdown_voice")
-                self.action.select_from_ul_dropdown_using_text('ul_campaign_selector', kwargs[voice_campaign_type])
+                self.make_campaign_selection('dropdown_chat', 'textbox_search', kwargs['chat'])
+            if kwargs['voice']:
+                self.action.click_element('dropdown_voice_supervisor')
+                for voice_campaign in kwargs['voice'].split(','):
+                    self.action.select_list_item_using_text('dropdown_items', voice_campaign)
             if kwargs['video']:
-                self.action.click_element("dropdown_video")
-                self.action.select_from_ul_dropdown_using_text('ul_campaign_selector', kwargs['video'])
+                self.make_campaign_selection('dropdown_video_supervisor', 'textbox_search', kwargs['video'])
             self.action.click_element("button_next")
-        else:
-            print("Already on home page.", current_url)
         return True
