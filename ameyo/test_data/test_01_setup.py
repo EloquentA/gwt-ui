@@ -33,7 +33,6 @@ class TestSetup:
         :param ameyo:
         :return:
         """
-        # ccname = f"{self.ccn}_{'Sp'}"
         test_data = TestSetup.read_json("test_data.json")
         calling.update({"test_data": test_data})
 
@@ -770,7 +769,7 @@ class TestSetup:
         else:
             raise Exception(f"dispositionClass {dp_cls_name} Not Found !!")
 
-        dp_code_name = f"{calling['ccname']}_DCODE_1"
+        dp_code_name = f"{calling['ccname']}_D_CODE_1"
         Codes = ameyo.get_disposition_codes(sessionId=ameyo.adminToken).json()
         for Code in Codes:
             if dp_code_name == Code['dispositionCodeName']:
@@ -1327,8 +1326,8 @@ class TestSetup:
         :return:
         """
         path = os.getcwd()
-        # test_data_dir = os.path.join(path)
-        test_data_dir = os.path.join(path, "ameyo", "test_data")
+        test_data_dir = os.path.join(path)
+        # test_data_dir = os.path.join(path, "ameyo", "test_data")
         json_file = os.path.join(test_data_dir, "test_data.json")
         yaml_file = os.path.join(test_data_dir, "sample_variables.yml")
         ameyo.json_to_yaml(json_file, yaml_file)

@@ -3053,3 +3053,32 @@ class DataCreationAPIs(Wrapper):
         self.is_key_there_in_dict([
             'campaignId', 'numLastCalls', 'disposeFromCRMOnlyEnabled', 'customerProviderType'], response.json())
         return response
+
+
+    def update_user_role(self, **kwargs):
+        """
+        Changes a user role i.e. from Administrator to Executive and so on
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        ccUserId = kwargs.get('ccUserId', None)
+        userId = kwargs.get('userId', None)
+        role_to_assign = kwargs.get('role_to_assign', None)
+        self.check_required_args([sessionId, userId, ccUserId])
+        response = self.rest.send_request(**{
+            'method': 'PUT',
+            'url': urljoin(self.creds.url,
+                           f"ameyorestapi/cc/contactCenterUsers/{ccUserId}"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "userId": userId,
+                "userType": role_to_assign,
+                "userName": userId,
+                "systemUserType": role_to_assign,
+                "defaultReady": False
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
