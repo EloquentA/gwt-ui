@@ -25,7 +25,8 @@ class Wrapper(General):
         self.supervisorToken, \
         self.ccManagerToken, \
         self.executiveToken, \
-        self.voiceAdminToken = None, None, None, None, None
+        self.voiceAdminToken,\
+        self.groupAdminToken = None, None, None, None, None, None
         self.logged_in_agents = dict()
         self.logged_in_agents_special = dict()
         self.executiveToken2 = None

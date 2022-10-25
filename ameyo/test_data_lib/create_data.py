@@ -3054,7 +3054,6 @@ class DataCreationAPIs(Wrapper):
             'campaignId', 'numLastCalls', 'disposeFromCRMOnlyEnabled', 'customerProviderType'], response.json())
         return response
 
-
     def update_user_role(self, **kwargs):
         """
         Changes a user role i.e. from Administrator to Executive and so on
@@ -3082,3 +3081,107 @@ class DataCreationAPIs(Wrapper):
         if self.noop is True or kwargs.get('toFail', True) is False:
             return response
         self.rest.raise_for_status(response)
+
+    def get_all_cc_user_groups_of_cc(self, **kwargs):
+        """
+        getAllContactCenterUserGroupsOfContactCenter
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([sessionId])
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'url': urljoin(self.creds.url, f"ameyorestapi/cc/usergroup/getAllContactCenterUserGroupsOfContactCenter"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        self.rest.raise_for_status(response)
+        return response
+
+
+    def is_grouphierarchylicense_enabled(self, **kwargs):
+        """
+        isGroupHierarchyLicenseEnabled
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([sessionId])
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'url': urljoin(self.creds.url, f"ameyorestapi/group/isGroupHierarchyLicenseEnabled"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        self.rest.raise_for_status(response)
+        return response
+
+    def delete_cc_user_groups(self, **kwargs):
+        """
+        Delete cc user groups
+        :param kwargs:
+        :return:
+        """
+        userGroupId = kwargs.get('userGroupId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([userGroupId, sessionId])
+        response = self.rest.send_request(**{
+            'method': 'DELETE',
+            'params': {'userGroupId': userGroupId},
+            'url': urljoin(self.creds.url, f"ameyorestapi/cc/usergroup/contactCenterUserGroups"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        self.rest.raise_for_status(response)
+        return response
+
+    def validate_and_create_group(self, **kwargs):
+        """
+        Create a Process
+        :param kwargs:
+        :return:
+        """
+        userId = kwargs.get('userId', None)
+        ccManagerUserIds = kwargs.get('ccManagerUserIds', None)
+        name = kwargs.get('name', None)
+        description = kwargs.get('description', None)
+        # ccUserIds = kwargs.get('ccUserIds', None)
+        # childGroupIds = kwargs.get('childGroupIds', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([userId, ccManagerUserIds, name, description, sessionId])
+
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, "ameyorestapi/group/validateAndCreateGroup"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                "userId": userId,
+                "ccManagerUserIds": [ccManagerUserIds],
+                "name": name,
+                "ccUserIds": [],
+                "childGroupIds": [],
+                "description": description,
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict(['groupErrorReason', 'managerAssignmentInGroupResponse',
+                                   'userAssignmentInGroupResponse'], response.json())
+        return response
+
+
+    def get_all_available_groups(self, **kwargs):
+        """
+        getAllAvailableGroups
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([sessionId])
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'url': urljoin(self.creds.url, f"ameyorestapi/group/getAllAvailableGroups"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        self.rest.raise_for_status(response)
+        return response
+
