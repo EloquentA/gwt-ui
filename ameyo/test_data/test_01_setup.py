@@ -984,6 +984,24 @@ class TestSetup:
                 ameyo.assign_lead_to_campaign(campaignContextId=Campaign['campaignId'], leadIds=leadIds,
                                               sessionId=ameyo.adminToken)
 
+    def test_31_upload_lead_csv(self, ameyo):
+        """
+        Uploads a csv (containing customer data) to the lead
+        :param ameyo:
+        :param request:
+        :return:
+        """
+        for Process in ameyo.get_all_processes().json():
+            for Lead in ameyo.get_all_leads_for_process(processId=Process['processId']).json():
+                csvPath = ameyo.create_customer_csv(count=50)
+                response = ameyo.upload_csv_to_lead(**{
+                    "processId": Lead['processId'],
+                    "leadIds": Lead['leadId'],
+                    'csvPath': csvPath
+                })
+                assert "failed" not in response.text.lower(), "Upload Failed !!"
+                assert "invalid" not in response.text.lower(), "Upload File is Invalid !!"
+
     def test_31_enable_lead_for_process(self, ameyo):
         """
         Enables lead for a process
