@@ -231,7 +231,7 @@ class TestSetup:
 
         multi_cc_created_users_list = calling['test_data']['multi_cc_created_users']
         group_name = calling['test_data']['group_name']
-        group_manager_name = calling['test_data']['group_manager_name']
+        group_manager_name = calling['test_data']['admin_created_users'][1]['name']
         group_desc = calling['test_data']['group_desc']
 
         for cc in ameyo.get_all_cc().json():
@@ -243,6 +243,14 @@ class TestSetup:
 
         ameyo.is_grouphierarchylicense_enabled()
 
+        # get all groups
+        response = ameyo.get_all_available_groups(sessionId=ameyo.adminToken).json()
+
+        # delete already existing groups
+        # for item in response:
+        #     if item['name'] == group_name:
+        #         ameyo.delete_cc_user_groups(sessionId=ameyo.adminToken,
+        #                                    userGroupId=item['id'])
         # create group
         response = ameyo.validate_and_create_group(userId=multi_cc_created_users_list[0]['name'],
                                                    ccManagerUserIds=group_manager_name,
@@ -250,7 +258,6 @@ class TestSetup:
                                                    description=group_desc,
                                                    sessionId=ameyo.adminToken).json()
         time.sleep(2)
-
 
     def test_08_verify_all_user_assigned_to_cc(self, ameyo, calling):
         """
@@ -666,7 +673,7 @@ class TestSetup:
             if policyName not in [x['policyName'] for x in response.json()]:
                 raise Exception(f"Routing Policy {policyName} Not Found !!")
 
-    def test_20_update_dial_profiles(self, ameyo):
+    def test_20_update_dial_profiles(self, ameyo, calling):
         """
         Update Dial Profiles
         :param ameyo:
@@ -692,9 +699,12 @@ class TestSetup:
             })
 
             # Auto Dial Profiles
-            ameyo.update_auto_dial_profile(campaignId=Campaign['campaignId'],
-                                           policyId=RoutingPolicy['policyId'],
-                                           sessionId=ameyo.adminToken)
+            if Campaign['campaignType'] != calling['test_data']['campaign_type_inbound']:
+                ameyo.update_auto_dial_profile(campaignId=Campaign['campaignId'],
+                                               policyId=RoutingPolicy['policyId'],
+                                               sessionId=ameyo.adminToken)
+            else:
+                pass
 
     def test_21_update_default_atd_for_campaign(self, ameyo):
         """
@@ -1044,8 +1054,6 @@ class TestSetup:
                     assert response, "Auto dial can not be enabled"
                 else:
                     assert response.ok, f"Auto dial can not be enabled !! {response.text}"
-                assert response.json()["dialerAlgoType"] == "Predictive", f"Dialer Algo could not be set" \
-                                                                          f" to Predictive.{response.text}"
             elif Campaign['campaignName'] in calling['test_data']['progressive_dial_campaigns']:
                 ameyo.set_outbound_voice_campaign_setting(campaignId=Campaign['campaignId'],
                                                           dialerAlgoType="Progressive")
@@ -1090,6 +1098,9 @@ class TestSetup:
 
         # Create a new user
         agents = []
+        # 'userId', 'userType', 'assigned', 'contactCenterUserId', 'skillLevelIds', 'systemUserType',
+        # 'privilegePlanId', 'maskedPrivileges', 'processUserIds', 'contactCenterTeamIds', 'userBusinessMetadata',
+        # 'contactCenterId', 'defaultReady', 'extensions', 'root', 'description', 'userName'
         for agent in calling['test_data']['agents']:
             response = ameyo.create_user(**{
                 'userId': agent, 'userName': agent, 'userType': 'Executive', 'contactCenterId': ccId,
@@ -1152,15 +1163,17 @@ class TestSetup:
             assigned = ameyo.get_all_campaign_users(campaignId=campaign_id).json()
 
             contactCenterUserIds, privilegePlanIds, userIds, contactCenterUserTypes = [], [], [], []
-            n = int(len(calling['agents']) / len(campaign_ids_list))
-            agents_lists = [calling['agents'][i * n:(i + 1) * n] for i in range((len(calling['agents']) + n - 1) // n)]
-            for agents in agents_lists:
+            # n = int(len(calling['agents']) / len(campaign_ids_list))
+            # agents_lists = [calling['agents'][i * n:(i + 1) * n] for i in range((len(calling['agents']) + n - 1) // n)]
+            for agent in calling['agents']:
                 # if agent['userId'] not in [x['userId'] for x in assigned]
-                for agent in agents:
-                    contactCenterUserIds.append(agent['contactCenterUserId'])
-                    privilegePlanIds.append(agent['privilegePlanId'])
-                    userIds.append(agent['userId'])
-                    contactCenterUserTypes.append(agent['userType'])
+                # 'userId', 'userType', 'assigned', 'contactCenterUserId', 'skillLevelIds', 'systemUserType',
+                # 'privilegePlanId', 'maskedPrivileges', 'processUserIds', 'contactCenterTeamIds', 'userBusinessMetadata',
+                # 'contactCenterId', 'defaultReady', 'extensions', 'root', 'description', 'userName'
+                contactCenterUserIds.append(agent['contactCenterUserId'])
+                privilegePlanIds.append(agent['privilegePlanId'])
+                userIds.append(agent['userId'])
+                contactCenterUserTypes.append(agent['userType'])
 
             if len(userIds) == 0:
                 ameyo.logger.debug(f'all users already assigned to Campaign !!')
@@ -1373,8 +1386,8 @@ class TestSetup:
         :return:
         """
         path = os.getcwd()
-        test_data_dir = os.path.join(path)
-        # test_data_dir = os.path.join(path, "ameyo", "test_data")
+        # test_data_dir = os.path.join(path)
+        test_data_dir = os.path.join(path, "ameyo", "test_data")
         json_file = os.path.join(test_data_dir, "test_data.json")
         yaml_file = os.path.join(test_data_dir, "sample_variables.yml")
         ameyo.json_to_yaml(json_file, yaml_file)

@@ -1697,7 +1697,6 @@ class DataCreationAPIs(Wrapper):
         ], response.json())
         return response
 
-
     def update_auto_dial_profile(self, **kwargs):
         """
         Update Auto Dial Profile
@@ -3168,7 +3167,6 @@ class DataCreationAPIs(Wrapper):
                                    'userAssignmentInGroupResponse'], response.json())
         return response
 
-
     def get_all_available_groups(self, **kwargs):
         """
         getAllAvailableGroups
@@ -3180,6 +3178,24 @@ class DataCreationAPIs(Wrapper):
         response = self.rest.send_request(**{
             'method': 'GET',
             'url': urljoin(self.creds.url, f"ameyorestapi/group/getAllAvailableGroups"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        self.rest.raise_for_status(response)
+        return response
+
+    def delete_cc_user_group(self, **kwargs):
+        """
+        Delete a User from CC
+        :param kwargs:
+        :return:
+        """
+        id = kwargs.get('id', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([id, sessionId])
+        response = self.rest.send_request(**{
+            'method': 'DELETE',
+            'params': {'id': id},
+            'url': urljoin(self.creds.url, f"ameyorestapi/group/deleteContactCenterUserGroup"),
             'headers': {"sessionId": sessionId, "correlation": self.uuid},
         })
         self.rest.raise_for_status(response)
