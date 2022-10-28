@@ -21,6 +21,7 @@ from AdminUser import AdminUser
 from AdminSystem import AdminSystem
 from Monitor import Monitor
 from CallDetails import CallDetails
+from Reports import Reports
 
 
 class Ameyo:
@@ -40,6 +41,7 @@ class Ameyo:
         self.adminsystem = AdminSystem(self.web_browser, self.common)
         self.monitor = Monitor(self.web_browser, self.common, self.agenthomepage)
         self.call_details = CallDetails(self.web_browser, self.common)
+        self.reports = Reports(self.web_browser)
 
     def __capture_error(self, method_name, error_msg):
         """Utility method to capture and report errors"""
@@ -388,3 +390,11 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"verify_call_history", error))
+
+    def validate_reports_tab(self):
+        """Method to validate report tab in admin and supervisor"""
+        try:
+            self.reports.validate_reports_tab()
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("validate_reports_tab", error))

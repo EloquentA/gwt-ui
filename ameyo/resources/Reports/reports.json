@@ -1,0 +1,7 @@
+{
+  "reports_tab":{"by":"xpath", "value":"//span[text()='Reports']", "index":"0"},
+  "ok_btn_report_tab_alert":{"by":"xpath", "value":"//button[text()='OK']", "index":"0"},
+  "home_tab":{"by":"xpath", "value":"//li//a[contains(@data-target, 'reportsListMenuItem')]", "index":"0"},
+  "report_list_tab":{"by":"xpath", "value":"//li[contains(@title, 'Reports List')]", "index":"0"},
+  "reports_frame":{"by":"xpath", "value":"//iframe[contains(@name,'reportsIF')]", "index":"0"}
+}
