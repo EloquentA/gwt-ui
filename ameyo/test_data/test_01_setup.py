@@ -297,13 +297,30 @@ class TestSetup:
             raise Exception(f"Cannot Find CC {calling['ccname']} !!")
         ccId = cc['contactCenterId']
 
-        breakReasons = []
-        for _ in range(1, 3):
-            breakReasons.append(f"BREAK_REASON_{_}")
+        breakReasons = ['Lunch', 'Break', 'Snack', 'Training']
+        # for _ in range(1, 3):
+        #     breakReasons.append(f"BREAK_REASON_{_}")
         response = ameyo.update_break_reasons(breakReasons=breakReasons, sessionId=ameyo.adminToken).json()
         assert response["contactCenterId"] == ccId, "Failed to update break reasons"
 
-    def test_10_assign_call_contexts_to_cc(self, ameyo, calling):
+    def test_10_update_knowledge_base_url(self, ameyo, calling):
+        """
+        Update the knowledge_base_url for a cc
+        :param ameyo:
+        :return:
+        """
+        for cc in ameyo.get_all_cc().json():
+            if cc['contactCenterName'] == calling['ccname']:
+                break
+        else:
+            raise Exception(f"Cannot Find CC {calling['ccname']} !!")
+        ccId = cc['contactCenterId']
+
+        response = ameyo.update_knowledge_base_url(knowledge_base_url='https://www.ameyo.com',
+                                                   sessionId=ameyo.adminToken).json()
+        assert response["contactCenterId"] == ccId, "Failed to update knowledge base url"
+
+    def test_11_assign_call_contexts_to_cc(self, ameyo, calling):
         """
         Assign Call Contexts to Contact Center
         :param ameyo:
@@ -345,7 +362,7 @@ class TestSetup:
         if len({x['callContextId'] for x in callContexts}.intersection(assigned)) != len(callContexts):
             raise Exception(f"Some Call Context not assigned !!")
 
-    def test_11_create_table_definition(self, ameyo, calling):
+    def test_12_create_table_definition(self, ameyo, calling):
         """
         Create Table Definitions
         :param ameyo:
@@ -377,7 +394,7 @@ class TestSetup:
         if tableDefinitionName not in [x['tableDefinitionName'] for x in tableDefinitions]:
             raise Exception(f"Failed to Create Table Definition !!")
 
-    def test_12_create_agent_table_definitions(self, ameyo, calling):
+    def test_13_create_agent_table_definitions(self, ameyo, calling):
         """
         Create agent table definition
         :param ameyo:
@@ -1067,11 +1084,11 @@ class TestSetup:
                 response = ameyo.get_outbound_voice_campaign_setting(campaignId=Campaign['campaignId'])
                 assert response.json()["dialerAlgoType"] == "Predictive", f"Dialer Algo could not be set" \
                                                                           f" to Predictive.{response.text}"
-                response = ameyo.enable_auto_dial(campaignId=Campaign['campaignId'])
-                if isinstance(response, bool):
-                    assert response, "Auto dial can not be enabled"
-                else:
-                    assert response.ok, f"Auto dial can not be enabled !! {response.text}"
+                # response = ameyo.enable_auto_dial(campaignId=Campaign['campaignId'])
+                # if isinstance(response, bool):
+                #     assert response, "Auto dial can not be enabled"
+                # else:
+                #     assert response.ok, f"Auto dial can not be enabled !! {response.text}"
             elif Campaign['campaignName'] in calling['test_data']['progressive_dial_campaigns']:
                 ameyo.set_outbound_voice_campaign_setting(campaignId=Campaign['campaignId'],
                                                           dialerAlgoType="Progressive")
@@ -1080,11 +1097,11 @@ class TestSetup:
                 assert response.json()[
                            "dialerAlgoType"] == "Progressive", \
                     f"Dialer Algo could not be set to Progressive.{response.text}"
-                response = ameyo.enable_auto_dial(campaignId=Campaign['campaignId'])
-                if isinstance(response, bool):
-                    assert response, "Auto dial can not be enabled"
-                else:
-                    assert response.ok, f"Auto dial can not be enabled !! {response.text}"
+                # response = ameyo.enable_auto_dial(campaignId=Campaign['campaignId'])
+                # if isinstance(response, bool):
+                #     assert response, "Auto dial can not be enabled"
+                # else:
+                #     assert response.ok, f"Auto dial can not be enabled !! {response.text}"
             elif Campaign['campaignName'] in calling['test_data']['preview_dial_campaigns']:
                 ameyo.set_outbound_voice_campaign_setting(campaignId=Campaign['campaignId'],
                                                           dialerAlgoType="Preview")
@@ -1093,11 +1110,11 @@ class TestSetup:
                 assert response.json()[
                            "dialerAlgoType"] == "Preview", \
                     f"Dialer Algo could not be set to Preview.{response.text}"
-                response = ameyo.enable_auto_dial(campaignId=Campaign['campaignId'])
-                if isinstance(response, bool):
-                    assert response, "Auto dial can not be enabled"
-                else:
-                    assert response.ok, f"Auto dial can not be enabled !! {response.text}"
+                # response = ameyo.enable_auto_dial(campaignId=Campaign['campaignId'])
+                # if isinstance(response, bool):
+                #     assert response, "Auto dial can not be enabled"
+                # else:
+                #     assert response.ok, f"Auto dial can not be enabled !! {response.text}"
             else:
                 pass
 

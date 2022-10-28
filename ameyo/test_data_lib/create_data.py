@@ -286,6 +286,34 @@ class DataCreationAPIs(Wrapper):
         ], response.json())
         return response
 
+    def update_knowledge_base_url(self, **kwargs):
+        """
+        update_knowledge_base_url
+        Note: This will overwrite the existing knowledge base url
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        knowledge_base_url = kwargs.get('knowledge_base_url', None)
+        # if not isinstance(breakReasons, list):
+        #     breakReasons = [breakReasons]
+        self.check_required_args([sessionId, knowledge_base_url])
+        response = self.rest.send_request(**{
+            'method': 'PUT',
+            'url': urljoin(self.creds.url, f"ameyorestapi/cc/contactCenterSettings/updateKnowledgeBaseURL"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+                'knowledgeBaseURL': knowledge_base_url,
+            }
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict([
+            'knowledgeBaseURL', 'breakReasons', 'contactCenterName', 'contactCenterId'
+        ], response.json())
+        return response
+
     def get_voice_resource_status(self, **kwargs):
         """
         Get the voice resource status
