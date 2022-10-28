@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation     Keywords supported common functionalities
+Documentation     Keywords supported ART functionalities
 ...               Developed By - Developer by EA
 ...               Comments:
 
