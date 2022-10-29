@@ -1,0 +1,21 @@
+{
+  "manage_tab":{"by":"xpath", "value":"//a[@automationid='supervisorManageTab']", "index":"0"},
+  "callback":{"by":"xpath", "value":"//a[@automationid='callbackTabLink']", "index":"0"},
+  "btn_add_callback":{"by":"xpath", "value":"//span[contains(text(),'Add Callback')]", "index":"0"},
+  "radio_btn_user":{"by":"xpath", "value":"//input[@type='radio' and @name='property']/following-sibling::label[contains(text(),'User')]", "index":"0"},
+  "radio_btn_campaign":{"by":"xpath", "value":"//input[@type='radio' and @name='property']/following-sibling::label[contains(text(),'Campaign')]", "index":"0"},
+  "dropdown_select_user":{"by":"xpath", "value":"//span[@title= 'Select User']", "index":"0"},
+  "textbox_phone":{"by":"xpath", "value":"//div[@title='text']/input", "index":"0"},
+  "callback_date":{"by":"xpath", "value":"//*[@placeholder='dd/MM/yyyy']", "index":"0"},
+  "select_current_date":{"by":"xpath", "value":"//*[contains(@class, 'datePickerDayIsToday')]", "index":"0"},
+  "callback_time":{"by":"xpath", "value":"//*[@placeholder='hh:mm']", "index":"0"},
+  "clock_hours":{"by":"xpath", "value":"//*[@class='lolliclock-dial lolliclock-dial-hours']/div", "index":"0"},
+  "clock_minutes":{"by":"xpath", "value":"//*[@class='lolliclock-dial lolliclock-dial-minutes']/div", "index":"0"},
+  "btn_ok":{"by":"xpath", "value":"//div[contains(text(),'OK')]", "index":"0"},
+  "checkbox_callback":{"by":"xpath", "value":"//*[@class='selection']/label", "index":"2"},
+  "textbox_delete_confirmation":{"by":"xpath", "value":"//*[@placeholder='Why do you want to delete?']", "index":"0"},
+  "btn_yes":{"by":"xpath", "value":"//span[contains(text(),'Yes')]", "index":"0"},
+  "btn_save":{"by":"xpath", "value":"//span[contains(text(),'Save')]", "index":"0"},
+  "link_call_details_tab":{"by":"xpath", "value":"//*[@automationid='callDetailsTabLink']", "index":"0"},
+  "textbox_search_call_details":{"by":"xpath", "value":"//*[@automationid='search']/input", "index":"0"}
+}

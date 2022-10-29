@@ -58,6 +58,14 @@ CREDENTIALS = {
       "chat": '',
       "voice": '',
       "Video": ''
+    },
+  "call_back": {
+      "callback_type": 'user',
+      "user": 'rahul',
+      "phone_number": "9988776655"
+    },
+    "call_details": {
+      "user": "rahul"
     }
   }
 }

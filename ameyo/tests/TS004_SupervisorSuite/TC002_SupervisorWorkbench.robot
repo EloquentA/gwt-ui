@@ -20,7 +20,7 @@ Library           ../../pages/Ameyo.py    browser_config=${BROWSER_CONFIG}    pr
 *** Test Cases ***
 TC - supervisor login after campaign selection
     [Tags]  smoke    testid=AP-16020-1    regression
-    Log To Console    Covered as a part of suite setup
+    select campaign    ${instance1}    supervisor    workbench=${TRUE}
 
 TC - call from supervisor login
     [Tags]  smoke    testid=AP-16020-2    regression

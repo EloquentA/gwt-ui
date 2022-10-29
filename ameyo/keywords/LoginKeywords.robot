@@ -45,8 +45,8 @@ I login into ameyo with blank username and blank password
 
 select campaign
     [Documentation]   This keyword will select campaigns as per input given from script
-    [Arguments]  ${instance}    ${req_run_as}    ${voice_campaign_type}=voice_outbound
-    ${result}=   call method    ${instance}    select_campaign    ${CREDENTIALS}    ${req_run_as}    ${voice_campaign_type}
+    [Arguments]  ${instance}    ${req_run_as}    ${voice_campaign_type}=voice_outbound    ${workbench}=${FALSE}
+    ${result}=   call method    ${instance}    select_campaign    ${CREDENTIALS}    ${req_run_as}    ${voice_campaign_type}    ${workbench}
     I verify result    ${result}
 
 I logout from ameyo homepage

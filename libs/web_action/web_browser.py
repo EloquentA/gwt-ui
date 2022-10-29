@@ -245,6 +245,12 @@ class WebBrowser:
         return element object
         """
         element_to_find = self.resources[locator]
+        # handling to update value and index during execution
+        if replace_dict:
+            if 'value' in replace_dict:
+                element_to_find['value'] = replace_dict['value']
+            elif 'index' in replace_dict:
+                element_to_find['index'] = replace_dict['index']
         print(f"Searching element - {element_to_find}")
         element = self.get_element(
             by=element_to_find["by"], value=element_to_find["value"], index=element_to_find["index"]
