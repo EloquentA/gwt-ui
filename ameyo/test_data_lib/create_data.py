@@ -2816,7 +2816,7 @@ class DataCreationAPIs(Wrapper):
         """
         sessionId = kwargs.get('sessionId', self.supervisorToken)
         campaignId = kwargs.get('campaignId', None)
-        leadUserDialing = kwargs.get('leadUserDialing', True)
+        leadUserDialing = kwargs.get('leadUserDialing', False)
         self.check_required_args([sessionId, campaignId])
         response = self.rest.send_request(**{
             'method': 'PUT',
