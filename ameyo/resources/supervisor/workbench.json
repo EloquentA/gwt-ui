@@ -16,5 +16,6 @@
   "btn_delete_popup":{"by":"xpath", "value":"//*[@class='modal-footer']/button/span[contains(text(),'Delete')]", "index":"0"},
   "btn_listen":{"by":"xpath", "value":"//td[@data-title='Listen']/div/i", "index":"0"},
   "audio_panel":{"by":"xpath", "value":"//audio[@controlslist='nodownload']", "index":"0"},
-  "close_audio": {"by":"xpath", "value":"//*[@class='audio-player audioPlayer--floating']/div/div/button/i[@class='mdi mdi-close']", "index":"0"}
+  "close_audio": {"by":"xpath", "value":"//*[@class='audio-player audioPlayer--floating']/div/div/button/i[@class='mdi mdi-close']", "index":"0"},
+  "download_voice_log":{"by":"xpath", "value":"//*[@class ='mdi mdi-download']", "index":"0"}
 }

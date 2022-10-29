@@ -104,7 +104,7 @@ class Login:
         self.action.press_key(search_box_locator, "ARROW_DOWN")
         self.action.press_key(search_box_locator, "ENTER")
 
-    def select_campaign(self, kwargs, user_type, voice_campaign_type="voice_outbound") -> bool:
+    def select_campaign(self, kwargs, user_type, voice_campaign_type="voice_outbound", workbench=False) -> bool:
         """This function will select campaign"""
         current_url = self.action.get_current_url()
         if user_type.lower() == 'executive':
@@ -124,7 +124,7 @@ class Login:
                 self.action.click_element("button_next")
             else:
                 print("Already on home page.", current_url)
-        elif user_type.lower() == 'supervisor':
+        elif workbench and user_type.lower() == 'supervisor':
             self.action.click_element('workbench_tab')
             if kwargs['interaction']:
                 self.make_campaign_selection('dropdown_interaction', 'textbox_search', kwargs['interaction'])

@@ -22,6 +22,7 @@ from AdminSystem import AdminSystem
 from Monitor import Monitor
 from CallDetails import CallDetails
 from Reports import Reports
+from Manage import Manage
 
 
 class Ameyo:
@@ -42,6 +43,7 @@ class Ameyo:
         self.monitor = Monitor(self.web_browser, self.common, self.agenthomepage)
         self.call_details = CallDetails(self.web_browser, self.common)
         self.reports = Reports(self.web_browser)
+        self.manage = Manage(self.web_browser, self.common)
 
     def __capture_error(self, method_name, error_msg):
         """Utility method to capture and report errors"""
@@ -164,12 +166,12 @@ class Ameyo:
         # get the final screenshot file path
         return file_storage_path + os.sep + file_name
 
-    def select_campaign(self, kwargs, run_as, voice_campaign_type="voice_outbound"):
+    def select_campaign(self, kwargs, run_as, voice_campaign_type="voice_outbound", workbench=False):
         """This function will select campaign"""
         try:
             kwargs = kwargs.get(run_as).get('campaign_details')
             if kwargs is not None:
-                self.login.select_campaign(kwargs, run_as, voice_campaign_type)
+                self.login.select_campaign(kwargs, run_as, voice_campaign_type, workbench)
             else:
                 print(f'Select campaign is not applicable for user type: {run_as}')
             return self._return_result()
@@ -398,3 +400,19 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("validate_reports_tab", error))
+
+    def supervisor_schedule_callback(self, schedule_callback_config, current_time):
+        """This function will schedule a callback from supervisor manage tab"""
+        try:
+            self.manage.schedule_callback(schedule_callback_config, current_time)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"supervisor_schedule_callback", error))
+
+    def verify_call_details(self, user_name):
+        """This function will verify call details from supervisor manage tab"""
+        try:
+            self.manage.verify_call_details(user_name)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"verify_call_details", error))
