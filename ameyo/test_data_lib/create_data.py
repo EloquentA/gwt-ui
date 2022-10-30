@@ -3170,7 +3170,7 @@ class DataCreationAPIs(Wrapper):
         ccManagerUserIds = kwargs.get('ccManagerUserIds', None)
         name = kwargs.get('name', None)
         description = kwargs.get('description', None)
-        # ccUserIds = kwargs.get('ccUserIds', None)
+        ccUserIds = kwargs.get('ccUserIds', None)
         # childGroupIds = kwargs.get('childGroupIds', None)
         sessionId = kwargs.get('sessionId', self.adminToken)
         self.check_required_args([userId, ccManagerUserIds, name, description, sessionId])
@@ -3183,7 +3183,7 @@ class DataCreationAPIs(Wrapper):
                 "userId": userId,
                 "ccManagerUserIds": [ccManagerUserIds],
                 "name": name,
-                "ccUserIds": [],
+                "ccUserIds": ccUserIds,
                 "childGroupIds": [],
                 "description": description,
             },
@@ -3227,5 +3227,51 @@ class DataCreationAPIs(Wrapper):
             'headers': {"sessionId": sessionId, "correlation": self.uuid},
         })
         self.rest.raise_for_status(response)
+        return response
+
+    def modify_group(self, **kwargs):
+        """
+        MOdify Group
+        :param kwargs:
+        :return:
+        """
+        userId = kwargs.get('userId', None)
+        groupId = kwargs.get('groupId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        unassignUserIds = kwargs.get('unassignUserIds', None)
+        assignChildGroupIds = kwargs.get('assignChildGroupIds', None)
+        unassignChildGroupIds = kwargs.get('unassignChildGroupIds', None)
+        assignManagerUserIds = kwargs.get('assignManagerUserIds', None)
+        assignUserIds = kwargs.get('assignUserIds', None)
+        unassignManagerIds = kwargs.get('unassignManagerIds', None)
+        name = kwargs.get('name', None)
+        description = kwargs.get('description', None)
+        self.check_required_args([sessionId])
+
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, "ameyorestapi/group/userGroupModifyAPI"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+              "groupId": groupId,
+              "sessionId": sessionId,
+              "userId": userId,
+              "unassignUserIds": [],
+              "assignChildGroupIds": [],
+              "unassignChildGroupIds": [],
+              "assignManagerUserIds": [],
+              "assignUserIds": assignUserIds,
+              "unassignManagerIds": [],
+              "name": name,
+              "description": description
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict([
+            'groupAssignErrorReason', 'groupUnassignErrorReason', 'managerAssignmentInGroupResponse',
+            'userAssignmentInGroupResponse', 'unassignManagerError'
+        ], response.json())
         return response
 

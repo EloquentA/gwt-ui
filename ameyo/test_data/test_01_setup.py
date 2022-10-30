@@ -218,46 +218,8 @@ class TestSetup:
             time.sleep(1)
             ameyo.groupAdminToken = ameyo.user_login(userId=f"{admin_created_users_list[1]['name']}",
                                                     token='Test300!@#').json()['userSessionInfo']['sessionId']
-            time.sleep(1)
-            ameyo.user_logout(sessionId=ameyo.groupAdminToken)
-
-    def test_07_create_group_and_assign_grp_manager(self, ameyo, calling):
-        """
-        Create group and assign group manager
-        :param ameyo:
-        :param role:
-        :return:
-        """
-
-        multi_cc_created_users_list = calling['test_data']['multi_cc_created_users']
-        group_name = calling['test_data']['group_name']
-        group_manager_name = calling['test_data']['admin_created_users'][1]['name']
-        group_desc = calling['test_data']['group_desc']
-
-        for cc in ameyo.get_all_cc().json():
-            if cc['contactCenterName'] == calling['ccname']:
-                break
-        else:
-            raise Exception(f"Cannot Find CC {calling['ccname']} !!")
-        ccId = cc['contactCenterId']
-
-        ameyo.is_grouphierarchylicense_enabled()
-
-        # get all groups
-        response = ameyo.get_all_available_groups(sessionId=ameyo.adminToken).json()
-
-        # delete already existing groups
-        # for item in response:
-        #     if item['name'] == group_name:
-        #         ameyo.delete_cc_user_groups(sessionId=ameyo.adminToken,
-        #                                    userGroupId=item['id'])
-        # create group
-        response = ameyo.validate_and_create_group(userId=multi_cc_created_users_list[0]['name'],
-                                                   ccManagerUserIds=group_manager_name,
-                                                   name=group_name,
-                                                   description=group_desc,
-                                                   sessionId=ameyo.adminToken).json()
-        time.sleep(2)
+            # time.sleep(1)
+            # ameyo.user_logout(sessionId=ameyo.groupAdminToken)
 
     def test_08_verify_all_user_assigned_to_cc(self, ameyo, calling):
         """
@@ -534,12 +496,29 @@ class TestSetup:
         preview_dial_campaigns_list = calling['test_data']['preview_dial_campaigns']
         predictive_dial_campaigns_list = calling['test_data']['predictive_dial_campaigns']
         progressive_dial_campaigns_list = calling['test_data']['progressive_dial_campaigns']
+        group_manager_campaigns_list = calling['test_data']['group_manager_campaigns']
         proc_inbound_campgn_dict = dict(zip(process_ids_list, inbound_campaigns_list))
         proc_outbound_campgn_dict = dict(zip(process_ids_list, outbound_campaigns_list))
         proc_preview_dial_campgn_dict = dict(zip(process_ids_list, preview_dial_campaigns_list))
         proc_predictive_dial_campgn_dict = dict(zip(process_ids_list, predictive_dial_campaigns_list))
         proc_progressive_dial_campgn_dict = dict(zip(process_ids_list, progressive_dial_campaigns_list))
+        proc_group_manager_campgn_dict = dict(zip(process_ids_list, group_manager_campaigns_list))
         campaignIds = []
+        grpCampaignIds = []
+        for process_id, campaign_name in proc_group_manager_campgn_dict.items():
+            campaignName = f"{campaign_name}"
+            response = ameyo.create_campaign(**{
+                "processId": process_id,
+                "campaignType": calling['test_data']['campaign_type_outbound'],
+                "campaignName": campaignName,
+                "description": f"{campaignName} Description",
+            })
+            grpCampaignId = response.json()['campaignId']
+            grpCampaignIds.append(grpCampaignId)
+
+            Campaigns = ameyo.get_all_campaigns().json()
+            if campaignName not in [x['campaignName'] for x in Campaigns]:
+                raise Exception(f"Campaign {campaignName} is not Present !!")
         for process_id, campaign_name in proc_inbound_campgn_dict.items():
             campaignName = f"{campaign_name}"
             response = ameyo.create_campaign(**{
@@ -611,6 +590,7 @@ class TestSetup:
             if campaignName not in [x['campaignName'] for x in Campaigns]:
                 raise Exception(f"Campaign {campaignName} is not Present !!")
         calling.update({'campaignIds': campaignIds})
+        calling.update({'grpCampaignIds': grpCampaignIds})
 
     def test_19_assign_call_contexts_to_campaign(self, ameyo, calling):
         """
@@ -1144,6 +1124,19 @@ class TestSetup:
             agents.append(response)
         calling.update({'agents': agents})
 
+        # Create a new user
+        group_agents = []
+        # 'userId', 'userType', 'assigned', 'contactCenterUserId', 'skillLevelIds', 'systemUserType',
+        # 'privilegePlanId', 'maskedPrivileges', 'processUserIds', 'contactCenterTeamIds', 'userBusinessMetadata',
+        # 'contactCenterId', 'defaultReady', 'extensions', 'root', 'description', 'userName'
+        for agent in calling['test_data']['group_agents']:
+            response = ameyo.create_user(**{
+                'userId': agent, 'userName': agent, 'userType': 'Executive', 'contactCenterId': ccId,
+                'password': 'Test300!@#$',
+            }).json()
+            group_agents.append(response)
+        calling.update({'group_agents': group_agents})
+
     def test_36_change_password(self, ameyo, calling):
         """
         Change Executive Agent Password
@@ -1152,6 +1145,7 @@ class TestSetup:
         """
         inbound_campaigns_list = calling['test_data']['inbound_campaigns']
         agents_list = calling['test_data']['agents']
+        group_agents_list = calling['test_data']['group_agents']
         campgn_agents_dict = dict(zip(inbound_campaigns_list, agents_list))
 
         for cc in ameyo.get_all_cc().json():
@@ -1177,6 +1171,22 @@ class TestSetup:
         else:
             pass
 
+        # Login group agents and change passwords
+        for agent in group_agents_list:
+            ameyo.groupExecutiveToken = ameyo.user_login(userId=agent,
+                                                    token='Test300!@#$').json()['userSessionInfo']['sessionId']
+            time.sleep(1)
+            ameyo.get_password_policy_for_user(sessionId=ameyo.groupExecutiveToken, userId=agent).json()
+            ameyo.change_password(sessionId=ameyo.groupExecutiveToken, userId=agent,
+                                  oldPassword='Test300!@#$', newPassword='Test300!@#')
+            time.sleep(1)
+            ameyo.user_logout(sessionId=ameyo.groupExecutiveToken)
+            time.sleep(1)
+            ameyo.groupExecutiveToken = ameyo.user_login(userId=agent,
+                                                    token='Test300!@#').json()['userSessionInfo']['sessionId']
+        else:
+            pass
+
     def test_37_assign_user_to_campaigns(self, ameyo, calling):
         """
         Assign user to campaign
@@ -1187,6 +1197,7 @@ class TestSetup:
         inbound_campaigns_list = calling['test_data']['inbound_campaigns']
         outbound_campaigns_list = calling['test_data']['outbound_campaigns']
         campaign_ids_list = calling['campaignIds']
+        grp_campaign_ids_list = calling['grpCampaignIds']
 
         for campaign_id in campaign_ids_list:
             # unassign any user assigned to campaign
@@ -1201,6 +1212,41 @@ class TestSetup:
             # n = int(len(calling['agents']) / len(campaign_ids_list))
             # agents_lists = [calling['agents'][i * n:(i + 1) * n] for i in range((len(calling['agents']) + n - 1) // n)]
             for agent in calling['agents']:
+                # if agent['userId'] not in [x['userId'] for x in assigned]
+                # 'userId', 'userType', 'assigned', 'contactCenterUserId', 'skillLevelIds', 'systemUserType',
+                # 'privilegePlanId', 'maskedPrivileges', 'processUserIds', 'contactCenterTeamIds', 'userBusinessMetadata',
+                # 'contactCenterId', 'defaultReady', 'extensions', 'root', 'description', 'userName'
+                contactCenterUserIds.append(agent['contactCenterUserId'])
+                privilegePlanIds.append(agent['privilegePlanId'])
+                userIds.append(agent['userId'])
+                contactCenterUserTypes.append(agent['userType'])
+
+            if len(userIds) == 0:
+                ameyo.logger.debug(f'all users already assigned to Campaign !!')
+                continue
+
+            time.sleep(1)
+            ameyo.assign_agent_to_campaign(**{
+                'campaignId': campaign_id,
+                'contactCenterUserIds': contactCenterUserIds,
+                'privilegePlanIds': privilegePlanIds,
+                'userIds': userIds,
+                'contactCenterUserTypes': contactCenterUserTypes,
+            })
+            time.sleep(1)
+        for campaign_id in grp_campaign_ids_list:
+            # unassign any user assigned to campaign
+            assigned = ameyo.get_all_campaign_users(campaignId=campaign_id).json()
+            ameyo.un_assign_agent_from_campaign(**{
+                'campaignId': campaign_id,
+                'campaignContextUserIds': [x['campaignUserId'] for x in assigned],
+            })
+            assigned = ameyo.get_all_campaign_users(campaignId=campaign_id).json()
+
+            contactCenterUserIds, privilegePlanIds, userIds, contactCenterUserTypes = [], [], [], []
+            # n = int(len(calling['agents']) / len(campaign_ids_list))
+            # agents_lists = [calling['agents'][i * n:(i + 1) * n] for i in range((len(calling['agents']) + n - 1) // n)]
+            for agent in calling['group_agents']:
                 # if agent['userId'] not in [x['userId'] for x in assigned]
                 # 'userId', 'userType', 'assigned', 'contactCenterUserId', 'skillLevelIds', 'systemUserType',
                 # 'privilegePlanId', 'maskedPrivileges', 'processUserIds', 'contactCenterTeamIds', 'userBusinessMetadata',
@@ -1402,16 +1448,76 @@ class TestSetup:
                                                             sessionId=ameyo.adminToken).json()
             ameyo.logger.info(f"response for  <{CallContext['callContextName']}> is {response} ")
 
+    def test_07_create_group_and_assign_grp_manager(self, ameyo, calling):
+        """
+        Create group and assign group manager
+        :param ameyo:
+        :param role:
+        :return:
+        """
+
+        multi_cc_created_users_list = calling['test_data']['multi_cc_created_users']
+        group_name = calling['test_data']['group_name']
+        group_manager_name = calling['test_data']['admin_created_users'][1]['name']
+        adminId = calling['test_data']['multi_cc_created_users'][0]['name']
+        group_desc = calling['test_data']['group_desc']
+        group_agents = calling['test_data']['group_agents']
+
+        for cc in ameyo.get_all_cc().json():
+            if cc['contactCenterName'] == calling['ccname']:
+                break
+        else:
+            raise Exception(f"Cannot Find CC {calling['ccname']} !!")
+        ccId = cc['contactCenterId']
+        ccGrpUserIds = []
+
+        # ccUsers = ameyo.get_all_users_assigned_to_cc(ccId=ccId, sessionId=ameyo.adminToken).json()
+        ccGrpUsers = list(filter(lambda a: a['userId'].startswith(f"{calling['ccname']}_GRP_"),
+                            ameyo.get_all_users_assigned_to_cc(ccId=ccId, sessionId=ameyo.adminToken).json()))
+        for ccGrpUser in ccGrpUsers:
+            ccGrpUserId = ccGrpUser['ccUserId']
+            ccGrpUserIds.append(ccGrpUserId)
+
+        ameyo.is_grouphierarchylicense_enabled()
+
+
+        # create group
+        response = ameyo.validate_and_create_group(userId=multi_cc_created_users_list[0]['name'],
+                                                   ccManagerUserIds=group_manager_name,
+                                                   name=group_name,
+                                                   ccUserIds=ccGrpUserIds,
+                                                   description=group_desc,
+                                                   sessionId=ameyo.adminToken).json()
+        time.sleep(2)
+
+        # get all groups
+        response = ameyo.get_all_available_groups(sessionId=ameyo.adminToken).json()
+
+        for item in response:
+            if item['name'] == group_name:
+                ameyo.modify_group(sessionId=ameyo.adminToken,
+                                   groupId=item['id'],
+                                   userId=adminId,
+                                   name=group_name,
+                                   description=group_desc,
+                                   assignUserIds=group_agents)
+            else:
+                pass
+
     def test_44_logout_users(self, ameyo, calling):
         """
         Logout
         :param ameyo:
         :return:
         """
-        ameyo.user_logout(sessionId=ameyo.adminToken)
-        ameyo.adminToken = None
-        ameyo.user_logout(sessionId=ameyo.supervisorToken)
-        ameyo.supervisorToken = None
+
+
+        users = list(filter(lambda a: a['userID'].startswith(f"{calling['test_data']['ccn']}_"),
+                            ameyo.get_all_users(sessionId=ameyo.ccManagerToken).json()))
+        for user in users:
+            userId = user['userID']
+            ameyo.logger.info(f'Terminate User: {userId} ...')
+            ameyo.terminate_all_sessions_for_user(userId=userId, sessionId=ameyo.ccManagerToken)
 
     def test_45_generate_yaml_test_data(self, ameyo, calling):
         """
