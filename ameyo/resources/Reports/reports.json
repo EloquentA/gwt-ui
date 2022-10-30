@@ -3,5 +3,15 @@
   "ok_btn_report_tab_alert":{"by":"xpath", "value":"//button[text()='OK']", "index":"0"},
   "home_tab":{"by":"xpath", "value":"//li//a[contains(@data-target, 'reportsListMenuItem')]", "index":"0"},
   "report_list_tab":{"by":"xpath", "value":"//li[contains(@title, 'Reports List')]", "index":"0"},
-  "reports_frame":{"by":"xpath", "value":"//iframe[contains(@name,'reportsIF')]", "index":"0"}
+  "reports_frame":{"by":"xpath", "value":"//iframe[contains(@name,'reportsIF')]", "index":"0"},
+  "management_tab":{"by":"xpath", "value":"//li//a[contains(@data-target, 'reportManagementMenuItem')]", "index":"0"},
+  "user_privilege_tab":{"by":"xpath", "value":"//li[contains(@title,'User Privilege')]//a", "index":"0"},
+  "user_name":{"by":"xpath", "value":"//tbody//a[text()='replace_me']", "index":"0"},
+  "privileges_type_select":{"by":"xpath", "value":"//select[@class='form-control']", "index":"0"},
+  "select_all_btn":{"by":"xpath", "value":"//button[@type='button' and text()='Select All']", "index":"0"},
+  "save_btn":{"by":"xpath", "value":"//button[@type='button' and text()='Save']", "index":"0"},
+  "report_assign_modal":{"by":"xpath", "value":"//div[@class='modal-content']//div[contains(text(),'Do You Want To Assign The Selected Reports To The User ')]", "index":"0"},
+  "report_list_table":{"by":"xpath", "value":"//tr[@role='listitem']", "index":"0"},
+  "report_name_column":{"by":"xpath", "value":"//tr[@role='listitem']/td/div[contains(@style, 'WIDTH:238')]", "index":"-1"},
+  "no_report_assigned_modal":{"by":"xpath", "value":"//div[@class='modal-content']//div[contains(text(),'No report assigned to ')]", "index":"0"}
 }

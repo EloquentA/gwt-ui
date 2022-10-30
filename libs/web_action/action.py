@@ -691,7 +691,7 @@ class Action:
         This is the opposite of `element_should_be_displayed`.
 
         """
-        self.visible = self._browser.elements_finder(locator)
+        self.visible = self._element_finder(locator)
         if len(self.visible) > 0:
             return False
         return True
@@ -1165,9 +1165,9 @@ class Action:
             return False
         return element.location['y']
 
-    def get_element(self, locator):
+    def get_element(self, locator, replace_dict=None):
         """Returns element """
-        return self._element_finder(locator)
+        return self._element_finder(locator, replace_dict)
 
     def get_color(self, locator):
         """

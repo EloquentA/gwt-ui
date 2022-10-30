@@ -1,6 +1,7 @@
 *** Settings ***
-Documentation     Ameyo Login test cases
+Documentation     Ameyo Logout Test cases
 ...               Developed By - Developer by EA
+...               https://touchstone.ameyo.com/linkto.php?tprojectPrefix=AP&item=testcase&id=AP-15999
 
 # Suite Setup and Teardown
 Suite Setup       Suite Initialization    ${RUN_AS}
