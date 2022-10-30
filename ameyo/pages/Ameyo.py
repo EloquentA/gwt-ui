@@ -416,3 +416,19 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"verify_call_details", error))
+
+    def assign_all_default_reports_to_user(self, replace_dict):
+        """Method to assign all default reports to the user, username passed in replace_dict"""
+        try:
+            self.reports.assign_all_default_reports_to_user(replace_dict)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("assign_all_default_reports_to_user", error))
+
+    def validate_reports_assigned_to_user(self, report_name=None):
+        """Method to validate the reports assigned to the user, validates specific report if report name is passed"""
+        try:
+            self.reports.validate_reports_assigned_to_user(report_name)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("validate_reports_assigned_to_user", error))
