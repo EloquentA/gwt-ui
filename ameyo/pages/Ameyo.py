@@ -426,7 +426,7 @@ class Ameyo:
             return self._return_result(False, error, self.__capture_error("assign_all_default_reports_to_user", error))
 
     def validate_reports_assigned_to_user(self, report_name=None):
-        """Method to assign all default reports to the user, username passed in replace_dict"""
+        """Method to validate the reports assigned to the user, validates specific report if report name is passed"""
         try:
             self.reports.validate_reports_assigned_to_user(report_name)
             return self._return_result()
