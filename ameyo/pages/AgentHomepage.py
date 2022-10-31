@@ -264,31 +264,47 @@ class AgentHomepage:
             self.action.select_from_ul_dropdown_using_text("ul_campaign_selector", kwargs['new_interaction'])
             self.action.click_element("button_next")
             elements = self.action.get_element('selected_campaign_verification')
-            campaign_list = [element.text for element in elements]
-            assert kwargs['new_video'] in campaign_list, "Campaign is not as expected"
+            campaign_list = [element.get_attribute('title') for element in elements]
+            assert kwargs['new_interaction'] in campaign_list, "Campaign is not as expected"
         if kwargs['new_chat']:
             self.action.click_element("dropdown_chat")
             self.action.select_from_ul_dropdown_using_text("ul_campaign_selector", kwargs['new_chat'])
             self.action.click_element("button_next")
             elements = self.action.get_element('selected_campaign_verification')
-            campaign_list = [element.text for element in elements]
-            assert kwargs['new_video'] in campaign_list, "Campaign is not as expected"
+            campaign_list = [element.get_attribute('title') for element in elements]
+            assert kwargs['new_chat'] in campaign_list, "Campaign is not as expected"
         if kwargs['new_voice']:
             self.action.explicit_wait("cross_selected_campaign")
             self.action.click_element("cross_selected_campaign")
             self.action.explicit_wait("ul_campaign_selector")
             self.action.select_from_ul_dropdown_using_text("ul_campaign_selector", kwargs['new_voice'])
             self.action.click_element("button_next")
+            time.sleep(3)
             elements = self.action.get_element('selected_campaign_verification')
-            campaign_list = [element.text for element in elements]
-            assert kwargs['new_video'] in campaign_list, "Campaign is not as expected"
+            campaign_list = [element.get_attribute('title') for element in elements]
+            assert kwargs['new_voice'] in campaign_list, "Campaign is not as expected"
         if kwargs['new_video']:
             self.action.click_element("dropdown_video")
             self.action.select_from_ul_dropdown_using_text("ul_campaign_selector", kwargs['new_video'])
             self.action.click_element("button_next")
             elements = self.action.get_element('selected_campaign_verification')
-            campaign_list = [element.text for element in elements]
+            campaign_list = [element.get_attribute('title') for element in elements]
             assert kwargs['new_video'] in campaign_list, "Campaign is not as expected"
+        return True
+
+    def change_extension(self, kwargs, extension_number):
+        """This function will select campaign"""
+        self.action.explicit_wait("preferences_drop_down_btn")
+        self.action.click_element("preferences_drop_down_btn")
+        self.action.explicit_wait("change_extension_link")
+        self.action.click_element("change_extension_link")
+        time.sleep(3)
+        self.action.click_element("extension_dropdown")
+        self.action.select_from_ul_dropdown_using_text("ul_campaign_selector", kwargs['new_extension'])
+        self.action.explicit_wait("phone_number_input_for_extension")
+        self.action.input_text("phone_number_input_for_extension", extension_number)
+        self.action.explicit_wait("extension_save_btn")
+        self.action.click_element("extension_save_btn")
         return True
 
     def change_password(self, oldpass, newpass) -> bool:

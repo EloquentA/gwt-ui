@@ -52,6 +52,7 @@ Ameyo setup
     I close alert if present   ${instance}
     I login into Ameyo    ${instance}    ${req_run_as}
     select campaign    ${instance}    ${req_run_as}    ${voice_campaign_type}
+    I select extension    ${instance}    ${CALLING_NUMBER}
 
 Ameyo teardown
     [Documentation]   This keyword does teardown setup for every suite

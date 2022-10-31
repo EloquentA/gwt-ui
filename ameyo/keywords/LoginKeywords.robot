@@ -61,4 +61,8 @@ I login into Ameyo using new password
     ${result}=   call method    ${instance}    ameyo_login_new_password    ${CREDENTIALS['change_executive']['username']}    Robo@12345
     I verify result    ${result}
 
-
+I select extension
+    [Documentation]   This keyword will select extension as per input given from script
+    [Arguments]  ${instance}    ${CALLING_NUMBER}
+    ${result}=   call method    ${instance}    select_extension    ${CREDENTIALS}    ${CALLING_NUMBER}
+    I verify result    ${result}
