@@ -432,3 +432,11 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("validate_reports_assigned_to_user", error))
+
+    def run_report_and_validate_download_in_required_formats(self, report_name, current_time_duration='Year', format_list=['CSV','XLS','PDF','HTML']):
+        """Method to validate the reports assigned to the user, validates specific report if report name is passed"""
+        try:
+            self.reports.run_report_and_validate_download_in_required_formats(report_name, current_time_duration, format_list)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("run_report_and_validate_download_in_required_formats", error))

@@ -17,8 +17,10 @@ class Reports:
 
     def navigate_to_reports(self):
         """This will navigate to Reports Tab and switches the frame"""
-        self.action.is_presence_of_element_located('reports_tab')
-        self.action.click_element('reports_tab')
+        current_url = self.action.get_current_url()
+        if 'Reports' not in current_url:
+            self.action.is_presence_of_element_located('reports_tab')
+            self.action.click_element('reports_tab')
         self.action.switch_to_frame('reports_frame')
         return True
 
@@ -69,10 +71,73 @@ class Reports:
             self.action.is_presence_of_element_located('report_list_table')
             print(report_name)
             if report_name is not None:
+                self.action.input_text('reports_search_box', report_name)
+                self.action.click_element('search_button')
                 reports_name_elements = self.action.get_element('report_name_column')
                 reports_name_list = [element.text for element in reports_name_elements]
                 print(reports_name_list)
                 assert report_name in reports_name_list, "Expected Report not found in assigned reports list"
+            # self.action.switch_to_default_frame()
+            # self.search_and_run_report_in_all_formats(report_name)
+        finally:
+            self.action.switch_to_default_frame()
+        return True
+
+    def run_report_and_validate_download_in_required_formats(self, report_name, current_time_duration='Year', report_formats_list=['CSV','XLS','PDF','HTML']):
+        """Search and Run specific report for given time window in all formats"""
+        try:
+            self.navigate_to_reports()
+            self.action.click_element('home_tab')
+            self.action.click_element('report_list_tab')
+            self.action.is_presence_of_element_located('report_list_table')
+            self.action.input_text('reports_search_box', report_name)
+            self.action.click_element('search_button')
+            self.action.element_should_contain_text('first_report_name', report_name)
+            self.action.click_element('first_report_run_button')
+            self.action.explicit_wait('for_current_radio')
+            self.action.click_element('for_current_radio')
+            self.action.click_element('nothing_selected_btn')
+            self.action.click_element('time_duration_selection', replace_dict={'replace_value': current_time_duration})
+            self.action.explicit_wait('select_all_campaigns')
+            self.action.click_element('select_all_campaigns')
+            self.action.explicit_wait('select_all_queues')
+            self.action.click_element('select_all_queues')
+            print(report_formats_list)
+            for report_format in report_formats_list:
+                self.action.click_element('report_format_checkbox', replace_dict={'replace_value': report_format})
+            self.action.explicit_wait('run_report_btn', ec='element_to_be_clickable')
+            self.action.click_element('run_report_btn')
+            self.action.switch_to_default_frame()
+            self.validate_report_in_queue_and_download(report_name, report_formats_list)
+        finally:
+            self.action.switch_to_default_frame()
+        return True
+
+    def validate_report_in_queue_and_download(self, report_name, report_formats_list=['CSV','XLS','PDF','HTML']):
+        """Validate successful report run from queue and download it in all desired formats"""
+        try:
+            self.navigate_to_reports()
+            self.action.click_element('queue_tab')
+            self.action.click_element('report_queue_tab')
+            self.action.element_should_contain_text('first_report_name', report_name)
+            self.action.explicit_wait('first_report_queue_status', waittime=240, ec='text_to_be_present_in_element', msg_to_verify='SUCCESS')
+            print(report_formats_list)
+            if 'CSV' in report_formats_list:
+                print("Downloading CSV")
+                self.action.explicit_wait('first_report_queue_csv', ec='element_to_be_clickable')
+                self.action.click_element('first_report_queue_csv')
+            if 'XLS' in report_formats_list:
+                print("Downloading XLS")
+                self.action.explicit_wait('first_report_queue_xls', ec='element_to_be_clickable')
+                self.action.click_element('first_report_queue_xls')
+            if 'PDF' in report_formats_list:
+                print("Downloading PDF")
+                self.action.explicit_wait('first_report_queue_pdf', ec='element_to_be_clickable')
+                self.action.click_element('first_report_queue_pdf')
+            if 'HTML' in report_formats_list:
+                print("Opening HTML")
+                self.action.explicit_wait('first_report_queue_html', ec='element_to_be_clickable')
+                self.action.click_element('first_report_queue_html')
         finally:
             self.action.switch_to_default_frame()
         return True
