@@ -35,8 +35,7 @@ CREDENTIALS = {
           "new_voice": '',
           "new_video": '',
         },
-    "extension": '',
-    "new_extension": ''
+    "extension": ''
   },
   "change_executive": {
     "username": '',
