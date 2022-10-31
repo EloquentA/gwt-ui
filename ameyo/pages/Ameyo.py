@@ -325,6 +325,7 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("change_user_mapper_policy_via_admin", error))
+
     def verify_whisper_action(self, campaign_details, executive_username):
         """Method to verify whisper functionality."""
         try:
@@ -400,6 +401,24 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("validate_reports_tab", error))
+
+    def select_extension(self, kwargs, extension_number):
+        """Method to select extension for agent"""
+        try:
+            kwargs = kwargs.get('change_executive')
+            self.login.select_extension(kwargs, extension_number)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("select_extension", error))
+
+    def change_extension(self, kwargs, extension_number):
+        """This method will change extension"""
+        try:
+            kwargs = kwargs.get('change_executive')
+            self.agenthomepage.change_extension(kwargs, extension_number)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("change_extension", error))
 
     def supervisor_schedule_callback(self, schedule_callback_config, current_time):
         """This function will schedule a callback from supervisor manage tab"""

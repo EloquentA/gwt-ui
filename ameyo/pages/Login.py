@@ -3,6 +3,7 @@ Module: This is the login module which contains methods for functionality relate
 """
 import os
 import sys
+import time
 
 sys.path.append(os.path.join(
     os.path.dirname((os.path.dirname(os.path.dirname(__file__)))), "libs", "web_action")
@@ -107,7 +108,7 @@ class Login:
     def select_campaign(self, kwargs, user_type, voice_campaign_type="voice_outbound", workbench=False) -> bool:
         """This function will select campaign"""
         current_url = self.action.get_current_url()
-        if user_type.lower() == 'executive':
+        if user_type.lower() == 'executive' or user_type.lower() == 'change_executive':
             if 'agentConfiguration' in current_url:
                 if kwargs['interaction']:
                     self.action.click_element("dropdown_interaction")
@@ -137,4 +138,22 @@ class Login:
             if kwargs['video']:
                 self.make_campaign_selection('dropdown_video_supervisor', 'textbox_search', kwargs['video'])
             self.action.click_element("button_next")
+        return True
+
+    def select_extension(self, kwargs, extension_number) -> bool:
+        """This function will select extension"""
+        time.sleep(2)
+        current_url = self.action.get_current_url()
+        if 'agentConfiguration' in current_url:
+            self.action.explicit_wait("extension_dropdown")
+            self.action.click_element("extension_dropdown")
+            self.action.select_from_ul_dropdown_using_text("ul_campaign_selector", kwargs['extension'])
+            self.action.explicit_wait("phone_number_input_for_extension")
+            self.action.input_text("phone_number_input_for_extension", extension_number)
+            self.action.explicit_wait("extension_save_btn")
+            self.action.click_element("extension_save_btn")
+            time.sleep(2)
+            current_url = self.action.get_current_url()
+            if 'home' in current_url:
+                self.common.change_status('Available', 'available_status')
         return True

@@ -68,6 +68,12 @@ I change password
     ${result}=   call method    ${instance}    change_password    ${old_password}    ${new_password}
     I verify result    ${result}
 
+I change extension
+    [Documentation]   This keyword will change extension as per input given from script
+    [Arguments]  ${instance}    ${CALLING_NUMBER}
+    ${result}=   call method    ${instance}    change_extension    ${CREDENTIALS}    ${CALLING_NUMBER}
+    I verify result    ${result}
+
 Inbound Call Validation
     [Documentation]   This keyword will accept inbound call and perform validations
     [Arguments]  ${instance}    ${inbound_url}    ${random_did_prefix}    ${random_calling_number_prefix}    ${campaign_name}    ${queue}

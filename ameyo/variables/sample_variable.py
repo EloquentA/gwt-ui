@@ -33,8 +33,10 @@ CREDENTIALS = {
           "new_interaction": '',
           "new_chat": '',
           "new_voice": '',
-          "new_video": ''
-        }
+          "new_video": '',
+        },
+    "extension": '',
+    "new_extension": ''
   },
   "change_executive": {
     "username": '',
@@ -47,8 +49,10 @@ CREDENTIALS = {
       "new_interaction": '',
       "new_chat": '',
       "new_voice": '',
-      "new_video": ''
-    }
+      "new_video": '',
+         },
+    "extension": '',
+    "new_extension": ''
   },
   "supervisor": {
     "username": '',

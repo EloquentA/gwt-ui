@@ -1,6 +1,7 @@
 *** Settings ***
-Documentation     Ameyo Login and campaign selection test cases
+Documentation     Test cases for Agent state change,campaign change and extension change
 ...               Developed By - Developer by EA
+...               https://touchstone.ameyo.com/index.php?caller=login
 
 # Suite Setup and Teardown
 Suite Setup       Suite Initialization    change_executive
@@ -26,8 +27,8 @@ TC - Test Case to change campaign
 
 #This will fail as the UI has a bug with change password rules.
 TC - Test Case to Change password
-    [Tags]  smoke    testid=AP-16013-3    regression
-    #[Tags]    robot:skip
+    #[Tags]  smoke    testid=AP-16013-3    regression
+    [Tags]    robot:skip
     # Setting a temporary password : Robo@12345
     I change password    ${instance1}    ${CREDENTIALS['change_executive']['password']}    Robo@12345
     I logout from ameyo homepage    ${instance1}
@@ -38,3 +39,7 @@ TC - Test Case to Change password
     I change password    ${instance1}    Robo@12345    Auto@12345
     # Calling change password again to not disrupt the flow of the suite. This will reset the password to what it orignally was
     I change password    ${instance1}    Auto@12345    ${CREDENTIALS['change_executive']['password']}
+
+TC - Test Case to change extension
+    [Tags]  smoke    testid=AP-16013-4    regression
+    I change extension    ${instance1}    ${CALLING_NUMBER}

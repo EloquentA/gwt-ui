@@ -33,6 +33,7 @@ CREDENTIALS:
       new_chat: ''
       new_voice: 'finance_inbound'
       new_video: ''
+    extension: 'customer_success_1800_DefaultVR'
     inbound_queue: 'finance_support'
   change_executive:
     username: ''
@@ -40,13 +41,15 @@ CREDENTIALS:
     campaign_details:
       interaction: ''
       chat: ''
-      voice_outbound: 'finance_outbound'
-      voice_inbound: 'finance_inbound'
+      voice_outbound: 'PROCESS_01_CAMPAIGN_OUT'
+      voice_inbound: 'PROCESS_01_CAMPAIGN_IN'
       video: ''
       new_interaction: ''
       new_chat: ''
-      new_voice: 'finance_inbound'
+      new_voice: 'PROCESS_01_CAMPAIGN_IN'
       new_video: ''
+    extension: 'customer_success_1800_DefaultVR'
+    new_extension: 'agent_success_1800_DefaultVR'
     inbound_queue: 'finance_support'
   supervisor:
     username: ''
