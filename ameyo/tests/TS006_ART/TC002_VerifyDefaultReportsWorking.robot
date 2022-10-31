@@ -22,9 +22,12 @@ TC - verify default reports is working
     [Tags]  smoke    testid=AP-16207-1    regression
     &{admin_replace_dict}=    Create Dictionary    replace_value=${CREDENTIALS['admin']['username']}
     Admin assigns all default reports to user     ${instance1}    ${admin_replace_dict}
-    Validates reports assigned to user     ${instance1}    ACD Abandon Call Detail Report
+    Validates reports assigned to user     ${instance1}    ACD Call Details
+    @{format_list}=    Create List    CSV    PDF    HTML
+    Run specific report and validate download in required formats     ${instance1}    ACD Call Details    Day    ${format_list}
     &{supervisor_replace_dict}=    Create Dictionary    replace_value=${CREDENTIALS['supervisor']['username']}
     Admin assigns all default reports to user     ${instance1}    ${supervisor_replace_dict}
     I logout from ameyo homepage    ${instance1}
     I login into Ameyo  ${instance1}    supervisor
-    Validates reports assigned to user     ${instance1}
+    Validates reports assigned to user     ${instance1}    ACD Abandon Call Summary Report
+    Run specific report and validate download in required formats     ${instance1}    ACD Abandon Call Summary Report

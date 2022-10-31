@@ -5,6 +5,8 @@ Documentation     Keywords supported ART functionalities
 
 # Keywords Definition file
 Resource          ./VerifyResult.robot
+*** Variables ***
+@{format_list}=    CSV    XLS    PDF    HTML
 
 *** Keywords **
 I validate reports tab
@@ -23,4 +25,10 @@ Validates reports assigned to user
     [Documentation]   This keyword validates the reports are assigned to given user
     [Arguments]  ${instance}    ${report_name}=${None}
     ${result}=   call method    ${instance}    validate_reports_assigned_to_user    ${report_name}
+    I verify result    ${result}
+
+Run specific report and validate download in required formats
+    [Documentation]   This keyword runs specific report and validate successful download in all formats
+    [Arguments]  ${instance}    ${report_name}    ${current_time_duration}=Year    ${format_list}=${format_list}
+    ${result}=   call method    ${instance}    run_report_and_validate_download_in_required_formats    ${report_name}    ${current_time_duration}    ${format_list}
     I verify result    ${result}

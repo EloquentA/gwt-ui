@@ -252,6 +252,7 @@ class WebBrowser:
                 value = replace_dict['value']
             elif 'replace_value' in replace_dict:
                 value = value.replace("replace_me", replace_dict['replace_value'])
+                print(f"Value after replacement is - {value}")
             elif 'index' in replace_dict:
                 element_to_find['index'] = replace_dict['index']
         print(f"Searching element - {element_to_find}")
