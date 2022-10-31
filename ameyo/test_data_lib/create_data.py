@@ -494,7 +494,7 @@ class DataCreationAPIs(Wrapper):
                     "userId": userId,
                     "isEmailAllowed": False,
                     "numOfChatExtensions": 5,
-                    "numOfInteractionExtensions": 5,
+                    "numOfInteractionExtensions": 50,
                     "isSmsAllowed": False,
                     "isWebQueryAllowed": False,
                     "emailId": emailId,
@@ -2951,7 +2951,6 @@ class DataCreationAPIs(Wrapper):
         self.logger.info("Auto dial disabled")
         self.is_auto_dial_enabled = False
         return response
-
 
     def set_outbound_voice_campaign_setting(self, **kwargs):
         """

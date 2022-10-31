@@ -483,7 +483,7 @@ class TestSetup:
                     'sessionId': ameyo.adminToken,
                 })
 
-    def test_18_create_campaign(self, ameyo, calling):
+    def test_18_create_campaigns(self, ameyo, calling):
         """
         Create Campaign
         :param ameyo:
@@ -497,14 +497,31 @@ class TestSetup:
         predictive_dial_campaigns_list = calling['test_data']['predictive_dial_campaigns']
         progressive_dial_campaigns_list = calling['test_data']['progressive_dial_campaigns']
         group_manager_campaigns_list = calling['test_data']['group_manager_campaigns']
+        interaction_campaigns_list = calling['test_data']['interaction_campaigns']
         proc_inbound_campgn_dict = dict(zip(process_ids_list, inbound_campaigns_list))
         proc_outbound_campgn_dict = dict(zip(process_ids_list, outbound_campaigns_list))
         proc_preview_dial_campgn_dict = dict(zip(process_ids_list, preview_dial_campaigns_list))
         proc_predictive_dial_campgn_dict = dict(zip(process_ids_list, predictive_dial_campaigns_list))
         proc_progressive_dial_campgn_dict = dict(zip(process_ids_list, progressive_dial_campaigns_list))
         proc_group_manager_campgn_dict = dict(zip(process_ids_list, group_manager_campaigns_list))
+        proc_interaction_campgn_dict = dict(zip(process_ids_list, interaction_campaigns_list))
         campaignIds = []
         grpCampaignIds = []
+        # campaign_type_interaction
+        for process_id, campaign_name in proc_interaction_campgn_dict.items():
+            campaignName = f"{campaign_name}"
+            response = ameyo.create_campaign(**{
+                "processId": process_id,
+                "campaignType": calling['test_data']['campaign_type_interaction'],
+                "campaignName": campaignName,
+                "description": f"{campaignName} Description",
+            })
+            grpCampaignId = response.json()['campaignId']
+            grpCampaignIds.append(grpCampaignId)
+
+            Campaigns = ameyo.get_all_campaigns().json()
+            if campaignName not in [x['campaignName'] for x in Campaigns]:
+                raise Exception(f"Campaign {campaignName} is not Present !!")
         for process_id, campaign_name in proc_group_manager_campgn_dict.items():
             campaignName = f"{campaign_name}"
             response = ameyo.create_campaign(**{
@@ -636,7 +653,7 @@ class TestSetup:
                 ameyo.get_call_contexts_in_campaign(campaignId=Campaign['campaignId'],
                                                     sessionId=ameyo.adminToken)
 
-    def test_20_create_routing_policy_for_campaign(self, ameyo):
+    def test_20_create_routing_policy_for_campaign(self, ameyo, calling):
         """
         Create Routing Policy for a Campaign
         :param ameyo:
@@ -657,18 +674,19 @@ class TestSetup:
                                                                    sessionId=ameyo.adminToken).json():
                 campaignCallContextIds.append(callContext['campaignCallContextId'])
 
-            ameyo.create_routing_policy_for_campaign(**{
-                'policyName': policyName,
-                'campaignId': Campaign['campaignId'],
-                'campaignCallContextIds': campaignCallContextIds,
-                'policyType': "basic.single.call.context.type",
-                'sessionId': ameyo.adminToken,
-            })
-
-            response = ameyo.get_routing_policies_for_campaign(campaignId=Campaign['campaignId'],
-                                                               sessionId=ameyo.adminToken)
-            if policyName not in [x['policyName'] for x in response.json()]:
-                raise Exception(f"Routing Policy {policyName} Not Found !!")
+            if Campaign['campaignName'] not in calling['test_data']['interaction_campaigns']:
+                ameyo.create_routing_policy_for_campaign(**{
+                    'policyName': policyName,
+                    'campaignId': Campaign['campaignId'],
+                    'campaignCallContextIds': campaignCallContextIds,
+                    'policyType': "basic.single.call.context.type",
+                    'sessionId': ameyo.adminToken,
+                })
+            time.sleep(1)
+            # response = ameyo.get_routing_policies_for_campaign(campaignId=Campaign['campaignId'],
+            #                                                    sessionId=ameyo.adminToken)
+            # if policyName not in [x['policyName'] for x in response.json()]:
+            #     raise Exception(f"Routing Policy {policyName} Not Found !!")
 
     def test_21_update_dial_profiles(self, ameyo, calling):
         """
@@ -677,29 +695,32 @@ class TestSetup:
         :return:
         """
         for count, Campaign in enumerate(ameyo.get_all_campaigns(sessionId=ameyo.adminToken).json()):
-            RoutingPolicy = random.choice(
-                ameyo.get_routing_policies_for_campaign(campaignId=Campaign['campaignId'],
-                                                        sessionId=ameyo.adminToken).json()
-            )
-            # Manual Dial Profiles
-            ameyo.update_manual_dial_profile(**{
-                'campaignId': Campaign['campaignId'],
-                'policyId': RoutingPolicy['policyId'],
-                'sessionId': ameyo.adminToken,
-            })
+            if Campaign['campaignName'] not in calling['test_data']['interaction_campaigns']:
+                RoutingPolicy = random.choice(
+                    ameyo.get_routing_policies_for_campaign(campaignId=Campaign['campaignId'],
+                                                            sessionId=ameyo.adminToken).json()
+                )
+                # Manual Dial Profiles
+                ameyo.update_manual_dial_profile(**{
+                    'campaignId': Campaign['campaignId'],
+                    'policyId': RoutingPolicy['policyId'],
+                    'sessionId': ameyo.adminToken,
+                })
 
-            # Conference Dial Profiles
-            ameyo.update_conference_dial_profile(**{
-                'campaignId': Campaign['campaignId'],
-                'policyId': RoutingPolicy['policyId'],
-                'sessionId': ameyo.adminToken,
-            })
+                # Conference Dial Profiles
+                ameyo.update_conference_dial_profile(**{
+                    'campaignId': Campaign['campaignId'],
+                    'policyId': RoutingPolicy['policyId'],
+                    'sessionId': ameyo.adminToken,
+                })
 
-            # Auto Dial Profiles
-            if Campaign['campaignType'] != calling['test_data']['campaign_type_inbound']:
-                ameyo.update_auto_dial_profile(campaignId=Campaign['campaignId'],
-                                               policyId=RoutingPolicy['policyId'],
-                                               sessionId=ameyo.adminToken)
+                # Auto Dial Profiles
+                if Campaign['campaignType'] != calling['test_data']['campaign_type_inbound']:
+                    ameyo.update_auto_dial_profile(campaignId=Campaign['campaignId'],
+                                                   policyId=RoutingPolicy['policyId'],
+                                                   sessionId=ameyo.adminToken)
+                else:
+                    pass
             else:
                 pass
 
@@ -1437,18 +1458,21 @@ class TestSetup:
             local_ivr_name = f"{calling['test_data']['local_ivr_name']}"
             ivr_src_number = f"{calling['test_data']['ivr_src_number']}"
             ivr_dst_number = f"{calling['test_data']['ivr_dst_number']}"
-            ameyo.create_local_IVR(name=local_ivr_name,
-                                   contactCenterCallContextId=CallContext['contactCenterCallContextId'],
-                                   campaignId=Campaign['campaignId'],
-                                   dstPhone=ivr_dst_number,
-                                   srcPhone=ivr_src_number,
-                                   desc="LocalIVR",
-                                   sessionId=ameyo.adminToken).json()
-            response = ameyo.get_all_local_IVR_for_campaign(campaignId=Campaign['campaignId'],
-                                                            sessionId=ameyo.adminToken).json()
-            ameyo.logger.info(f"response for  <{CallContext['callContextName']}> is {response} ")
+            if Campaign['campaignName'] not in calling['test_data']['interaction_campaigns']:
+                ameyo.create_local_IVR(name=local_ivr_name,
+                                       contactCenterCallContextId=CallContext['contactCenterCallContextId'],
+                                       campaignId=Campaign['campaignId'],
+                                       dstPhone=ivr_dst_number,
+                                       srcPhone=ivr_src_number,
+                                       desc="LocalIVR",
+                                       sessionId=ameyo.adminToken).json()
+                response = ameyo.get_all_local_IVR_for_campaign(campaignId=Campaign['campaignId'],
+                                                                sessionId=ameyo.adminToken).json()
+                ameyo.logger.info(f"response for  <{CallContext['callContextName']}> is {response} ")
+            else:
+                pass
 
-    def test_07_create_group_and_assign_grp_manager(self, ameyo, calling):
+    def test_44_create_group_and_assign_grp_manager(self, ameyo, calling):
         """
         Create group and assign group manager
         :param ameyo:
@@ -1504,7 +1528,7 @@ class TestSetup:
             else:
                 pass
 
-    def test_44_logout_users(self, ameyo, calling):
+    def test_45_logout_users(self, ameyo, calling):
         """
         Logout
         :param ameyo:
@@ -1519,7 +1543,7 @@ class TestSetup:
             ameyo.logger.info(f'Terminate User: {userId} ...')
             ameyo.terminate_all_sessions_for_user(userId=userId, sessionId=ameyo.ccManagerToken)
 
-    def test_45_generate_yaml_test_data(self, ameyo, calling):
+    def test_46_generate_yaml_test_data(self, ameyo, calling):
         """
         Convert test data from JSON to YAML for UI automation consumption
         :param ameyo:
