@@ -140,20 +140,16 @@ class Login:
             self.action.click_element("button_next")
         return True
 
-    def select_extension(self, kwargs, extension_number) -> bool:
-        """This function will select extension"""
-        time.sleep(2)
+    def select_extension(self, kwargs) -> bool:
+        """This function will select extension."""
         current_url = self.action.get_current_url()
-        if 'agentConfiguration' in current_url:
+        if any([i in current_url for i in ['agentConfiguration', 'LiveMonitoring']]) and \
+                self.action.is_presence_of_element_located('extension_selection_modal_header'):
             self.action.explicit_wait("extension_dropdown")
             self.action.click_element("extension_dropdown")
             self.action.select_from_ul_dropdown_using_text("ul_campaign_selector", kwargs['extension'])
             self.action.explicit_wait("phone_number_input_for_extension")
-            self.action.input_text("phone_number_input_for_extension", extension_number)
+            self.action.input_text("phone_number_input_for_extension", kwargs['extension_number'])
             self.action.explicit_wait("extension_save_btn")
             self.action.click_element("extension_save_btn")
-            time.sleep(2)
-            current_url = self.action.get_current_url()
-            if 'home' in current_url:
-                self.common.change_status('Available', 'available_status')
         return True

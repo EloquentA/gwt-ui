@@ -63,6 +63,6 @@ I login into Ameyo using new password
 
 I select extension
     [Documentation]   This keyword will select extension as per input given from script
-    [Arguments]  ${instance}    ${CALLING_NUMBER}
-    ${result}=   call method    ${instance}    select_extension    ${CREDENTIALS}    ${CALLING_NUMBER}
+    [Arguments]  ${instance}    ${req_run_as}
+    ${result}=   call method    ${instance}    select_extension    ${CREDENTIALS['${req_run_as}']}
     I verify result    ${result}

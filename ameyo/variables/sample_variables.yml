@@ -34,6 +34,8 @@ CREDENTIALS:
       new_voice: 'finance_inbound'
       new_video: ''
     extension: 'customer_success_1800_DefaultVR'
+    # Extension number must be different for simultaneously logged in personas
+    extension_number: 9999999991
     inbound_queue: 'finance_support'
   change_executive:
     username: ''
@@ -49,6 +51,8 @@ CREDENTIALS:
       new_voice: 'PROCESS_01_CAMPAIGN_IN'
       new_video: ''
     extension: 'customer_success_1800_DefaultVR'
+    # Extension number must be different for simultaneously logged in personas
+    extension_number: 9999999992
     new_extension: 'agent_success_1800_DefaultVR'
     inbound_queue: 'finance_support'
   supervisor:
@@ -63,6 +67,9 @@ CREDENTIALS:
       video: ''
       # To perform monitoring test cases out of: interaction, chat, voice or video
       monitor_with: 'voice_outbound'
+    extension: 'customer_success_1800_DefaultVR'
+    # Extension number must be different for simultaneously logged in personas
+    extension_number: 9999999993
     call_back:
       callback_type: 'user'
       user: 'rahul'
@@ -80,6 +87,22 @@ CREDENTIALS:
       video: ''
       # To perform monitoring test cases out of: interaction, chat, voice or video
       monitor_with: 'voice_outbound'
+    extension: 'customer_success_1800_DefaultVR'
+    # Extension number must be different for simultaneously logged in personas
+    extension_number: 9999999994
+  group_manager:
+    username: ''
+    password: ''
+    campaign_details:
+      interaction: ''
+      chat: ''
+      voice_outbound: ''
+      voice_inbound: ''
+      video: ''
+      # To perform monitoring test cases out of: interaction, chat, voice or video
+      monitor_with: 'voice_outbound'
+    extension: 'customer_success_1800_DefaultVR'
+    extension_number: 9999999995
 CALLING_NUMBER: 9999999999
 DESIRED_STATE: 'Available'
 DISPOSITION:

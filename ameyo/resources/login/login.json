@@ -17,5 +17,6 @@
   "cross_selected_campaign":{"by":"xpath", "value":"//li[@class='select2-selection__choice']/span[@role='presentation']", "index":"0"},
   "extension_dropdown":{"by":"xpath", "value":"//span[@title='Select Extension']", "index":"0"},
   "phone_number_input_for_extension":{"by":"xpath", "value":"//input[contains(@placeholder, 'Enter Number')]", "index":"0"},
-  "extension_save_btn":{"by":"xpath", "value":"//*[@automationid='extensionSaveBtn']", "index":"0"}
+  "extension_save_btn":{"by":"xpath", "value":"//*[@automationid='extensionSaveBtn']", "index":"0"},
+  "extension_selection_modal_header":{"by":"xpath", "value":"//h2[text()='Extension Selection']", "index":"0"}
 }

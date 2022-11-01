@@ -402,11 +402,10 @@ class Ameyo:
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("validate_reports_tab", error))
 
-    def select_extension(self, kwargs, extension_number):
+    def select_extension(self, kwargs):
         """Method to select extension for agent"""
         try:
-            kwargs = kwargs.get('change_executive')
-            self.login.select_extension(kwargs, extension_number)
+            self.login.select_extension(kwargs)
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("select_extension", error))
