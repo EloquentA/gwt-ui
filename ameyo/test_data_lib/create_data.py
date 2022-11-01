@@ -3152,8 +3152,7 @@ class DataCreationAPIs(Wrapper):
         self.check_required_args([userGroupId, sessionId])
         response = self.rest.send_request(**{
             'method': 'DELETE',
-            'params': {'userGroupId': userGroupId},
-            'url': urljoin(self.creds.url, f"ameyorestapi/cc/usergroup/contactCenterUserGroups"),
+            'url': urljoin(self.creds.url, f"ameyorestapi/cc/usergroup/contactCenterUserGroups/{userGroupId}"),
             'headers': {"sessionId": sessionId, "correlation": self.uuid},
         })
         self.rest.raise_for_status(response)

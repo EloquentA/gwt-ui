@@ -35,6 +35,7 @@ class TestSetup:
         """
         test_data = TestSetup.read_json("test_data.json")
         calling.update({"test_data": test_data})
+        group_name = calling['test_data']['group_name']
 
         for cc in ameyo.get_all_cc().json():
             if cc['contactCenterName'] == calling['test_data']['ccn']:
@@ -47,6 +48,12 @@ class TestSetup:
                         for processId in cc['processIds']:
                             ameyo.delete_process(sessionId=ameyo.ccManagerToken, processId=processId)
                             ameyo.logger.info(f"Process {processId} Deleted Successfully :)")
+
+                        # delete all groups
+                        response = ameyo.get_all_available_groups(sessionId=ameyo.ccManagerToken).json()
+                        for item in response:
+                            if item['name'] == group_name:
+                                ameyo.delete_cc_user_groups(sessionId=ameyo.ccManagerToken, userGroupId=item['id'])
 
                     users = list(filter(lambda a: a['userID'].startswith(f"{calling['test_data']['ccn']}_"),
                                         ameyo.get_all_users(sessionId=ameyo.ccManagerToken).json()))
@@ -221,7 +228,7 @@ class TestSetup:
             # time.sleep(1)
             # ameyo.user_logout(sessionId=ameyo.groupAdminToken)
 
-    def test_08_verify_all_user_assigned_to_cc(self, ameyo, calling):
+    def test_07_verify_all_user_assigned_to_cc(self, ameyo, calling):
         """
         Verify that all users are assigned to CC
         :param ameyo:
@@ -246,7 +253,7 @@ class TestSetup:
             if userId not in [x['userId'] for x in ccUsers]:
                 raise Exception(f"User {userId} not assigned to CC")
 
-    def test_09_update_the_break_reasons(self, ameyo, calling):
+    def test_08_update_the_break_reasons(self, ameyo, calling):
         """
         Update the break reasons for a cc
         :param ameyo:
@@ -265,7 +272,7 @@ class TestSetup:
         response = ameyo.update_break_reasons(breakReasons=breakReasons, sessionId=ameyo.adminToken).json()
         assert response["contactCenterId"] == ccId, "Failed to update break reasons"
 
-    def test_10_update_knowledge_base_url(self, ameyo, calling):
+    def test_09_update_knowledge_base_url(self, ameyo, calling):
         """
         Update the knowledge_base_url for a cc
         :param ameyo:
@@ -282,7 +289,7 @@ class TestSetup:
                                                    sessionId=ameyo.adminToken).json()
         assert response["contactCenterId"] == ccId, "Failed to update knowledge base url"
 
-    def test_11_assign_call_contexts_to_cc(self, ameyo, calling):
+    def test_10_assign_call_contexts_to_cc(self, ameyo, calling):
         """
         Assign Call Contexts to Contact Center
         :param ameyo:
@@ -324,7 +331,7 @@ class TestSetup:
         if len({x['callContextId'] for x in callContexts}.intersection(assigned)) != len(callContexts):
             raise Exception(f"Some Call Context not assigned !!")
 
-    def test_12_create_table_definition(self, ameyo, calling):
+    def test_11_create_table_definition(self, ameyo, calling):
         """
         Create Table Definitions
         :param ameyo:
@@ -356,7 +363,7 @@ class TestSetup:
         if tableDefinitionName not in [x['tableDefinitionName'] for x in tableDefinitions]:
             raise Exception(f"Failed to Create Table Definition !!")
 
-    def test_13_create_agent_table_definitions(self, ameyo, calling):
+    def test_12_create_agent_table_definitions(self, ameyo, calling):
         """
         Create agent table definition
         :param ameyo:
@@ -390,7 +397,7 @@ class TestSetup:
             if name not in [x['agentTableDefinitionName'] for x in atds]:
                 raise Exception(f"Agent Table Definition: {name} not Found !!")
 
-    def test_14_create_table_mappings(self, ameyo, calling):
+    def test_13_create_table_mappings(self, ameyo, calling):
         """
         Create Table Mappings
         :param ameyo:
@@ -424,7 +431,7 @@ class TestSetup:
                 if columnMappingName not in [x['columnMappingName'] for x in mappings]:
                     raise Exception(f"Table Mapping {columnMappingName} not created !!")
 
-    def test_15_create_process(self, ameyo, calling):
+    def test_14_create_process(self, ameyo, calling):
         """
         Create Process
         :param ameyo:
@@ -444,7 +451,7 @@ class TestSetup:
             processIds.append(Process['processId'])
         calling.update({'processIds': processIds})
 
-    def test_16_update_process_crm_settings(self, ameyo):
+    def test_15_update_process_crm_settings(self, ameyo):
         """
         Update Process
         :param ameyo:
@@ -468,7 +475,7 @@ class TestSetup:
 
             ameyo.update_process_crm_settings(processId=Process['processId'], sessionId=ameyo.adminToken)
 
-    def test_17_init_process_td(self, ameyo):
+    def test_16_init_process_td(self, ameyo):
         """
         Init Process
         :param ameyo:
@@ -483,7 +490,7 @@ class TestSetup:
                     'sessionId': ameyo.adminToken,
                 })
 
-    def test_18_create_campaigns(self, ameyo, calling):
+    def test_17_create_campaigns(self, ameyo, calling):
         """
         Create Campaign
         :param ameyo:
@@ -609,7 +616,7 @@ class TestSetup:
         calling.update({'campaignIds': campaignIds})
         calling.update({'grpCampaignIds': grpCampaignIds})
 
-    def test_19_assign_call_contexts_to_campaign(self, ameyo, calling):
+    def test_18_assign_call_contexts_to_campaign(self, ameyo, calling):
         """
         Assign all Call Contexts to a Given Campaign
         25-03 - Assigning call contexts(which starts with customer i.e. customer_success_*, customer_notreachable*) to campaigns
@@ -653,7 +660,7 @@ class TestSetup:
                 ameyo.get_call_contexts_in_campaign(campaignId=Campaign['campaignId'],
                                                     sessionId=ameyo.adminToken)
 
-    def test_20_create_routing_policy_for_campaign(self, ameyo, calling):
+    def test_19_create_routing_policy_for_campaign(self, ameyo, calling):
         """
         Create Routing Policy for a Campaign
         :param ameyo:
@@ -688,7 +695,7 @@ class TestSetup:
             # if policyName not in [x['policyName'] for x in response.json()]:
             #     raise Exception(f"Routing Policy {policyName} Not Found !!")
 
-    def test_21_update_dial_profiles(self, ameyo, calling):
+    def test_20_update_dial_profiles(self, ameyo, calling):
         """
         Update Dial Profiles
         :param ameyo:
@@ -724,7 +731,7 @@ class TestSetup:
             else:
                 pass
 
-    def test_22_update_default_atd_for_campaign(self, ameyo):
+    def test_21_update_default_atd_for_campaign(self, ameyo):
         """
         Updated Default Agent Table Definition for Campaign
         :param ameyo:
@@ -742,7 +749,7 @@ class TestSetup:
                     })
                     return
 
-    def test_23_set_column_mapping_for_campaign(self, ameyo):
+    def test_22_set_column_mapping_for_campaign(self, ameyo):
         """
         Set Column Mapping for Campaign
         :param ameyo:
@@ -761,7 +768,7 @@ class TestSetup:
                     })
                     assert response.text == 'ok', "Failed to set Column Mapping for Campaign"
 
-    def test_24_assign_supervisor_to_campaign(self, ameyo, calling):
+    def test_23_assign_supervisor_to_campaign(self, ameyo, calling):
         """
         Assign Supervisor user to Campaign
         :param ameyo:
@@ -807,7 +814,7 @@ class TestSetup:
             returneduserids = [returneduser['userId'] for returneduser in returnedusers]
             assert (len(userIds) == len(returneduserids) and sorted(userIds) == sorted(returneduserids))
 
-    def test_25_create_disposition_class(self, ameyo, calling):
+    def test_24_create_disposition_class(self, ameyo, calling):
         """
         Create Disposition Class
         :param ameyo:
@@ -830,7 +837,7 @@ class TestSetup:
             else:
                 raise Exception(f"dispositionClassName {dp_cls_name} Not Found !!")
 
-    def test_26_add_disposition_codes_to_dp_class(self, ameyo, calling):
+    def test_25_add_disposition_codes_to_dp_class(self, ameyo, calling):
         """
         Add Disposition Codes to Disposition Class
         :param ameyo:
@@ -863,7 +870,7 @@ class TestSetup:
         else:
             raise Exception(f"dispositionCodeName {dp_code_name} Not Found !!")
 
-    def test_27_add_disposition_codes_for_callback(self, ameyo):
+    def test_26_add_disposition_codes_for_callback(self, ameyo):
         """
         Add Disposition Codes for callback
         :param ameyo:
@@ -896,7 +903,7 @@ class TestSetup:
         else:
             raise Exception(f"dispositionCodeName {dp_code_name} Not Found !!")
 
-    def test_28_create_disposition_plan_from_dp_class_and_code(self, ameyo, calling):
+    def test_27_create_disposition_plan_from_dp_class_and_code(self, ameyo, calling):
         """
         Create Disposition Plan from Disposition Class and Code
         :param ameyo:
@@ -916,7 +923,7 @@ class TestSetup:
             'sessionId': ameyo.adminToken,
         })
 
-    def test_29_assign_disposition_plan_to_campaign(self, ameyo, calling):
+    def test_28_assign_disposition_plan_to_campaign(self, ameyo, calling):
         """
         Assign Disposition Plan to Campaign
         :param ameyo:
@@ -935,7 +942,7 @@ class TestSetup:
             ameyo.assign_disposition_plan_to_campaign(dispositionPlanId=dispositionPlanId, campaignId=campaignId,
                                                       sessionId=ameyo.adminToken)
 
-    def test_30_create_new_lead(self, ameyo, calling):
+    def test_29_create_new_lead(self, ameyo, calling):
         """
         Create a new Lead
         :param ameyo:
@@ -977,7 +984,7 @@ class TestSetup:
                 else:
                     raise Exception(f"New Created Lead not Found !!")
 
-    def test_31_assign_lead_to_campaign(self, ameyo):
+    def test_30_assign_lead_to_campaign(self, ameyo):
         """
         Assign Lead to Campaign
         :param ameyo:
@@ -1020,7 +1027,7 @@ class TestSetup:
     #             assert "failed" not in response.text.lower(), "Upload Failed !!"
     #             assert "invalid" not in response.text.lower(), "Upload File is Invalid !!"
 
-    def test_32_enable_lead_for_process(self, ameyo):
+    def test_31_enable_lead_for_process(self, ameyo):
         """
         Enables lead for a process
         :param ameyo:
@@ -1036,7 +1043,7 @@ class TestSetup:
                     'sessionId': ameyo.supervisorToken,
                 })
 
-    def test_33_enable_lead_for_campaign(self, ameyo):
+    def test_32_enable_lead_for_campaign(self, ameyo):
         """
         Enables lead for a campaign
         :param ameyo:
@@ -1068,7 +1075,7 @@ class TestSetup:
                     assert lead[
                         "isEnable"], f"Lead <{Lead['leadName']}> can not be enabled for <{Campaign['campaignName']}>"
 
-    def test_34_set_dialer_settings_in_campaigns(self, ameyo, calling):
+    def test_33_set_dialer_settings_in_campaigns(self, ameyo, calling):
         """
         Set dialer settings in campaigns
         :param ameyo:
@@ -1119,7 +1126,7 @@ class TestSetup:
             else:
                 pass
 
-    def test_35_create_agents(self, ameyo, calling):
+    def test_34_create_agents(self, ameyo, calling):
         """
         Get Contact Center Agents
         :param ameyo:
@@ -1158,7 +1165,7 @@ class TestSetup:
             group_agents.append(response)
         calling.update({'group_agents': group_agents})
 
-    def test_36_change_password(self, ameyo, calling):
+    def test_35_change_password(self, ameyo, calling):
         """
         Change Executive Agent Password
         :param ameyo:
@@ -1208,7 +1215,7 @@ class TestSetup:
         else:
             pass
 
-    def test_37_assign_user_to_campaigns(self, ameyo, calling):
+    def test_36_assign_user_to_campaigns(self, ameyo, calling):
         """
         Assign user to campaign
         25-03 - Assigning random number of agents to all campaigns
@@ -1290,6 +1297,59 @@ class TestSetup:
                 'contactCenterUserTypes': contactCenterUserTypes,
             })
             time.sleep(1)
+
+    def test_37_assign_grp_mngr_to_campaigns(self, ameyo, calling):
+        """
+        Assign grp manager to Campaigns
+        :param ameyo:
+        :return:
+        """
+
+        grp_campaign_ids_list = calling['grpCampaignIds']
+        for cc in ameyo.get_all_cc().json():
+            if cc['contactCenterName'] == calling['ccname']:
+                ccId = cc['contactCenterId']
+                break
+        else:
+            raise Exception(f"{calling['ccname']} not found !!")
+
+        Users = list(filter(
+            lambda a: a['systemUserType'] in ['Group Manager'],
+            ameyo.get_all_users_assigned_to_cc(ccId=ccId, sessionId=ameyo.adminToken).json()
+        ))
+
+        for campaign_id in grp_campaign_ids_list:
+        # for count, Campaign in enumerate(ameyo.get_all_campaigns(sessionId=ameyo.adminToken).json()):
+            response = ameyo.get_all_campaign_users(campaignId=campaign_id,
+                                                    sessionId=ameyo.adminToken)
+            assigned = [x['userId'] for x in response.json()]
+
+            contactCenterUserIds, privilegePlanIds, userIds, contactCenterUserTypes = [], [], [], []
+            for User in Users:
+                if User['userId'] not in assigned:
+                    contactCenterUserIds.append(User['ccUserId'])
+                    privilegePlanIds.append(User['privilegePlanId'])
+                    userIds.append(User['userId'])
+                    contactCenterUserTypes.append(User['systemUserType'])
+
+            if all([contactCenterUserIds, privilegePlanIds, userIds, contactCenterUserTypes]) is False:
+                continue
+
+            # assign agent to Campaign
+            ameyo.assign_agent_to_campaign(**{
+                'campaignId': campaign_id,
+                'contactCenterUserIds': contactCenterUserIds,
+                'privilegePlanIds': privilegePlanIds,
+                'userIds': userIds,
+                'contactCenterUserTypes': contactCenterUserTypes,
+                'sessionId': ameyo.adminToken,
+            })
+
+            # Get users assigned to campaign
+            response = ameyo.get_all_campaign_users(campaignId=campaign_id,
+                                                    sessionId=ameyo.adminToken)
+            ameyo.logger.info(
+                f"All {len(response.json())} users in <{campaign_id}> <{campaign_id}> {[x['userId'] for x in response.json()]}")
 
     def test_38_assign_supervisor_to_all_campaigns(self, ameyo, calling):
         """
@@ -1494,6 +1554,7 @@ class TestSetup:
             raise Exception(f"Cannot Find CC {calling['ccname']} !!")
         ccId = cc['contactCenterId']
         ccGrpUserIds = []
+        ccGrpMngrIds = []
 
         # ccUsers = ameyo.get_all_users_assigned_to_cc(ccId=ccId, sessionId=ameyo.adminToken).json()
         ccGrpUsers = list(filter(lambda a: a['userId'].startswith(f"{calling['ccname']}_GRP_"),
@@ -1501,6 +1562,12 @@ class TestSetup:
         for ccGrpUser in ccGrpUsers:
             ccGrpUserId = ccGrpUser['ccUserId']
             ccGrpUserIds.append(ccGrpUserId)
+
+        # ccGrpMngrs = list(filter(lambda a: a['userId'].startswith(f"{group_manager_name}"),
+        #                          ameyo.get_all_users_assigned_to_cc(ccId=ccId, sessionId=ameyo.adminToken).json()))
+        # for ccGrpMngr in ccGrpMngrs:
+        #     ccGrpMngrId = ccGrpMngr['ccUserId']
+        #     ccGrpMngrIds.append(ccGrpMngrId)
 
         ameyo.is_grouphierarchylicense_enabled()
 
