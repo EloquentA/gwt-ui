@@ -1123,6 +1123,64 @@ class TestSetup:
                 #     assert response, "Auto dial can not be enabled"
                 # else:
                 #     assert response.ok, f"Auto dial can not be enabled !! {response.text}"
+            elif Campaign['campaignName'] in calling['test_data']['outbound_campaigns']:
+                ameyo.set_outbound_voice_campaign_setting(campaignId=Campaign['campaignId'],
+                                                            dialerAlgoType=None,
+                                                            isAMDEnabled=True,
+                                                            crmURL=None,
+                                                            previewURL=None,
+                                                            peakCallCount=100,
+                                                            callerId="NODID",
+                                                            wrapTimeOut=30,
+                                                            numOfLastCallsToMonitor=200,
+                                                            timeZoneMapper=None,
+                                                            dispositionURL=None,
+                                                            recordingFileFormat="g729c",
+                                                            voiceLogsEnabled=True,
+                                                            beepEnabled=False,
+                                                            beepDuration=15,
+                                                            dialPhoneEnabled=True,
+                                                            maxCallbackCount=10,
+                                                            amdType="DEFAULT",
+                                                            customerProviderType="campaign.based.customer.provider",
+                                                            dialOnTimeOut=30,
+                                                            dialOnTimeOutEnabled=False,
+                                                            screenLogsEnabled=True,
+                                                            acwConnected=30,
+                                                            acwNotConnected=30,
+                                                            acwConnectedEnabled=False,
+                                                            autoAnswer=False,
+                                                            inheritAutoAnswerFromParent=True,
+                                                            disposeFromCRMOnlyEnabled=None)
+            elif Campaign['campaignName'] in calling['test_data']['group_manager_campaigns']:
+                ameyo.set_outbound_voice_campaign_setting(campaignId=Campaign['campaignId'],
+                                                            dialerAlgoType=None,
+                                                            isAMDEnabled=True,
+                                                            crmURL=None,
+                                                            previewURL=None,
+                                                            peakCallCount=100,
+                                                            callerId="NODID",
+                                                            wrapTimeOut=30,
+                                                            numOfLastCallsToMonitor=200,
+                                                            timeZoneMapper=None,
+                                                            dispositionURL=None,
+                                                            recordingFileFormat="g729c",
+                                                            voiceLogsEnabled=True,
+                                                            beepEnabled=False,
+                                                            beepDuration=15,
+                                                            dialPhoneEnabled=True,
+                                                            maxCallbackCount=10,
+                                                            amdType="DEFAULT",
+                                                            customerProviderType="campaign.based.customer.provider",
+                                                            dialOnTimeOut=30,
+                                                            dialOnTimeOutEnabled=False,
+                                                            screenLogsEnabled=True,
+                                                            acwConnected=30,
+                                                            acwNotConnected=30,
+                                                            acwConnectedEnabled=False,
+                                                            autoAnswer=False,
+                                                            inheritAutoAnswerFromParent=True,
+                                                            disposeFromCRMOnlyEnabled=None)
             else:
                 pass
 
@@ -1348,8 +1406,8 @@ class TestSetup:
             # Get users assigned to campaign
             response = ameyo.get_all_campaign_users(campaignId=campaign_id,
                                                     sessionId=ameyo.adminToken)
-            ameyo.logger.info(
-                f"All {len(response.json())} users in <{campaign_id}> <{campaign_id}> {[x['userId'] for x in response.json()]}")
+            # ameyo.logger.info(
+            #     f"All {len(response.json())} users in <{campaign_id}> <{campaign_id}> {[x['userId'] for x in response.json()]}")
 
     def test_38_assign_supervisor_to_all_campaigns(self, ameyo, calling):
         """

@@ -2959,7 +2959,7 @@ class DataCreationAPIs(Wrapper):
         sessionId = kwargs.get('sessionId', self.supervisorToken)
         campaignId = kwargs.get('campaignId', None)
         dialerAlgoType = kwargs.get('dialerAlgoType', None)
-        self.check_required_args([sessionId, campaignId, dialerAlgoType])
+        self.check_required_args([sessionId, campaignId])
         payload = {
             "dialerAlgoType": dialerAlgoType,
             "acwConnected": 30,
@@ -2987,7 +2987,7 @@ class DataCreationAPIs(Wrapper):
             "screenLogsEnabled": True,
             "timeZoneMapper": "lead.based.campaign.timezone.mapper",
             "voiceLogsEnabled": True,
-            "wrapTimeOut": 300
+            "wrapTimeOut": 30
         }
         response = self.rest.send_request(**{
             'method': 'PUT',
