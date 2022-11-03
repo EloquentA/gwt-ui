@@ -32,3 +32,9 @@ Run specific report and validate download in required formats
     [Arguments]  ${instance}    ${report_name}    ${current_time_duration}=Year    ${format_list}=${format_list}
     ${result}=   call method    ${instance}    run_report_and_validate_download_in_required_formats    ${report_name}    ${current_time_duration}    ${format_list}
     I verify result    ${result}
+
+Validate rerun report from queue
+    [Documentation]   This keyword validates the re-run of reports from the Queue>>Report Queue
+    [Arguments]  ${instance}    ${report_name}    ${format_list}=${format_list}
+    ${result}=   call method    ${instance}    validate_rerun_report_from_queue    ${report_name}    ${format_list}
+    I verify result    ${result}

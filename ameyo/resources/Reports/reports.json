@@ -33,6 +33,7 @@
   "first_report_queue_pdf":{"by":"xpath", "value":"//tr[@role='listitem'][1]//td[12]/div/img", "index":"0"},
   "first_report_queue_html":{"by":"xpath", "value":"//tr[@role='listitem'][1]//td[13]/div/img", "index":"0"},
   "first_report_queue_added_by":{"by":"xpath", "value":"//tr[@role='listitem'][1]//td[5]/div", "index":"0"},
-  "first_report_queue_rerun":{"by":"xpath", "value":"//tr[@role='listitem'][1]//td[9]/div/img", "index":"0"}
-
+  "first_report_queue_rerun":{"by":"xpath", "value":"//tr[@role='listitem'][1]//td[9]/div/img", "index":"0"},
+  "template_queue_tab":{"by":"xpath", "value":"//li[contains(@title,'Template Queue')]//a", "index":"0"},
+  "template_name_header":{"by":"xpath", "value":"//div[text()='Template Name']", "index":"0"}
 }

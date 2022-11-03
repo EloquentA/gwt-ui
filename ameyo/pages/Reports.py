@@ -77,8 +77,6 @@ class Reports:
                 reports_name_list = [element.text for element in reports_name_elements]
                 print(reports_name_list)
                 assert report_name in reports_name_list, "Expected Report not found in assigned reports list"
-            # self.action.switch_to_default_frame()
-            # self.search_and_run_report_in_all_formats(report_name)
         finally:
             self.action.switch_to_default_frame()
         return True
@@ -124,20 +122,52 @@ class Reports:
             print(report_formats_list)
             if 'CSV' in report_formats_list:
                 print("Downloading CSV")
+                #Navigating to Template Queue tab just to reload the DOM as WA for table elements disappearing from DOM issue
+                self.action.click_element('template_queue_tab')
+                self.action.is_presence_of_element_located('template_name_header')
+                self.action.click_element('report_queue_tab')
                 self.action.explicit_wait('first_report_queue_csv', ec='element_to_be_clickable')
                 self.action.click_element('first_report_queue_csv')
             if 'XLS' in report_formats_list:
                 print("Downloading XLS")
+                self.action.click_element('template_queue_tab')
+                self.action.is_presence_of_element_located('template_name_header')
+                self.action.click_element('report_queue_tab')
                 self.action.explicit_wait('first_report_queue_xls', ec='element_to_be_clickable')
                 self.action.click_element('first_report_queue_xls')
             if 'PDF' in report_formats_list:
                 print("Downloading PDF")
+                self.action.click_element('template_queue_tab')
+                self.action.is_presence_of_element_located('template_name_header')
+                self.action.click_element('report_queue_tab')
                 self.action.explicit_wait('first_report_queue_pdf', ec='element_to_be_clickable')
                 self.action.click_element('first_report_queue_pdf')
             if 'HTML' in report_formats_list:
                 print("Opening HTML")
+                self.action.click_element('template_queue_tab')
+                self.action.is_presence_of_element_located('template_name_header')
+                self.action.click_element('report_queue_tab')
                 self.action.explicit_wait('first_report_queue_html', ec='element_to_be_clickable')
                 self.action.click_element('first_report_queue_html')
+        finally:
+            self.action.switch_to_default_frame()
+        return True
+
+    def validate_rerun_report_from_queue(self, report_name, report_formats_list=['CSV', 'XLS', 'PDF', 'HTML']):
+        """Validate the re-run of reports from the Queue>>Report Queue"""
+        try:
+            self.navigate_to_reports()
+            self.action.click_element('queue_tab')
+            self.action.click_element('report_queue_tab')
+            self.action.element_should_contain_text('first_report_name', report_name)
+            self.action.click_element('first_report_queue_rerun')
+            print(report_formats_list)
+            for report_format in report_formats_list:
+                self.action.click_element('report_format_checkbox', replace_dict={'replace_value': report_format})
+            self.action.explicit_wait('run_report_btn', ec='element_to_be_clickable')
+            self.action.click_element('run_report_btn')
+            self.action.switch_to_default_frame()
+            self.validate_report_in_queue_and_download(report_name, report_formats_list)
         finally:
             self.action.switch_to_default_frame()
         return True

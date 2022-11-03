@@ -458,3 +458,11 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("run_report_and_validate_download_in_required_formats", error))
+
+    def validate_rerun_report_from_queue(self, report_name, format_list=['CSV','XLS','PDF','HTML']):
+        """Method to validate the re-run of reports from the Queue>>Report Queue"""
+        try:
+            self.reports.validate_rerun_report_from_queue(report_name, format_list)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("validate_rerun_report_from_queue", error))
