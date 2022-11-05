@@ -1,0 +1,107 @@
+{
+  "group_sub_tab": {
+    "by": "xpath",
+    "value": "//a/span[text()='Groups']",
+    "index": "0"
+  },
+ "users_sub_tab": {
+    "by": "xpath",
+    "value": "//a/span[text()='Users']",
+    "index": "0"
+  },
+  "create_new_group_btn": {
+    "by": "xpath",
+    "value": "//span/following-sibling::button/span[text()='Create New Group']",
+    "index": "0"
+  },
+  "create_new_group_btn_with_data": {
+    "by": "xpath",
+    "value": "//span[text()='Create New Group']/parent::button",
+    "index": "0"
+  },
+  "group_name_input": {
+    "by": "xpath",
+    "value": "//label[text()='Group Name*']/preceding:: input",
+    "index": "0"
+  },
+  "group_desc_input": {
+    "by": "xpath",
+    "value": "//label[text()='Description']/preceding:: textarea",
+    "index": "0"
+  },
+ "available_users_and_group_search_input": {
+    "by": "xpath",
+    "value": "//div/h4[contains(text(),'My Available Users and Groups')]/parent::div/following-sibling::div//input",
+    "index": "0"
+  },
+  "assigned_users_and_group_search_input": {
+    "by": "xpath",
+    "value": "//div/h4[contains(text(),'Assigned Users and Groups')]/parent::div/following-sibling::div//input",
+    "index": "0"
+  },
+  "total_available_users_and_groups_records": {
+    "by": "xpath",
+    "value": "//div/h4[contains(text(),'My Available Users and Groups')]/parent::div/parent::div/parent::div/following-sibling::div[3]/div//i/following-sibling::span",
+    "index": "0"
+  },
+  "available_page_limit": {
+    "by": "xpath",
+    "value": "//div/h4[contains(text(),'My Available Users and Groups')]/parent::div/parent::div/parent::div/following-sibling::div[3]//span[text()='Rows per page']/parent::div//input",
+    "index": "0"
+  },
+  "available_users_and_groups_table_tbody": {
+    "by": "xpath",
+    "value": "//div/h4[contains(text(),'My Available Users and Groups')]/parent::div/parent::div/parent::div/following-sibling::div[2]//table//tbody",
+    "index": "0"
+  },
+  "assign_user_btn": {
+    "by": "xpath",
+    "value": "//button/i[@class='fontello fontello-move-right']",
+    "index": "0"
+  },
+  "submit_create_group_btn": {
+    "by": "xpath",
+    "value": "//button/span[text()='Create']",
+    "index": "0"
+  },
+  "groups_table_header": {
+    "by": "xpath",
+    "value": "//div/h4[contains(text(), 'Groups')]",
+    "index": "0"
+  },
+ "groups_table_tbody": {
+    "by": "xpath",
+    "value": "//div/h4[contains(text(),'Groups')]/parent::div/parent::div/parent::div/following-sibling::div[2]//table//tbody",
+    "index": "0"
+  },
+  "total_groups_records": {
+    "by": "xpath",
+    "value": "//div/h4[contains(text(),'Groups')]/parent::div/parent::div/parent::div/following-sibling::div[3]//span[contains(text(), 'of')]",
+    "index": "0"
+  },
+  "confirm_delete_group_btn": {
+    "by": "xpath",
+    "value": "//button[@automationid='confirmationBtn1']/span[text()='Delete']",
+    "index": "0"
+  },
+ "edit_group_btn": {
+    "by": "xpath",
+    "value": "//button/span[text()='Save']",
+    "index": "0"
+  },
+  "assigned_users_and_groups_table_tbody": {
+    "by": "xpath",
+    "value": "//div/h4[contains(text(),'Assigned Users and Groups')]/parent::div/parent::div/parent::div/following-sibling::div[2]//table//tbody",
+    "index": "0"
+  },
+  "total_assigned_users_and_groups_records": {
+    "by": "xpath",
+    "value": "//div/h4[contains(text(),'Assigned Users and Groups')]/parent::div/parent::div/parent::div/following-sibling::div[3]/div//i/following-sibling::span",
+    "index": "0"
+  },
+  "assigned_page_limit": {
+    "by": "xpath",
+    "value": "//div/h4[contains(text(),'Assigned Users and Groups')]/parent::div/parent::div/parent::div/following-sibling::div[3]//span[text()='Rows per page']/parent::div//input",
+    "index": "0"
+  }
+}

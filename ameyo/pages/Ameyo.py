@@ -24,7 +24,7 @@ from CallDetails import CallDetails
 from Reports import Reports
 from Manage import Manage
 from KnowledgeBase import KnowledgeBase
-
+from AdminGroup import AdminGroup
 
 class Ameyo:
     """Ameyo functionality class"""
@@ -46,6 +46,7 @@ class Ameyo:
         self.reports = Reports(self.web_browser)
         self.manage = Manage(self.web_browser, self.common)
         self.knowledgebase = KnowledgeBase(self.web_browser, self.common)
+        self.admin_group = AdminGroup(self.web_browser, self.common, self.adminuser)
 
     def __capture_error(self, method_name, error_msg):
         """Utility method to capture and report errors"""
@@ -484,3 +485,32 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("validate_knowledge_base_page", error))
+
+    def verify_create_group(self, group_manager):
+        """Method to verify creation of group."""
+        try:
+            is_passed, group = self.admin_group.verify_create_group(group_manager)
+            return self._return_result(is_passed, '', '', group)
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"verify_create_group", error))
+
+    def verify_assign_group_users(self, group):
+        """Method to verify assignment of users to group."""
+        try:
+            return self._return_result(self.admin_group.verify_assign_group_users(group))
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"verify_assign_group_users", error))
+
+    def verify_update_group(self, group):
+        """Method to verify updation of group."""
+        try:
+            return self._return_result(self.admin_group.verify_update_group(group))
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"verify_update_group", error))
+
+    def verify_delete_group(self, group):
+        """Method to verify deletion of group."""
+        try:
+            return self._return_result(self.admin_group.verify_delete_group(group))
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"verify_delete_group", error))

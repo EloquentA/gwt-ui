@@ -5,7 +5,6 @@ import os
 import sys
 import time
 
-from selenium.webdriver.common.by import By
 from uuid import uuid4
 
 sys.path.append(os.path.join(

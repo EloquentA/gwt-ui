@@ -839,10 +839,11 @@ class Action:
         except Exception as err:
             raise AssertionError(f"Error in get_table_row_elements - Check table locator: {err}")
 
-    def get_table_cell_data(self, locator, row, col, raw_cell=False, raise_error=True):
+    def get_table_cell_data(self, locator, row, col, raw_cell=False, raise_error=True, retries=0):
         """Returns cell data of a table using row & col number.
         your xpath for table should be something like : //form[2]/table/tbody
         raw_cell: If True, returns cell element
+        retries to avoid stale elememt errors
         """
         try:
             self.table = self._element_finder(locator)
@@ -865,6 +866,10 @@ class Action:
                     return self.colList[col]
                 return self.colList[col].text
         except Exception as err:
+            retries+=1
+            if retries <=3:
+                time.sleep(1)
+                return self.get_table_cell_data(locator, row, col, raw_cell, raise_error, retries=0)
             if raise_error:
                 raise AssertionError("Error in get_table_cell_data - Check table xpath " \
                                      f"or row count or col count: {err}")

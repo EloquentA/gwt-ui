@@ -106,3 +106,76 @@ class Common:
             if os.path.isfile(os.path.join(directory, path)) and os.path.getsize(os.path.join(directory, path)) > 0:
                 count += 1
         return count
+
+    def get_total_records(self, total_records_selector,table_selector,retries=0):
+        """Gets total records."""
+        try:
+            self.wait_for_data_to_load(table_selector)
+            records_str = self.action.get_text(total_records_selector)
+            total_records = int(records_str.split('of')[-1].strip())
+            print('Total records present for selector: ', total_records_selector, ' : ', total_records)
+            return total_records
+        except Exception as err:
+            retries += 1
+            if retries <= 3:
+                time.sleep(3)
+                return self.get_total_records(total_records_selector, table_selector, retries)
+            print(f"Error getting total records for {total_records_selector}: {err} after {retries} retries.")
+            return 0
+
+    def wait_for_data_to_load(self, table_selector):
+        """Waits for data to be loaded in table.
+            Maximum wait time is 10 seconds.
+        """
+        current_time = time.time()
+        while self.action.get_row_count(table_selector) < 1 and time.time() - current_time <= 10:
+            time.sleep(3)
+
+    def wait_for_searched_record_to_load(self, total_records_selector,table_selector,expected_records=1):
+        """Waits for searched record to be loaded in table.
+            Maximum wait time is 10 seconds.
+        """
+        current_time = time.time()
+        while self.get_total_records(
+                total_records_selector,table_selector) != expected_records and time.time() - current_time <= 10:
+            time.sleep(3)
+
+    def search_record(self, search_str, input_selector,total_records_selector ,table_selector,expected_records=1):
+        """Searches for requested record in table and waits for records to load."""
+        self.action.input_text(input_selector, search_str)
+        self.action.press_key(input_selector, 'ENTER')
+        self.wait_for_searched_record_to_load(total_records_selector, table_selector,expected_records)
+        return True
+
+    def get_col_text_from_ameyo_table(
+            self,
+            search_query_str,
+            page_limit_selector,
+            total_records_selector,
+            table_selector,
+            table_search_input,
+            col=1,
+            click_on_row=False
+    ):
+        """Gets record from ameyo tables used commonly."""
+        current_total_records = self.get_total_records(total_records_selector, table_selector)
+        if current_total_records > int(self.action.get_value(page_limit_selector)):
+            self.search_record(search_query_str, table_search_input, total_records_selector, table_selector)
+            if click_on_row:
+                first_col = self.action.get_table_cell_data(table_selector, row=0, col=0, raw_cell=True)
+                first_col.click()
+            search_query_str = self.action.get_table_cell_data(table_selector, row=0, col=col)
+        else:
+            table_data = []
+            for i in range(current_total_records):
+                user = self.action.get_table_cell_data(table_selector, row=i, col=col)
+                table_data.append(user)
+                if search_query_str.lower() in user.lower():
+                    if click_on_row:
+                        first_col = self.action.get_table_cell_data(table_selector, row=i, col=0, raw_cell=True)
+                        first_col.click()
+                    search_query_str =  user
+                    break
+            else:
+                assert False, f"No such search record found in table: {search_query_str}. in table data: {table_data}"
+        return search_query_str, current_total_records
