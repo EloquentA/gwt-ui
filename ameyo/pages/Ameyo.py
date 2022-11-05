@@ -23,6 +23,7 @@ from Monitor import Monitor
 from CallDetails import CallDetails
 from Reports import Reports
 from Manage import Manage
+from KnowledgeBase import KnowledgeBase
 
 
 class Ameyo:
@@ -44,6 +45,7 @@ class Ameyo:
         self.call_details = CallDetails(self.web_browser, self.common)
         self.reports = Reports(self.web_browser)
         self.manage = Manage(self.web_browser, self.common)
+        self.knowledgebase = KnowledgeBase(self.web_browser, self.common)
 
     def __capture_error(self, method_name, error_msg):
         """Utility method to capture and report errors"""
@@ -474,3 +476,11 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("create_template_and_run_report_from_template", error))
+
+    def validate_knowledge_base_page(self, user_type, campaign_details):
+        """Method to validate that the knowledge base page is opening or not"""
+        try:
+            self.knowledgebase.validate_knowledge_base_page(user_type,campaign_details)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("validate_knowledge_base_page", error))

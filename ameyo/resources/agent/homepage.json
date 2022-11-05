@@ -75,5 +75,11 @@
   "textbox_hours": {"by":"xpath", "value":"//label[text()= 'Hour(s)']/preceding-sibling::div/input", "index":"0"},
   "textbox_days": {"by":"xpath", "value":"//label[text()= 'Days(s)']/preceding-sibling::div/input", "index":"0"},
   "box_call_panel":{"by":"xpath", "value":"//*[@automationid='callPanelBox']", "index":"0"},
-  "change_extension_link":{"by":"xpath", "value":"//*[@automationid='changeExtensionLink']", "index":"0"}
+  "change_extension_link":{"by":"xpath", "value":"//*[@automationid='changeExtensionLink']", "index":"0"},
+  "knowledge_base_btn":{"by":"xpath", "value":"//li[contains(@class, 'tab')]//span[contains(text(), 'Knowledge Base')]", "index":"0"},
+  "kb_href_state":{"by":"xpath", "value":"//a[contains(@href, '#tab1')]", "index":"0"},
+  "copyright_am":{"by":"xpath", "value":"//div[contains(@class, 'col-sm-6 text-center') and contains(text(), 'Copyright 2022, ')]", "index":"0"},
+  "kb_iframe":{"by":"xpath", "value":"//iframe[contains(@class, 'iframe-button-app')]", "index":"0"},
+  "kb_about_us_tab":{"by":"xpath", "value":"//a[contains(@class, 'mega-menu-link') and text() = 'About Us']", "index":"0"},
+  "kb_cookies_ok_btn":{"by":"id", "value":"cookie_action_close_header", "index":"0"}
 }

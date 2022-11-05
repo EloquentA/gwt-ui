@@ -137,23 +137,6 @@ class Monitor:
         self._wrap_up(executive_username, 'whisper')
         return True
 
-    def setup_workbench_for_conference(self, campaign_details):
-        """Sets up workbench for conference."""
-        self.action.explicit_wait('workbench_tab', ec='element_to_be_clickable')
-        self.action.click_element('workbench_tab')
-        monitor_with = campaign_details.get('monitor_with')
-        dropdown_selector = {
-            'interaction': 'dropdown_interaction',
-            'chat': 'dropdown_chat',
-            'video': 'dropdown_video'
-        }
-        selector = dropdown_selector.get(monitor_with, 'dropdown_voice')
-        self.action.explicit_wait(selector, ec='element_to_be_clickable')
-        self.action.click_element(selector)
-        self.action.select_from_ul_dropdown_using_text('ul_campaign_selector', campaign_details.get(monitor_with))
-        self.action.click_element("button_next")
-        return True
-
     def verify_conference_action(self, campaign_details, executive_username):
         """Method to verify conference functionality."""
         self.action.switch_to_window(1)
@@ -162,7 +145,7 @@ class Monitor:
         self.agent_homepage.manual_dial_only(999999999, campaign)
         self.action.switch_to_window(1)
         self.open_actions(executive_username)
-        self.setup_workbench_for_conference(campaign_details)
+        self.common.setup_workbench_for_campaign(campaign_details)
         self.action.explicit_wait('conference_btn',ec='element_to_be_clickable')
         self.action.click_element('conference_btn')
         self.action.explicit_wait('accept_conference_call', ec='element_to_be_clickable', waittime=60)

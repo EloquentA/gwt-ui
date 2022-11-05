@@ -309,7 +309,6 @@ class AgentHomepage:
 
     def change_password(self, oldpass, newpass) -> bool:
         """Change Password of a logged in Agent"""
-        self.action.explicit_wait('active_phone_icon', waittime=120)
         self.action.click_element("preferences_drop_down_btn")
         self.action.click_element("change_pass_link")
         self.action.input_text('current_password', oldpass)
@@ -323,8 +322,8 @@ class AgentHomepage:
 
     def set_status(self) -> bool:
         """Change Agent Status from Just logged to available and to any break reason"""
-        self.action.explicit_wait('active_phone_icon', waittime=120)
         self.common.change_status('Available', 'available_status')
+        self.action.explicit_wait('active_phone_icon', waittime=120)
         self.common.change_status('Break', 'break_status')
         self.common.change_status('Available', 'available_status')
         self.common.change_status('Snack', 'snack_status')

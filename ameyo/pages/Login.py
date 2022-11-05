@@ -143,7 +143,7 @@ class Login:
     def select_extension(self, kwargs) -> bool:
         """This function will select extension."""
         current_url = self.action.get_current_url()
-        if any([i in current_url for i in ['agentConfiguration', 'LiveMonitoring']]) and \
+        if any([i in current_url for i in ['agentConfiguration', 'LiveMonitoring', 'MonitoringNavBar']]) and \
                 self.action.is_presence_of_element_located('extension_selection_modal_header'):
             self.action.explicit_wait("extension_dropdown")
             self.action.click_element("extension_dropdown")
