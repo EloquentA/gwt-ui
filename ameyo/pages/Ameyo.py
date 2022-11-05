@@ -466,3 +466,11 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("validate_rerun_report_from_queue", error))
+
+    def create_template_and_run_report_from_template(self, report_name, template_name="TestTemplate", current_time_duration='Year', format_list=['CSV','XLS','PDF','HTML']):
+        """Method to create template and run report via template"""
+        try:
+            self.reports.create_template_and_run_report_from_template(report_name, template_name, current_time_duration, format_list)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("create_template_and_run_report_from_template", error))

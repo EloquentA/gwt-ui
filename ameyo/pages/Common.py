@@ -80,3 +80,12 @@ class Common:
         if expected_message in toast_text_list:
             return True
         return False
+
+    def get_non_empty_files_count_in_directory(self, directory=os.path.join(os.getcwd(), "ameyo", "temp_downloads")):
+        """Used to get count of non-empty files in given directory"""
+        count = 0
+        for path in os.listdir(directory):
+            # check if current path is a file and file is not empty(zero bytes)
+            if os.path.isfile(os.path.join(directory, path)) and os.path.getsize(os.path.join(directory, path)) > 0:
+                count += 1
+        return count

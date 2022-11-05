@@ -38,3 +38,9 @@ Validate rerun report from queue
     [Arguments]  ${instance}    ${report_name}    ${format_list}=${format_list}
     ${result}=   call method    ${instance}    validate_rerun_report_from_queue    ${report_name}    ${format_list}
     I verify result    ${result}
+
+Create template and run report from template
+    [Documentation]   This keyword creates template and run report via template"""
+    [Arguments]  ${instance}    ${report_name}    ${template_name}=TestTemplate    ${current_time_duration}=Year    ${format_list}=${format_list}
+    ${result}=   call method    ${instance}    create_template_and_run_report_from_template    ${report_name}    ${template_name}    ${current_time_duration}    ${format_list}
+    I verify result    ${result}

@@ -13,6 +13,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 import sys
 import os
+import shutil
 import tempfile
 import logging
 from pathlib import Path
@@ -73,6 +74,7 @@ class WebBrowser:
         """
         import sys
         browser = kwargs["browser_config"]["name"]
+        download_directory = kwargs["browser_config"]["download_directory"]
         if kwargs is None:
             kwargs = {}
         if browser == 'firefox':
@@ -135,9 +137,20 @@ class WebBrowser:
             else:
                 prefs = {"profile.default_content_setting_values.notifications": 2}
 
-            if "download_directory" in kwargs.keys():
-                prefs["download.default_directory"] = kwargs["download_directory"]
-
+            path = os.getcwd()
+            temp_download_dir = os.path.join(path, "ameyo", "temp_downloads")
+            if os.path.exists(temp_download_dir):
+                for file in os.listdir(temp_download_dir):
+                    file_path = os.path.join(temp_download_dir, file)
+                    try:
+                        if os.path.isfile(file_path) or os.path.islink(file_path):
+                            os.unlink(file_path)
+                        elif os.path.isdir(file_path):
+                            shutil.rmtree(file_path)
+                    except Exception as e:
+                        print('Failed to delete %s. Reason: %s' % (file_path, e))
+            if download_directory:
+                prefs["download.default_directory"] = temp_download_dir
             # to disable file download protection i.e. Keep and Discard
             prefs["safebrowsing.enabled"] = "false"
             options.add_experimental_option("prefs", prefs)

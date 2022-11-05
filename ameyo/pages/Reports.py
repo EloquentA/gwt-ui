@@ -3,17 +3,20 @@ Module: This is the Report module which contains methods for functionality relat
 """
 import os
 import sys
+import time
 
 sys.path.append(os.path.join(
     os.path.dirname((os.path.dirname(os.path.dirname(__file__)))), "libs", "web_action")
 )
 from action import Action
+from Common import Common
 
 class Reports:
     """Report functionality class"""
 
     def __init__(self, web_browser):
         self.action = Action(web_browser)
+        self.common = Common(web_browser)
 
     def navigate_to_reports(self):
         """This will navigate to Reports Tab and switches the frame"""
@@ -90,8 +93,8 @@ class Reports:
             self.action.is_presence_of_element_located('report_list_table')
             self.action.input_text('reports_search_box', report_name)
             self.action.click_element('search_button')
-            self.action.element_should_contain_text('first_report_name', report_name)
-            self.action.click_element('first_report_run_button')
+            assert self.action.get_table_cell_data('report_queue_table', row=0, col=0, raw_cell=True).text == report_name,"Incorrect report name"
+            self.action.get_table_cell_data('report_queue_table', row=0, col=2, raw_cell=True).click()
             self.action.explicit_wait('for_current_radio')
             self.action.click_element('for_current_radio')
             self.action.click_element('nothing_selected_btn')
@@ -117,38 +120,45 @@ class Reports:
             self.navigate_to_reports()
             self.action.click_element('queue_tab')
             self.action.click_element('report_queue_tab')
-            self.action.element_should_contain_text('first_report_name', report_name)
+            assert self.action.get_table_cell_data('report_queue_table', row=0, col=0, raw_cell=True).text == report_name, "Incorrect report name"
             self.action.explicit_wait('first_report_queue_status', waittime=240, ec='text_to_be_present_in_element', msg_to_verify='SUCCESS')
             print(report_formats_list)
+            file_count = self.common.get_non_empty_files_count_in_directory()
+            print(file_count)
             if 'CSV' in report_formats_list:
                 print("Downloading CSV")
                 #Navigating to Template Queue tab just to reload the DOM as WA for table elements disappearing from DOM issue
                 self.action.click_element('template_queue_tab')
-                self.action.is_presence_of_element_located('template_name_header')
+                self.action.is_presence_of_element_located('template_table_body')
                 self.action.click_element('report_queue_tab')
-                self.action.explicit_wait('first_report_queue_csv', ec='element_to_be_clickable')
-                self.action.click_element('first_report_queue_csv')
+                self.action.get_table_cell_data('report_queue_table', row=0, col=9, raw_cell=True).click()
+                time.sleep(1)
+                file_count = file_count + 1
+                assert self.common.get_non_empty_files_count_in_directory() == file_count, "Files count mismatch, not downloaded"
             if 'XLS' in report_formats_list:
                 print("Downloading XLS")
                 self.action.click_element('template_queue_tab')
-                self.action.is_presence_of_element_located('template_name_header')
+                self.action.is_presence_of_element_located('template_table_body')
                 self.action.click_element('report_queue_tab')
-                self.action.explicit_wait('first_report_queue_xls', ec='element_to_be_clickable')
-                self.action.click_element('first_report_queue_xls')
+                self.action.get_table_cell_data('report_queue_table', row=0, col=10, raw_cell=True).click()
+                time.sleep(1)
+                file_count = file_count + 1
+                assert self.common.get_non_empty_files_count_in_directory() == file_count, "Files count mismatch, not downloaded"
             if 'PDF' in report_formats_list:
                 print("Downloading PDF")
                 self.action.click_element('template_queue_tab')
-                self.action.is_presence_of_element_located('template_name_header')
+                self.action.is_presence_of_element_located('template_table_body')
                 self.action.click_element('report_queue_tab')
-                self.action.explicit_wait('first_report_queue_pdf', ec='element_to_be_clickable')
-                self.action.click_element('first_report_queue_pdf')
+                self.action.get_table_cell_data('report_queue_table', row=0, col=11, raw_cell=True).click()
+                time.sleep(1)
+                file_count = file_count + 1
+                assert self.common.get_non_empty_files_count_in_directory() == file_count, "Files count mismatch, not downloaded"
             if 'HTML' in report_formats_list:
                 print("Opening HTML")
                 self.action.click_element('template_queue_tab')
-                self.action.is_presence_of_element_located('template_name_header')
+                self.action.is_presence_of_element_located('template_table_body')
                 self.action.click_element('report_queue_tab')
-                self.action.explicit_wait('first_report_queue_html', ec='element_to_be_clickable')
-                self.action.click_element('first_report_queue_html')
+                self.action.get_table_cell_data('report_queue_table', row=0, col=12, raw_cell=True).click()
         finally:
             self.action.switch_to_default_frame()
         return True
@@ -159,8 +169,8 @@ class Reports:
             self.navigate_to_reports()
             self.action.click_element('queue_tab')
             self.action.click_element('report_queue_tab')
-            self.action.element_should_contain_text('first_report_name', report_name)
-            self.action.click_element('first_report_queue_rerun')
+            assert self.action.get_table_cell_data('report_queue_table', row=0, col=0, raw_cell=True).text == report_name, "Incorrect report name"
+            self.action.get_table_cell_data('report_queue_table', row=0, col=8, raw_cell=True).click()
             print(report_formats_list)
             for report_format in report_formats_list:
                 self.action.click_element('report_format_checkbox', replace_dict={'replace_value': report_format})
@@ -168,6 +178,97 @@ class Reports:
             self.action.click_element('run_report_btn')
             self.action.switch_to_default_frame()
             self.validate_report_in_queue_and_download(report_name, report_formats_list)
+        finally:
+            self.action.switch_to_default_frame()
+        return True
+
+    def create_template_and_run_report_from_template(self, report_name, template_name, current_time_duration='Year', report_formats_list=['CSV','XLS','PDF','HTML']):
+        """Save template of the report and run template and download"""
+        try:
+            self.navigate_to_reports()
+            self.action.click_element('home_tab')
+            self.action.click_element('report_list_tab')
+            self.action.is_presence_of_element_located('report_list_table')
+            self.action.input_text('reports_search_box', report_name)
+            self.action.click_element('search_button')
+            assert self.action.get_table_cell_data('report_queue_table', row=0, col=0, raw_cell=True).text == report_name, "Incorrect report name"
+            self.action.get_table_cell_data('report_queue_table', row=0, col=2, raw_cell=True).click()
+            self.action.explicit_wait('for_current_radio')
+            self.action.click_element('for_current_radio')
+            self.action.click_element('nothing_selected_btn')
+            self.action.click_element('time_duration_selection', replace_dict={'replace_value': current_time_duration})
+            self.action.explicit_wait('select_all_campaigns')
+            self.action.click_element('select_all_campaigns')
+            self.action.explicit_wait('select_all_queues')
+            self.action.click_element('select_all_queues')
+            print(report_formats_list)
+            for report_format in report_formats_list:
+                self.action.click_element('report_format_checkbox', replace_dict={'replace_value': report_format})
+            self.action.explicit_wait('save_template_btn', ec='element_to_be_clickable')
+            self.action.click_element('save_template_btn')
+            self.action.explicit_wait('save_template_as_modal')
+            self.action.input_text('template_name_input', template_name)
+            self.action.explicit_wait('ok_btn_report_tab_alert')
+            self.action.click_element('ok_btn_report_tab_alert')
+            self.action.switch_to_default_frame()
+            self.validate_template_in_queue_and_download(template_name, report_name, report_formats_list)
+        finally:
+            self.action.switch_to_default_frame()
+        return True
+
+    def validate_template_in_queue_and_download(self, template_name, report_name, report_formats_list=['CSV', 'XLS', 'PDF', 'HTML']):
+        """Validate successful template run from queue and download it in all desired formats"""
+        try:
+            self.navigate_to_reports()
+            self.action.click_element('queue_tab')
+            self.action.click_element('template_queue_tab')
+            self.action.explicit_wait('template_name_header')
+            assert self.action.get_table_cell_data('report_queue_table', row=0, col=0,
+                                                   raw_cell=True).text == template_name, "Incorrect template name"
+            assert self.action.get_table_cell_data('report_queue_table', row=0, col=2,
+                                                   raw_cell=True).text == report_name, "Incorrect report name"
+            self.action.explicit_wait('first_template_queue_status', waittime=240, ec='text_to_be_present_in_element',
+                                      msg_to_verify='SUCCESS')
+            print(report_formats_list)
+            file_count = self.common.get_non_empty_files_count_in_directory()
+            if 'CSV' in report_formats_list:
+                print("Downloading CSV")
+                # Navigating to Template Queue tab just to reload the DOM as WA for table elements disappearing from DOM issue
+                self.action.explicit_wait('report_queue_tab', ec='element_to_be_clickable')
+                self.action.click_element('report_queue_tab')
+                self.action.explicit_wait('template_queue_tab', ec='element_to_be_clickable')
+                self.action.click_element('template_queue_tab')
+                self.action.get_table_cell_data('report_queue_table', row=0, col=10, raw_cell=True).click()
+                time.sleep(1)
+                file_count = file_count + 1
+                assert self.common.get_non_empty_files_count_in_directory() == file_count, "Files count mismatch, not downloaded"
+            if 'XLS' in report_formats_list:
+                print("Downloading XLS")
+                self.action.explicit_wait('report_queue_tab', ec='element_to_be_clickable')
+                self.action.click_element('report_queue_tab')
+                self.action.explicit_wait('template_queue_tab', ec='element_to_be_clickable')
+                self.action.click_element('template_queue_tab')
+                self.action.get_table_cell_data('report_queue_table', row=0, col=11, raw_cell=True).click()
+                time.sleep(1)
+                file_count = file_count + 1
+                assert self.common.get_non_empty_files_count_in_directory() == file_count, "Files count mismatch, not downloaded"
+            if 'PDF' in report_formats_list:
+                print("Downloading PDF")
+                self.action.explicit_wait('report_queue_tab', ec='element_to_be_clickable')
+                self.action.click_element('report_queue_tab')
+                self.action.explicit_wait('template_queue_tab', ec='element_to_be_clickable')
+                self.action.click_element('template_queue_tab')
+                self.action.get_table_cell_data('report_queue_table', row=0, col=12, raw_cell=True).click()
+                time.sleep(1)
+                file_count = file_count + 1
+                assert self.common.get_non_empty_files_count_in_directory() == file_count, "Files count mismatch, not downloaded"
+            if 'HTML' in report_formats_list:
+                print("Opening HTML")
+                self.action.explicit_wait('report_queue_tab', ec='element_to_be_clickable')
+                self.action.click_element('report_queue_tab')
+                self.action.explicit_wait('template_queue_tab', ec='element_to_be_clickable')
+                self.action.click_element('template_queue_tab')
+                self.action.get_table_cell_data('report_queue_table', row=0, col=13, raw_cell=True).click()
         finally:
             self.action.switch_to_default_frame()
         return True

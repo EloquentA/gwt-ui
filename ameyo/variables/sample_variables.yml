@@ -4,6 +4,7 @@ BROWSER_CONFIG:
   is_remote_driver: False
   server: ''
   port: ''
+  download_directory: True
 SKIP_POST_RUN_CLEANUP: True
 AMEYO_URL: 'https://vapt.ameyo.net:8443/app/'
 INBOUND_API_URL: 'https://vapt.ameyo.net:8786/inbound.php/?count=no_of_calls&toprefix=did_prefix&calleridprefix=calling_number'
