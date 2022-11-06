@@ -514,3 +514,10 @@ class Ameyo:
             return self._return_result(self.admin_group.verify_delete_group(group))
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"verify_delete_group", error))
+
+    def verify_auto_on_call_stats(self, campaign_details):
+        """Method to verify auto on call stats."""
+        try:
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"verify_auto_on_call_stats", error))

@@ -108,7 +108,7 @@ class Login:
     def select_campaign(self, kwargs, user_type, voice_campaign_type="voice_outbound", workbench=False) -> bool:
         """This function will select campaign"""
         current_url = self.action.get_current_url()
-        if user_type.lower() == 'executive' or user_type.lower() == 'change_executive':
+        if 'executive' in user_type.lower():
             if 'agentConfiguration' in current_url:
                 if kwargs['interaction']:
                     self.action.click_element("dropdown_interaction")

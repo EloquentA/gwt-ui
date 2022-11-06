@@ -56,6 +56,17 @@ CREDENTIALS:
     extension_number: 9999999992
     new_extension: 'agent_success_1800_DefaultVR'
     inbound_queue: 'finance_support'
+  spare_executive:
+    username: ''
+    password: ''
+    campaign_details:
+      interaction: ''
+      chat: ''
+      voice_outbound: ''
+      voice_inbound: ''
+      video: ''
+    extension: 'customer_success_1800_DefaultVR'
+    extension_number: 9999999996
   supervisor:
     username: ''
     password: ''

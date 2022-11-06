@@ -53,7 +53,20 @@ Suite Cleanup
     ELSE
         # Close second tab if present
         I close requested tab    ${instance1}    1    ${FALSE}
+        # Close second tab if present
+        I close requested tab    ${instance1}    2    ${FALSE}
         # If some other persona has been requested in common suite setup, login with original persona on suite cleanup
         Run Keyword If    '${req_run_as}' != '${RUN_AS}'    I logout from ameyo homepage    ${instance1}
         Run Keyword If    '${req_run_as}' != '${RUN_AS}'    Ameyo setup    ${instance1}    ${RUN_AS}
     END
+
+Suite Initialization For Two Executives And Requested User
+    [Documentation]   This keyword does suite initialization for monitoring test cases
+    [Arguments]  ${req_run_as}=supervisor
+    Suite Initialization    executive
+    I open ameyo home page in separate tab    ${instance1}
+    I switch to requested tab   ${instance1}    1
+    Ameyo setup    ${instance1}    spare_executive
+    I open ameyo home page in separate tab    ${instance1}
+    I switch to requested tab   ${instance1}    2
+    Ameyo setup    ${instance1}    ${req_run_as}
