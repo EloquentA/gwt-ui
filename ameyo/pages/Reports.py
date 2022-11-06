@@ -101,8 +101,8 @@ class Reports:
             self.action.click_element('time_duration_selection', replace_dict={'replace_value': current_time_duration})
             self.action.explicit_wait('select_all_campaigns')
             self.action.click_element('select_all_campaigns')
-            self.action.explicit_wait('select_all_queues')
-            self.action.click_element('select_all_queues')
+            if self.action.is_presence_of_element_located('select_all_queues'):
+                self.action.click_element('select_all_queues')
             print(report_formats_list)
             for report_format in report_formats_list:
                 self.action.click_element('report_format_checkbox', replace_dict={'replace_value': report_format})
@@ -129,7 +129,7 @@ class Reports:
                 print("Downloading CSV")
                 #Navigating to Template Queue tab just to reload the DOM as WA for table elements disappearing from DOM issue
                 self.action.click_element('template_queue_tab')
-                self.action.is_presence_of_element_located('template_table_body')
+                self.action.is_presence_of_element_located('template_name_header')
                 self.action.click_element('report_queue_tab')
                 self.action.get_table_cell_data('report_queue_table', row=0, col=9, raw_cell=True).click()
                 time.sleep(1)
@@ -138,7 +138,7 @@ class Reports:
             if 'XLS' in report_formats_list:
                 print("Downloading XLS")
                 self.action.click_element('template_queue_tab')
-                self.action.is_presence_of_element_located('template_table_body')
+                self.action.is_presence_of_element_located('template_name_header')
                 self.action.click_element('report_queue_tab')
                 self.action.get_table_cell_data('report_queue_table', row=0, col=10, raw_cell=True).click()
                 time.sleep(1)
@@ -147,7 +147,7 @@ class Reports:
             if 'PDF' in report_formats_list:
                 print("Downloading PDF")
                 self.action.click_element('template_queue_tab')
-                self.action.is_presence_of_element_located('template_table_body')
+                self.action.is_presence_of_element_located('template_name_header')
                 self.action.click_element('report_queue_tab')
                 self.action.get_table_cell_data('report_queue_table', row=0, col=11, raw_cell=True).click()
                 time.sleep(1)
@@ -156,7 +156,7 @@ class Reports:
             if 'HTML' in report_formats_list:
                 print("Opening HTML")
                 self.action.click_element('template_queue_tab')
-                self.action.is_presence_of_element_located('template_table_body')
+                self.action.is_presence_of_element_located('template_name_header')
                 self.action.click_element('report_queue_tab')
                 self.action.get_table_cell_data('report_queue_table', row=0, col=12, raw_cell=True).click()
         finally:
@@ -199,8 +199,8 @@ class Reports:
             self.action.click_element('time_duration_selection', replace_dict={'replace_value': current_time_duration})
             self.action.explicit_wait('select_all_campaigns')
             self.action.click_element('select_all_campaigns')
-            self.action.explicit_wait('select_all_queues')
-            self.action.click_element('select_all_queues')
+            if self.action.is_presence_of_element_located('select_all_queues'):
+                self.action.click_element('select_all_queues')
             print(report_formats_list)
             for report_format in report_formats_list:
                 self.action.click_element('report_format_checkbox', replace_dict={'replace_value': report_format})

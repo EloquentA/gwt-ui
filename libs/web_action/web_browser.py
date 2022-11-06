@@ -149,6 +149,8 @@ class WebBrowser:
                             shutil.rmtree(file_path)
                     except Exception as e:
                         print('Failed to delete %s. Reason: %s' % (file_path, e))
+            else:
+                os.mkdir(temp_download_dir)
             if download_directory:
                 prefs["download.default_directory"] = temp_download_dir
             # to disable file download protection i.e. Keep and Discard
