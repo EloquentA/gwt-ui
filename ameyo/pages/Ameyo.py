@@ -25,6 +25,7 @@ from Reports import Reports
 from Manage import Manage
 from KnowledgeBase import KnowledgeBase
 from AdminGroup import AdminGroup
+from AutoCall import AutoCall
 
 class Ameyo:
     """Ameyo functionality class"""
@@ -47,6 +48,7 @@ class Ameyo:
         self.manage = Manage(self.web_browser, self.common)
         self.knowledgebase = KnowledgeBase(self.web_browser, self.common)
         self.admin_group = AdminGroup(self.web_browser, self.common, self.adminuser)
+        self.auto_call = AutoCall(self.web_browser, self.common, self.agenthomepage, self.monitor)
 
     def __capture_error(self, method_name, error_msg):
         """Utility method to capture and report errors"""
@@ -515,9 +517,9 @@ class Ameyo:
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"verify_delete_group", error))
 
-    def verify_auto_on_call_stats(self, campaign_details):
-        """Method to verify auto on call stats."""
+    def verify_auto_call_on_stats(self, campaign_details, user_type):
+        """Method to verify auto call on stats."""
         try:
-            return self._return_result()
+            return self._return_result(self.auto_call.verify_auto_call_on_stats(campaign_details))
         except Exception as error:
-            return self._return_result(False, error, self.__capture_error(f"verify_auto_on_call_stats", error))
+            return self._return_result(False, error, self.__capture_error(f"verify_auto_call_on_stats_{user_type}", error))

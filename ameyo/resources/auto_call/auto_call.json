@@ -1,0 +1,32 @@
+{
+  "auto_call_phone_icon": {
+    "by": "xpath",
+    "value": "//i[@class='mdi mdi-phone left']",
+    "index": 0
+  },
+  "auto_call_phone_icon_div": {
+    "by": "xpath",
+    "value": "//i[@class='mdi mdi-phone left']/parent::div",
+    "index": 0
+  },
+  "auto_call_lever": {
+    "by": "xpath",
+    "value": "//label/span[text()='Voice']/following-sibling::span[1]",
+    "index": 0
+  },
+  "auto_call_on": {
+    "by": "xpath",
+    "value": "//h6[contains(text(),'Auto-Call On:')]",
+    "index": 0
+  },
+  "auto_call_on_connected": {
+    "by": "xpath",
+    "value": "//span[@automationid='autoCallOnAgentConnectedCount']",
+    "index": 0
+  },
+  "auto_call_on_not_on_call": {
+    "by": "xpath",
+    "value": "//span[@automationid='autoCallOnAgentNotOnCallCount']",
+    "index": 0
+  }
+}

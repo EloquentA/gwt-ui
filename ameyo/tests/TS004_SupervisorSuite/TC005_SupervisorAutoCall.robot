@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation     Ameyo Supervisor test cases to verify auto on call functionalities.
+Documentation     Ameyo Supervisor test cases to verify auto call stats.
 ...               Developed By - Developer by EA
 ...               https://touchstone.ameyo.com/linkto.php?tprojectPrefix=AP&item=testcase&id=AP-8895
 
@@ -11,13 +11,13 @@ Suite Teardown    Suite Cleanup
 Resource          ../../keywords/SetupTeardown.robot
 Resource          ../../keywords/CommonKeywords.robot
 Resource          ../../keywords/LoginKeywords.robot
-Resource          ../../keywords/AutoOnCall.robot
+Resource          ../../keywords/AutoCall.robot
 
 
 # Main library file which contains methods to perform some functionality
-Library           ../../pages/Ameyo.py    browser_config=${BROWSER_CONFIG}    project=${PROJECT}    run_as=executive    WITH NAME    Client1
+Library           ../../pages/Ameyo.py    browser_config=${BROWSER_CONFIG}    project=${PROJECT}    run_as=supervisor    WITH NAME    Client1
 
 *** Test Cases ***
-TC - Verify auto on call for supervisor user
+TC - Verify auto call on stats for supervisor user
     [Tags]  sanity    testid=AP-8895    regression
-    I verify auto on call stats    ${instance1}    supervisor
+    I verify auto call on stats    ${instance1}    supervisor
