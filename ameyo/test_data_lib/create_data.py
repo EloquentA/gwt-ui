@@ -667,7 +667,6 @@ class DataCreationAPIs(Wrapper):
             ], _item)
         return response
 
-
     def get_table_definitions(self, **kwargs):
         """
         Get Table Definitions
@@ -1607,7 +1606,6 @@ class DataCreationAPIs(Wrapper):
         })
         return response
 
-
     def update_manual_dial_profile(self, **kwargs):
         """
         Update Manual Dial Profile
@@ -1642,7 +1640,6 @@ class DataCreationAPIs(Wrapper):
         ], response.json())
         return response
 
-
     def get_conference_dial_profile(self, **kwargs):
         """
         Get Conference Dial Profile
@@ -1665,7 +1662,6 @@ class DataCreationAPIs(Wrapper):
             'policyId', 'campaignId', 'useMinutesProfiler', 'setUpTimeout', 'ringTimeout'
         ], response.json())
         return response
-
 
     def update_conference_dial_profile(self, **kwargs):
         """
@@ -1700,7 +1696,6 @@ class DataCreationAPIs(Wrapper):
             'policyId', 'campaignId', 'useMinutesProfiler', 'setUpTimeout', 'ringTimeout'
         ], response.json())
         return response
-
 
     def get_auto_dial_profile(self, **kwargs):
         """
@@ -2554,7 +2549,7 @@ class DataCreationAPIs(Wrapper):
                 'privilegePlanId', 'user'
             ], _item)
         return response
-    
+
     def enable_lead_for_process(self, **kwargs):
         """
         Enables/Disables Lead for a process
@@ -2714,7 +2709,8 @@ class DataCreationAPIs(Wrapper):
             'headers': {"sessionId": sessionId, "correlation": self.uuid},
             'json': {
                 "name": name, "contactCenterCallContextId": contactCenterCallContextId, "campaignId": campaignId,
-                "isOverrideDstPhone": isOverrideDstPhone, "dstPhone": dstPhone, "isOverrideSrcPhone": isOverrideSrcPhone,
+                "isOverrideDstPhone": isOverrideDstPhone, "dstPhone": dstPhone,
+                "isOverrideSrcPhone": isOverrideSrcPhone,
                 "srcPhone": srcPhone, "desc": desc
             },
         })
@@ -3021,7 +3017,6 @@ class DataCreationAPIs(Wrapper):
         self.rest.raise_for_status(response)
         return response
 
-
     def get_crm_adapter_setting(self, **kwargs):
         """
         Get CRM adapter Settings for a Campaign
@@ -3123,7 +3118,6 @@ class DataCreationAPIs(Wrapper):
         })
         self.rest.raise_for_status(response)
         return response
-
 
     def is_grouphierarchylicense_enabled(self, **kwargs):
         """
@@ -3251,17 +3245,17 @@ class DataCreationAPIs(Wrapper):
             'url': urljoin(self.creds.url, "ameyorestapi/group/userGroupModifyAPI"),
             'headers': {"sessionId": sessionId, "correlation": self.uuid},
             'json': {
-              "groupId": groupId,
-              "sessionId": sessionId,
-              "userId": userId,
-              "unassignUserIds": [],
-              "assignChildGroupIds": [],
-              "unassignChildGroupIds": [],
-              "assignManagerUserIds": [],
-              "assignUserIds": assignUserIds,
-              "unassignManagerIds": [],
-              "name": name,
-              "description": description
+                "groupId": groupId,
+                "sessionId": sessionId,
+                "userId": userId,
+                "unassignUserIds": [],
+                "assignChildGroupIds": [],
+                "unassignChildGroupIds": [],
+                "assignManagerUserIds": [],
+                "assignUserIds": assignUserIds,
+                "unassignManagerIds": [],
+                "name": name,
+                "description": description
             },
         })
         if self.noop is True or kwargs.get('toFail', True) is False:
@@ -3273,3 +3267,144 @@ class DataCreationAPIs(Wrapper):
         ], response.json())
         return response
 
+    def create_cc_routing_profiles(self, **kwargs):
+        """
+        contactCenterRoutingProfiles
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', None)
+        profileType = kwargs.get('profileType', None)
+        profileName = kwargs.get('profileName', None)
+        self.check_required_args([sessionId, profileType, profileName])
+
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, 'ameyorestapi/cc/contactCenterRoutingProfiles'),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {"profileType": profileType, "profileName": profileName}
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        return response
+
+    def upload_nodeflow_file(self, **kwargs):
+        """
+        Uploads a nodeflow file to an inbound campaign
+        """
+
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        campaignId = kwargs.get('campaignId', None)
+        contextName = kwargs.get('contextName', None)
+        fileName = kwargs.get('fileName', None)
+        self.check_required_args([sessionId, campaignId, contextName, fileName])
+
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, "upload/fileupload"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'params': {
+                "sessionId": sessionId,
+                "campaignId": campaignId,
+                "serverHostUrl": self.creds.url,
+                "contextName": contextName,
+                "transferable": True,
+                "fileName": fileName
+            }
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        return response
+
+    def get_all_feature_contexts_for_campaign(self, **kwargs):
+        """
+        Get all Feature Contexts for a Campaign
+        RPC Call: getAllFeatureContextsForCampaign
+        :return:
+        """
+        campaignId = kwargs.get('campaignId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([campaignId, sessionId])
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'params': {'campaignId': campaignId},
+            'url': urljoin(self.creds.url, f"ameyorestapi/voice/getAllCampaignDefaultFeatureContextForCampaign"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        # for _item in response.json():
+        #     self.is_key_there_in_dict(['campaignId', 'campaignName'], _item)
+        return response
+
+    def delete_feature_context_by_context_ids(self, **kwargs):
+        """
+        deleteFeatureContextByContextIds
+        :param kwargs:
+        :return:
+        """
+        contextId = kwargs.get('contextId', None)
+        contextName = kwargs.get('contextName', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([contextId, contextName])
+        response = self.rest.send_request(**{
+            'method': 'DELETE',
+            'params': {'contextId': contextId, 'contextName': contextName},
+            'url': urljoin(self.creds.url, f"ameyorestapi/deleteFeatureContextByContextIds"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        self.rest.raise_for_status(response)
+        return response
+
+    def get_all_acd_nodes_for_campaign_feature(self, **kwargs):
+        """
+        getAllACDNodesForCampaignFeature
+        RPC Call: getAllACDNodesForCampaignFeature
+        :return:
+        """
+        campaignFeature = kwargs.get('campaignFeature', None)
+        featureContextId = kwargs.get('campaignFeature', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([campaignFeature, featureContextId, sessionId])
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'params': {'campaignFeature': campaignFeature, 'featureContextId': featureContextId},
+            'url': urljoin(self.creds.url, f"ameyorestapi/voice/getAllACDNodesForCampaignFeature"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        # for _item in response.json():
+        #     self.is_key_there_in_dict(['id', 'acdNodeName', 'acdNodeDesc'], _item)
+        return response
+
+    def set_acd_node_to_a_q_mapping_for_default_campaign_feature(self, **kwargs):
+        """
+        setACDNodeToAQMappingForDefaultCampaignFeature
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        contextId = kwargs.get('contextId', None)
+        id = kwargs.get('id', None)
+        acdNodeName = kwargs.get('acdNodeName', None)
+        agentQueueId = kwargs.get('agentQueueId', None)
+        self.check_required_args([sessionId, contextId, id, acdNodeName, agentQueueId])
+
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, 'ameyorestapi/voice/setACDNodeToAQMappingForDefaultCampaignFeature'),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {"contextId": contextId,
+                     "acdNodeToAQMappingInfoBeans": [{"id": id,
+                                                      "acdNodeName": acdNodeName,
+                                                      "agentQueueId": agentQueueId}]}
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        return response

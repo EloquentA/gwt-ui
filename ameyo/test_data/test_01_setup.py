@@ -70,6 +70,10 @@ class TestSetup:
             # Create Contact Center
             try:
                 ameyo.create_cc(contactCenterName=calling['test_data']['ccn']).json()
+                time.sleep(1)
+                ameyo.create_cc_routing_profiles(sessionId=ameyo.ccManagerToken,
+                                                 profileType="cc.call.context.based.profile", 
+                                                 profileName="DefaultCallContextProfile")
             except:
                 pass
 
@@ -660,15 +664,15 @@ class TestSetup:
                 ameyo.get_call_contexts_in_campaign(campaignId=Campaign['campaignId'],
                                                     sessionId=ameyo.adminToken)
 
-    def test_19_create_routing_policy_for_campaign(self, ameyo, calling):
+    def test_19_create_routing_policy_and_context_flow_for_campaign(self, ameyo, calling):
         """
         Create Routing Policy for a Campaign
         :param ameyo:
         :return:
         """
-
         for count, Campaign in enumerate(ameyo.get_all_campaigns(sessionId=ameyo.adminToken).json()):
             policyName = f"{Campaign['campaignName']}_ROUTING_POLICY".upper()
+            contextName = f"{Campaign['campaignName']}_CONTEXT".upper()
             policies = ameyo.get_routing_policies_for_campaign(campaignId=Campaign['campaignId'],
                                                                sessionId=ameyo.adminToken).json()
             if policyName in [x['policyName'] for x in policies]:
@@ -681,7 +685,8 @@ class TestSetup:
                                                                    sessionId=ameyo.adminToken).json():
                 campaignCallContextIds.append(callContext['campaignCallContextId'])
 
-            if Campaign['campaignName'] not in calling['test_data']['interaction_campaigns']:
+            if Campaign['campaignName'] not in calling['test_data']['interaction_campaigns'] and \
+                    Campaign['campaignName'] not in calling['test_data']['inbound_campaigns']:
                 ameyo.create_routing_policy_for_campaign(**{
                     'policyName': policyName,
                     'campaignId': Campaign['campaignId'],
@@ -702,7 +707,8 @@ class TestSetup:
         :return:
         """
         for count, Campaign in enumerate(ameyo.get_all_campaigns(sessionId=ameyo.adminToken).json()):
-            if Campaign['campaignName'] not in calling['test_data']['interaction_campaigns']:
+            if Campaign['campaignName'] not in calling['test_data']['interaction_campaigns'] and \
+                    Campaign['campaignName'] not in calling['test_data']['inbound_campaigns']:
                 RoutingPolicy = random.choice(
                     ameyo.get_routing_policies_for_campaign(campaignId=Campaign['campaignId'],
                                                             sessionId=ameyo.adminToken).json()
@@ -1459,7 +1465,7 @@ class TestSetup:
             ameyo.logger.info(
                 f"All {len(response.json())} users in <{Campaign['campaignId']}> <{Campaign['campaignName']}> {[x['userId'] for x in response.json()]}")
 
-    def test_39_assign_user_to_atd(self, ameyo):
+    def test_39_assign_user_to_atd(self, ameyo, calling):
         """
         Assign user to agent table definition
         :param ameyo:
@@ -1478,7 +1484,7 @@ class TestSetup:
                         'sessionId': ameyo.adminToken,
                     })
 
-    def test_40_create_queue(self, ameyo):
+    def test_40_create_queue(self, ameyo, calling):
         """
         Create Queue
         :param ameyo:
@@ -1514,7 +1520,7 @@ class TestSetup:
                 if user['agentQueueUserId'] not in response['userIdList']:
                     raise Exception("User not assigned in Queue !!")
 
-    def test_41_update_queue(self, ameyo):
+    def test_41_update_queue(self, ameyo, calling):
         """
         update queue data
         :param ameyo:
@@ -1529,6 +1535,47 @@ class TestSetup:
                     "description": f"Queue Updated By: {ameyo.faker.first_name()}",
                     "sessionId": ameyo.adminToken,
                 }).json()
+
+    def test_42_create_context_flow_for_campaign(self, ameyo, calling):
+        """
+        Create context flow for a Campaign
+        :param ameyo:
+        :return:
+        """
+        path = os.getcwd()
+        test_data_dir = os.path.join(path, "ameyo", "test_data")
+        node_flow_file = os.path.join(test_data_dir, "singleACDWithCustomerQuery.nodeflow")
+        for count, Campaign in enumerate(ameyo.get_all_campaigns(sessionId=ameyo.adminToken).json()):
+            contextName = f"{Campaign['campaignName']}_CONTEXT".upper()
+            if Campaign['campaignName'] in calling['test_data']['inbound_campaigns']:
+                ameyo.upload_nodeflow_file(**{
+                    'contextName': contextName,
+                    'campaignId': Campaign['campaignId'],
+                    'fileName': node_flow_file,
+                    'sessionId': ameyo.adminToken,
+                })
+            time.sleep(1)
+            response = ameyo.get_all_feature_contexts_for_campaign(campaignId=Campaign['campaignId'],
+                                                                   sessionId=ameyo.adminToken).json()
+            calling.update({"contextId": response[0]['contextId']})
+            calling.update({"acdNodeToAQMapping": response[0]['acdNodeToAQMappingInfoBeans']})
+            time.sleep(1)
+            response = ameyo.get_all_acd_nodes_for_campaign_feature(campaignFeature=calling['test_data']['campaign_feature'],
+                                                                    featureContextId=calling['contextId'],
+                                                                    sessionId=ameyo.adminToken).json()
+            calling.update({"inboundNodeFlowId": response[0]['id']})
+            calling.update({"acdNodeName": response[0]['acdNodeName']})
+            calling.update({"acdNodeDesc": response[0]['acdNodeDesc']})
+
+            for Queue in ameyo.get_all_queue(campaignId=Campaign['campaignId'],
+                                             sessionId=ameyo.adminToken).json():
+                response = ameyo.set_acd_node_to_a_q_mapping_for_default_campaign_feature(
+                                                                    acdNodeName=calling['test_data']['acdNodeName'],
+                                                                    contextId=calling['contextId'],
+                                                                    id=calling['contextId']+1,
+                                                                    agentQueueId=Queue['agentQueueId'],
+                                                                    sessionId=ameyo.adminToken).json()
+                time.sleep(1)
 
     def test_42_create_tpv(self, ameyo, calling):
         """
