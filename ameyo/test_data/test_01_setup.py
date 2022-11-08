@@ -1543,39 +1543,40 @@ class TestSetup:
         :return:
         """
         path = os.getcwd()
+        # test_data_dir = os.path.join(path)
         test_data_dir = os.path.join(path, "ameyo", "test_data")
         node_flow_file = os.path.join(test_data_dir, "singleACDWithCustomerQuery.nodeflow")
         for count, Campaign in enumerate(ameyo.get_all_campaigns(sessionId=ameyo.adminToken).json()):
             contextName = f"{Campaign['campaignName']}_CONTEXT".upper()
             if Campaign['campaignName'] in calling['test_data']['inbound_campaigns']:
-                ameyo.upload_nodeflow_file(**{
+                response = ameyo.upload_nodeflow_file(**{
                     'contextName': contextName,
                     'campaignId': Campaign['campaignId'],
-                    'fileName': node_flow_file,
+                    'nodeFlowFilePath': node_flow_file,
                     'sessionId': ameyo.adminToken,
                 })
-            time.sleep(1)
-            response = ameyo.get_all_feature_contexts_for_campaign(campaignId=Campaign['campaignId'],
-                                                                   sessionId=ameyo.adminToken).json()
-            calling.update({"contextId": response[0]['contextId']})
-            calling.update({"acdNodeToAQMapping": response[0]['acdNodeToAQMappingInfoBeans']})
-            time.sleep(1)
-            response = ameyo.get_all_acd_nodes_for_campaign_feature(campaignFeature=calling['test_data']['campaign_feature'],
-                                                                    featureContextId=calling['contextId'],
-                                                                    sessionId=ameyo.adminToken).json()
-            calling.update({"inboundNodeFlowId": response[0]['id']})
-            calling.update({"acdNodeName": response[0]['acdNodeName']})
-            calling.update({"acdNodeDesc": response[0]['acdNodeDesc']})
-
-            for Queue in ameyo.get_all_queue(campaignId=Campaign['campaignId'],
-                                             sessionId=ameyo.adminToken).json():
-                response = ameyo.set_acd_node_to_a_q_mapping_for_default_campaign_feature(
-                                                                    acdNodeName=calling['test_data']['acdNodeName'],
-                                                                    contextId=calling['contextId'],
-                                                                    id=calling['contextId']+1,
-                                                                    agentQueueId=Queue['agentQueueId'],
-                                                                    sessionId=ameyo.adminToken).json()
                 time.sleep(1)
+                response = ameyo.get_all_feature_contexts_for_campaign(campaignId=Campaign['campaignId'],
+                                                                       sessionId=ameyo.adminToken).json()
+                calling.update({"contextId": response[0]['contextId']})
+                calling.update({"acdNodeToAQMapping": response[0]['acdNodeToAQMappingInfoBeans']})
+                time.sleep(1)
+                # response = ameyo.get_all_acd_nodes_for_campaign_feature(campaignFeature=calling['test_data']['campaign_feature'],
+                #                                                         featureContextId=calling['contextId'],
+                #                                                         sessionId=ameyo.adminToken).json()
+                # calling.update({"inboundNodeFlowId": response[0]['id']})
+                # calling.update({"acdNodeName": response[0]['acdNodeName']})
+                # calling.update({"acdNodeDesc": response[0]['acdNodeDesc']})
+
+                for Queue in ameyo.get_all_queue(campaignId=Campaign['campaignId'],
+                                                 sessionId=ameyo.adminToken).json():
+                    response = ameyo.set_acd_node_to_a_q_mapping_for_default_campaign_feature(
+                                                                        acdNodeName=calling['test_data']['acd_node_name'],
+                                                                        contextId=calling['contextId'],
+                                                                        id=calling['contextId']+1,
+                                                                        agentQueueId=Queue['agentQueueId'],
+                                                                        sessionId=ameyo.adminToken).json()
+                    time.sleep(1)
 
     def test_42_create_tpv(self, ameyo, calling):
         """

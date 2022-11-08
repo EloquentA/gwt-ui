@@ -1,6 +1,7 @@
 __author__ = "Developed by EA"
 
 from datetime import datetime
+from time import gmtime, strftime
 import time
 import csv
 import json
@@ -3297,13 +3298,16 @@ class DataCreationAPIs(Wrapper):
         sessionId = kwargs.get('sessionId', self.adminToken)
         campaignId = kwargs.get('campaignId', None)
         contextName = kwargs.get('contextName', None)
-        fileName = kwargs.get('fileName', None)
-        self.check_required_args([sessionId, campaignId, contextName, fileName])
+        nodeFlowFilePath = kwargs.get('nodeFlowFilePath', None)
+        # Tue-Nov-08-08:41:22-GMT+530-2022
+        fileName = kwargs.get('fileName', strftime("%a-%b-%d-%I:%M:%S"+"-GMT+530"+"-%Y"))
+        self.check_required_args([sessionId, campaignId, contextName, fileName, nodeFlowFilePath])
 
         response = self.rest.send_request(**{
             'method': 'POST',
             'url': urljoin(self.creds.url, "upload/fileupload"),
             'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'files': {'file': ('singleACDWithCustomerQuery.nodeflow', open(nodeFlowFilePath, 'rb'), "application/xml")},
             'params': {
                 "sessionId": sessionId,
                 "campaignId": campaignId,
@@ -3311,7 +3315,8 @@ class DataCreationAPIs(Wrapper):
                 "contextName": contextName,
                 "transferable": True,
                 "fileName": fileName
-            }
+            },
+            "data": {"authorizationToken": sessionId},
         })
         if self.noop is True or kwargs.get('toFail', True) is False:
             return response
