@@ -20,4 +20,4 @@ Library           ../../pages/Ameyo.py    browser_config=${BROWSER_CONFIG}    pr
 *** Test Cases ***
 TC - Verify auto call on stats for analyst user
     [Tags]  sanity    testid=AP-8895    regression
-    I verify auto call on stats    ${instance1}    analyst
+    I verify auto call stats    ${instance1}    analyst    ${TRUE}

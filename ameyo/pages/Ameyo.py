@@ -517,9 +517,17 @@ class Ameyo:
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"verify_delete_group", error))
 
-    def verify_auto_call_on_stats(self, campaign_details, user_type):
-        """Method to verify auto call on stats."""
+    def verify_auto_call_stats(self, campaign_details, user_type, auto_call):
+        """Method to verify auto call on/off stats."""
         try:
-            return self._return_result(self.auto_call.verify_auto_call_on_stats(campaign_details))
+            return self._return_result(self.auto_call.verify_auto_call_stats(campaign_details, auto_call))
         except Exception as error:
-            return self._return_result(False, error, self.__capture_error(f"verify_auto_call_on_stats_{user_type}", error))
+            return self._return_result(False, error, self.__capture_error(f"verify_auto_call_{'on' if auto_call else 'off'}_stats_{user_type}", error))
+
+    def verify_auto_call_not_on_call_filter(self, campaign_details, user_type, auto_call):
+        """Method to verify auto call on/off, not on call filter."""
+        try:
+            return self._return_result(self.auto_call.verify_auto_call_not_on_call_filter(campaign_details, auto_call))
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(
+                f"verify_auto_call_{'on' if auto_call else 'off'}_not_on_call_filter_{user_type}", error))

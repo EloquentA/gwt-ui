@@ -43,8 +43,9 @@ class AutoCall:
             self.action.click_element('auto_call_lever')
             self.action.click_element('auto_call_phone_icon')
         auto_call_phone_icon_div_class = self.action.get_element_attribute('auto_call_phone_icon_div', 'class')
-        current_auto_call = 'active' in auto_call_phone_icon_div_class if auto_call else 'inactive' in auto_call_phone_icon_div_class
-        assert current_auto_call == auto_call,  f'Failed to set auto call to: {auto_call}, found:{current_auto_call}'
+        current_auto_call_verified = 'active' in auto_call_phone_icon_div_class if auto_call \
+            else 'inactive' in auto_call_phone_icon_div_class
+        assert current_auto_call_verified,  f'Failed to set auto call to: {auto_call}'
 
     def get_auto_call_count(self, auto_call_selector):
         """Gets auto call count selector for on/off as per requested selector."""
@@ -59,7 +60,7 @@ class AutoCall:
             self.set_auto_call(auto_call)
         self.action.switch_to_window(2)
 
-    def verify_auto_call_stats(self,auto_call, is_connected):
+    def _verify_auto_call_stats(self,auto_call, is_connected):
         """Verifies stats for auto call."""
         # Wait for data to auto refresh
         time.sleep(10)
@@ -91,16 +92,23 @@ class AutoCall:
             f"Auto call {'on' if auto_call else 'off'}, not connected count should be " \
             f"{auto_call_not_on_call_expected}, found: {auto_call_not_on_call} when call is connected."
 
-    def verify_auto_call_on_stats(self, campaign_details):
-        """Verifies auto call on stats."""
-        self.setup_executives_with_auto_call(auto_call=True)
+    def verify_auto_call_stats(self, campaign_details, auto_call):
+        """Verifies auto call on/off stats."""
+        self.setup_executives_with_auto_call(auto_call)
         campaign = self.monitor.set_up_campaign(campaign_details)
         self.action.switch_to_window(0)
         self.agent_homepage.manual_dial_only(999999999, campaign)
         self.action.switch_to_window(2)
-        self.verify_auto_call_stats(auto_call=True, is_connected=True)
+        self._verify_auto_call_stats(auto_call, is_connected=True)
         self.action.switch_to_window(0)
         self.agent_homepage.end_call_and_auto_dispose()
         self.action.switch_to_window(2)
-        self.verify_auto_call_stats(auto_call=True, is_connected=False)
+        self._verify_auto_call_stats(auto_call, is_connected=False)
+        return True
+
+    def verify_auto_call_not_on_call_filter(self, campaign_details, auto_call):
+        """Verifies auto call on/off, not on call filter."""
+        self.setup_executives_with_auto_call(auto_call)
+        campaign = self.monitor.set_up_campaign(campaign_details)
+        # TODO(praveen): WIP
         return True
