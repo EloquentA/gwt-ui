@@ -71,9 +71,6 @@ class TestSetup:
             try:
                 ameyo.create_cc(contactCenterName=calling['test_data']['ccn']).json()
                 time.sleep(1)
-                ameyo.create_cc_routing_profiles(sessionId=ameyo.ccManagerToken,
-                                                 profileType="cc.call.context.based.profile", 
-                                                 profileName="DefaultCallContextProfile")
             except:
                 pass
 
@@ -494,6 +491,28 @@ class TestSetup:
                     'sessionId': ameyo.adminToken,
                 })
 
+    def test_17_create_system_routing(self, ameyo, calling):
+        """
+        Create system routing
+        :param ameyo:
+        :return:
+        """
+        response = ameyo.create_cc_routing_profiles(sessionId=ameyo.adminToken,
+                                         profileType="cc.call.context.based.profile",
+                                         profileName="DefaultCallContextProfile").json()
+        time.sleep(1)
+        calling.update({'call_context_profile_id': response['profileId']})
+        response = ameyo.create_cc_routing_profiles(sessionId=ameyo.adminToken,
+                                         profileType="cc.source.contact.based.profile",
+                                         profileName="DefaultSourcePhoneProfile").json()
+        time.sleep(1)
+        calling.update({'src_contact_profile_id': response['profileId']})
+        response = ameyo.create_cc_routing_profiles(sessionId=ameyo.adminToken,
+                                         profileType="cc.destination.contact.based.profile",
+                                         profileName="DefaultDestinationPhoneProfile").json()
+        time.sleep(1)
+        calling.update({'dst_contact_profile_id': response['profileId']})
+
     def test_17_create_campaigns(self, ameyo, calling):
         """
         Create Campaign
@@ -670,6 +689,10 @@ class TestSetup:
         :param ameyo:
         :return:
         """
+        response = ameyo.get_cc_call_contexts(sessionId=ameyo.adminToken).json()
+        for item in response:
+            if item['callContextName'] == calling['test_data']['cxn'][0]:
+                ameyo.create_routing_profiles(callContextId=item['callContextId']).json()
         for count, Campaign in enumerate(ameyo.get_all_campaigns(sessionId=ameyo.adminToken).json()):
             policyName = f"{Campaign['campaignName']}_ROUTING_POLICY".upper()
             contextName = f"{Campaign['campaignName']}_CONTEXT".upper()

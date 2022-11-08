@@ -3413,3 +3413,128 @@ class DataCreationAPIs(Wrapper):
             return response
         self.rest.raise_for_status(response)
         return response
+
+    def get_all_contact_center_routing_profile_types(self, **kwargs):
+        """
+        getAllContactCenterRoutingProfileTypes
+        RPC Call: getAllContactCenterRoutingProfileTypes
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([sessionId])
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'url': urljoin(self.creds.url, f'ameyorestapi/cc/getAllContactCenterRoutingProfileTypes'),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        # for _item in response.json():
+        #     self.is_key_there_in_dict([
+        #         'campaignTypeName', 'defaultCampaignCallbackHandler', 'tableFilterConstants', 'columnMappingAttributes'
+        #     ], _item)
+        return response
+
+    def modify_call_context_based_profile(self, **kwargs):
+        """
+        Changes a user role i.e. from Administrator to Executive and so on
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        profileId = kwargs.get('profileId', None)
+        profileName = kwargs.get('profileName', None)
+        callContextId = kwargs.get('callContextId', None)
+        actionType = kwargs.get('actionType', None)
+        subAction = kwargs.get('subAction', None)
+        actionContextId = kwargs.get('actionContextId', None)
+        self.check_required_args([sessionId, profileId])
+        response = self.rest.send_request(**{
+            'method': 'PUT',
+            'url': urljoin(self.creds.url,
+                           f"ameyorestapi/cc/contactCenterRoutingProfiles/modifyCallContextBasedProfile/{profileId}"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {
+              "profileName": profileName,
+              "planArray": [
+                {
+                  "callContextId": callContextId,
+                  "actionType": actionType,
+                  "subAction": subAction,
+                  "actionContextId": actionContextId
+                }
+              ]
+            },
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+
+    def get_all_routing_profiles(self, **kwargs):
+        """
+        Get all Routing Profiles
+        RPC: getAllRoutingProfiles
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([sessionId])
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'url': urljoin(self.creds.url, f"ameyorestapi/cm/callManagerRoutingProfiles/getAllRoutingProfiles"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        for _item in response.json():
+            self.is_key_there_in_dict(['id', 'type', 'name', 'callManagerRoutingRowPlans'], _item)
+        return response
+
+    def create_routing_profiles(self, **kwargs):
+        """
+        Get all Routing Profiles
+        RPC: getAllRoutingProfiles
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        callContextId = kwargs.get('callContextId', None)
+        self.check_required_args([callContextId, sessionId])
+
+        name = kwargs.get('name', 'Default Voice ResourceDefaultCC')
+        routingProfileId = kwargs.get('routingProfileId', 1)
+        actionContextId = kwargs.get('actionContextId', 1)
+
+        routingProfile = list(filter(lambda x: x['name'] == name, self.get_all_routing_profiles().json()))[0]
+        profileId = routingProfile.pop('id', None)
+        assert profileId, "ERROR: profileId is Required !!"
+
+        # RoutingRowPlan = sorted(routingProfile['callManagerRoutingRowPlans'], key=lambda a: a['sequence'])[-1]
+        # sequence = RoutingRowPlan['sequence'] + 1
+        # del RoutingRowPlan['id']
+        # RoutingRowPlan.update({
+        #     "routingProfileId": routingProfileId, "actionContextId": actionContextId, "contact": None,
+        #     "callContextId": callContextId, "actionType": "call.manager.route.to.contact.center.action",
+        #     "subAction": "call.manager.route.to.contact.center.action", "sequence": sequence,
+        #     "isContactBasedRounting": False
+        # })
+
+        response = self.rest.send_request(**{
+            'method': 'PUT',
+            'url': urljoin(self.creds.url, f"ameyorestapi/cm/callManagerRoutingProfiles/{profileId}"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': routingProfile
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        self.is_key_there_in_dict(['id', 'type', 'name', 'callManagerRoutingRowPlans'], response.json())
+        for _inside in response.json()['callManagerRoutingRowPlans']:
+            self.is_key_there_in_dict([
+                'id', 'routingProfileId', 'actionContextId', 'contact', 'callContextId', 'actionType', 'subAction',
+                'sequence', 'isContactBasedRounting'
+            ], _inside)
+        return response

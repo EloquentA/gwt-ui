@@ -61,46 +61,46 @@ TESTRAIL_RUN_URL: /index.php?/runs/view/{run_id}&group_by=cases:section_id&group
 acd_node_name: CommonQueue
 admin_created_users:
 - isRoot: false
-  name: E2E_7_SUPERVISOR_USER
+  name: E2E_8_SUPERVISOR_USER
   password: Test300!@#
   role: Supervisor
 - isRoot: false
-  name: E2E_7_GROUP_MANAGER
+  name: E2E_8_GROUP_MANAGER
   password: Test300!@#
   role: Group Manager
 agents:
-- E2E_7_EXECUTIVE_USER_01
-- E2E_7_EXECUTIVE_USER_02
-- E2E_7_EXECUTIVE_USER_03
-- E2E_7_EXECUTIVE_USER_04
-- E2E_7_EXECUTIVE_USER_05
-- E2E_7_EXECUTIVE_USER_06
-- E2E_7_EXECUTIVE_USER_07
-- E2E_7_EXECUTIVE_USER_08
-- E2E_7_EXECUTIVE_USER_09
-- E2E_7_EXECUTIVE_USER_10
+- E2E_8_EXECUTIVE_USER_01
+- E2E_8_EXECUTIVE_USER_02
+- E2E_8_EXECUTIVE_USER_03
+- E2E_8_EXECUTIVE_USER_04
+- E2E_8_EXECUTIVE_USER_05
+- E2E_8_EXECUTIVE_USER_06
+- E2E_8_EXECUTIVE_USER_07
+- E2E_8_EXECUTIVE_USER_08
+- E2E_8_EXECUTIVE_USER_09
+- E2E_8_EXECUTIVE_USER_10
 campaign_feature: default.acd.feature
 campaign_type_inbound: Interactive Voice Application
 campaign_type_interaction: Interaction Campaign
 campaign_type_outbound: Outbound Voice Campaign
-ccn: E2E_7
+ccn: E2E_8
 cxn:
 - customer_success_1800_DefaultVR
 - agent_success_1800_DefaultVR
 group_agents:
-- E2E_7_GRP_EXECUTIVE_USER_01
-- E2E_7_GRP_EXECUTIVE_USER_02
-- E2E_7_GRP_EXECUTIVE_USER_03
-- E2E_7_GRP_EXECUTIVE_USER_04
-- E2E_7_GRP_EXECUTIVE_USER_05
-group_desc: E2E_7_GRP description
+- E2E_8_GRP_EXECUTIVE_USER_01
+- E2E_8_GRP_EXECUTIVE_USER_02
+- E2E_8_GRP_EXECUTIVE_USER_03
+- E2E_8_GRP_EXECUTIVE_USER_04
+- E2E_8_GRP_EXECUTIVE_USER_05
+group_desc: E2E_8_GRP description
 group_manager_campaigns:
 - PROCESS_01_CAMPAIGN_GROUP
 - PROCESS_02_CAMPAIGN_GROUP
 - PROCESS_03_CAMPAIGN_GROUP
 - PROCESS_04_CAMPAIGN_GROUP
 - PROCESS_05_CAMPAIGN_GROUP
-group_name: E2E_7_GRP
+group_name: E2E_8_GRP
 inbound_campaigns:
 - PROCESS_01_CAMPAIGN_IN
 - PROCESS_02_CAMPAIGN_IN
@@ -124,7 +124,7 @@ lead_names:
 local_ivr_name: Ameyo_IVR
 multi_cc_created_users:
 - isRoot: true
-  name: E2E_7_ADMIN_USER
+  name: E2E_8_ADMIN_USER
   password: Test300!@#
   role: Administrator
 outbound_campaigns:
