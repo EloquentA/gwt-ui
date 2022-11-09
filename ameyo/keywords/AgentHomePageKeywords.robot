@@ -9,8 +9,8 @@ Resource          ./VerifyResult.robot
 *** Keywords ***
 Manual Dial Only
     [Documentation]   This keyword does a manual dial only call to given number
-    [Arguments]  ${instance}    ${CALLING_NUMBER}    ${campaign_name}
-    ${result}=   call method    ${instance}    manual_dial_only    ${CALLING_NUMBER}    ${campaign_name}
+    [Arguments]  ${instance}    ${CALLING_NUMBER}    ${campaign_name}    ${auto_call}=TRUE
+    ${result}=   call method    ${instance}    manual_dial_only    ${CALLING_NUMBER}    ${campaign_name}    ${auto_call}
     I verify result    ${result}
 
 Create and Dial Call

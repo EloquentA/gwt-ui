@@ -183,10 +183,10 @@ class Ameyo:
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("select_campaign", error))
 
-    def manual_dial_only(self, calling_number, campaign_name):
+    def manual_dial_only(self, calling_number, campaign_name, auto_call=True):
         """Method to manual dial only"""
         try:
-            self.agenthomepage.manual_dial_only(calling_number, campaign_name)
+            self.agenthomepage.manual_dial_only(calling_number, campaign_name, auto_call)
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("manual_dial_only", error))

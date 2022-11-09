@@ -60,7 +60,7 @@ class AutoCall:
             self.set_auto_call(auto_call)
         self.action.switch_to_window(2)
 
-    def _verify_auto_call_stats(self,auto_call, is_connected):
+    def _verify_auto_call_stats(self, auto_call, is_connected):
         """Verifies stats for auto call."""
         # Wait for data to auto refresh
         time.sleep(10)
@@ -68,14 +68,19 @@ class AutoCall:
             auto_call_selector = 'auto_call_on'
             auto_call_connected_selector = 'auto_call_on_connected'
             auto_call_not_on_call_selector = 'auto_call_on_not_on_call'
-            if is_connected:
-                auto_call_expected = 2
-                auto_call_connected_expected = 1
-                auto_call_not_on_call_expected = 1
-            else:
-                auto_call_expected = 2
-                auto_call_connected_expected = 0
-                auto_call_not_on_call_expected = 2
+        else:
+            auto_call_selector = 'auto_call_off'
+            auto_call_connected_selector = 'auto_call_off_connected'
+            auto_call_not_on_call_selector = 'auto_call_off_not_on_call'
+
+        if is_connected:
+            auto_call_expected = 2
+            auto_call_connected_expected = 1
+            auto_call_not_on_call_expected = 1
+        else:
+            auto_call_expected = 2
+            auto_call_connected_expected = 0
+            auto_call_not_on_call_expected = 2
 
         auto_call_count = self.get_auto_call_count(auto_call_selector)
         assert auto_call_count == auto_call_expected,\
@@ -97,7 +102,7 @@ class AutoCall:
         self.setup_executives_with_auto_call(auto_call)
         campaign = self.monitor.set_up_campaign(campaign_details)
         self.action.switch_to_window(0)
-        self.agent_homepage.manual_dial_only(999999999, campaign)
+        self.agent_homepage.manual_dial_only(999999999, campaign, auto_call)
         self.action.switch_to_window(2)
         self._verify_auto_call_stats(auto_call, is_connected=True)
         self.action.switch_to_window(0)

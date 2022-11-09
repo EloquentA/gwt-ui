@@ -17,10 +17,11 @@ class AgentHomepage:
         self.action = Action(web_browser)
         self.common = common
 
-    def manual_dial_only(self, calling_number, campaign_name):
+    def manual_dial_only(self, calling_number, campaign_name, auto_call=True):
         """Method to manual dial only call to calling number."""
         self.common.change_status('Available', 'available_status')
-        self.action.explicit_wait('active_phone_icon', waittime=120)
+        if auto_call:
+            self.action.explicit_wait('active_phone_icon', waittime=120)
         if self.action.is_presence_of_element_located('telephony_panel_hidden'):
             self.action.explicit_wait('phone_icon', ec='element_to_be_clickable')
             self.action.click_element('phone_icon')

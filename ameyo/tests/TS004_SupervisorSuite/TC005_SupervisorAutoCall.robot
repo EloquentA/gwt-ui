@@ -3,6 +3,7 @@ Documentation     Ameyo Supervisor test cases to verify auto call features.
 ...               Developed By - Developer by EA
 ...               https://touchstone.ameyo.com/linkto.php?tprojectPrefix=AP&item=testcase&id=AP-8895
 ...               https://touchstone.ameyo.com/linkto.php?tprojectPrefix=AP&item=testcase&id=AP-8913
+...               https://touchstone.ameyo.com/linkto.php?tprojectPrefix=AP&item=testcase&id=AP-8912
 
 # Suite Setup and Teardown
 Suite Setup       Suite Initialization For Two Executives And Requested User
@@ -22,6 +23,10 @@ Library           ../../pages/Ameyo.py    browser_config=${BROWSER_CONFIG}    pr
 TC - Verify auto call on stats for supervisor user
     [Tags]  sanity    testid=AP-8895    regression
     I verify auto call stats    ${instance1}    supervisor    ${TRUE}
+
+TC - Verify auto call off stats for supervisor user
+    [Tags]  sanity    testid=AP-8912    regression
+    I verify auto call stats    ${instance1}    supervisor    ${FALSE}
 
 TC - Verify auto call off not on call filters for supervisor user
     [Tags]  sanity    testid=AP-8913    regression

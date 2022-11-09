@@ -19,14 +19,29 @@
     "value": "//h6[contains(text(),'Auto-Call On:')]",
     "index": 0
   },
+  "auto_call_off": {
+    "by": "xpath",
+    "value": "//h6[contains(text(),'Auto-Call Off:')]",
+    "index": 0
+  },
   "auto_call_on_connected": {
     "by": "xpath",
     "value": "//span[@automationid='autoCallOnAgentConnectedCount']",
     "index": 0
   },
+  "auto_call_off_connected": {
+    "by": "xpath",
+    "value": "//span[@automationid='autoCallOffAgentConnectedCount']",
+    "index": 0
+  },
   "auto_call_on_not_on_call": {
     "by": "xpath",
     "value": "//span[@automationid='autoCallOnAgentNotOnCallCount']",
+    "index": 0
+  },
+  "auto_call_off_not_on_call": {
+    "by": "xpath",
+    "value": "//span[@automationid='autoCallOffAgentNotOnCallCount']",
     "index": 0
   }
 }
