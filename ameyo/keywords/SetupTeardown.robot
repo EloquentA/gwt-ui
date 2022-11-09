@@ -61,7 +61,7 @@ Suite Cleanup
     END
 
 Suite Initialization For Two Executives And Requested User
-    [Documentation]   This keyword does suite initialization for monitoring test cases
+    [Documentation]   This keyword does suite initialization for two executives and one requested user
     [Arguments]  ${req_run_as}=supervisor
     Suite Initialization    executive
     I open ameyo home page in separate tab    ${instance1}
@@ -69,4 +69,12 @@ Suite Initialization For Two Executives And Requested User
     Ameyo setup    ${instance1}    spare_executive
     I open ameyo home page in separate tab    ${instance1}
     I switch to requested tab   ${instance1}    2
+    Ameyo setup    ${instance1}    ${req_run_as}
+
+Suite Initialization For One Executive And Requested User
+    [Documentation]   This keyword does suite initialization for one executive and one requested user
+    [Arguments]  ${req_run_as}=supervisor
+    Suite Initialization    executive
+    I open ameyo home page in separate tab    ${instance1}
+    I switch to requested tab   ${instance1}    1
     Ameyo setup    ${instance1}    ${req_run_as}

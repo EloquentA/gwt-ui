@@ -8,14 +8,6 @@ Resource          ./SetupTeardown.robot
 Resource          ./CommonKeywords.robot
 
 *** Keywords **
-Suite Initialization For Monitoring
-    [Documentation]   This keyword does suite initialization for monitoring test cases
-    [Arguments]  ${req_run_as}=supervisor
-    Suite Initialization    executive
-    I open ameyo home page in separate tab    ${instance1}
-    I switch to requested tab   ${instance1}    1
-    Ameyo setup    ${instance1}    ${req_run_as}
-
 I verify snoop
     [Documentation]   This keyword verifies snoop functionality
     [Arguments]  ${instance}    ${req_run_as}

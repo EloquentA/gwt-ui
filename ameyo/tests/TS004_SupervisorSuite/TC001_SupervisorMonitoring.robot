@@ -4,7 +4,7 @@ Documentation     Ameyo Supervisor test cases to verify snoop, barge, whisper, c
 ...               https://touchstone.ameyo.com/linkto.php?tprojectPrefix=AP&item=testcase&id=AP-16016
 
 # Suite Setup and Teardown
-Suite Setup       Suite Initialization For Monitoring
+Suite Setup       Suite Initialization For One Executive And Requested User
 Suite Teardown    Suite Cleanup    executive
 
 # Keywords Definition file

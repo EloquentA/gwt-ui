@@ -4,7 +4,7 @@ Documentation     Ameyo group manager test cases to verify snoop, barge, whisper
 ...               https://touchstone.ameyo.com/linkto.php?tprojectPrefix=AP&item=testcase&id=AP-16025
 
 # Suite Setup and Teardown
-Suite Setup       Suite Initialization For Monitoring    group_manager
+Suite Setup       Suite Initialization For One Executive And Requested User    group_manager
 Suite Teardown    Suite Cleanup    executive
 
 # Keywords Definition file
