@@ -3290,6 +3290,52 @@ class DataCreationAPIs(Wrapper):
         self.rest.raise_for_status(response)
         return response
 
+    def get_cc_routing_profiles(self, **kwargs):
+        """
+        contactCenterRoutingProfiles
+        :param kwargs:
+        :return:
+        """
+        profileId = kwargs.get('profileId', None)
+        sessionId = kwargs.get('sessionId', self.adminToken)
+        self.check_required_args([profileId, sessionId])
+        response = self.rest.send_request(**{
+            'method': 'GET',
+            'url': urljoin(self.creds.url, f"ameyorestapi/cc/contactCenterRoutingProfiles/{profileId}"),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        # self.is_key_there_in_dict(['processId', 'crmPropsUrl'], response.json())
+        return response
+
+    def create_cc_routing_policies(self, **kwargs):
+        """
+        contactCenterRoutingPolicies
+        :param kwargs:
+        :return:
+        """
+        sessionId = kwargs.get('sessionId', None)
+        policyType = kwargs.get('policyType', None)
+        policyName = kwargs.get('policyName', None)
+        contactCenterRoutingProfileIds = kwargs.get('contactCenterRoutingProfileIds', None)
+        self.check_required_args([sessionId, policyType, policyName, contactCenterRoutingProfileIds])
+
+        response = self.rest.send_request(**{
+            'method': 'POST',
+            'url': urljoin(self.creds.url, 'ameyorestapi/cc/contactCenterRoutingPolicies'),
+            'headers': {"sessionId": sessionId, "correlation": self.uuid},
+            'json': {"policyType": policyType,
+                  "policyName": policyName,
+                  "contactCenterRoutingProfileIds": contactCenterRoutingProfileIds
+                 }
+        })
+        if self.noop is True or kwargs.get('toFail', True) is False:
+            return response
+        self.rest.raise_for_status(response)
+        return response
+    
     def upload_nodeflow_file(self, **kwargs):
         """
         Uploads a nodeflow file to an inbound campaign
@@ -3307,7 +3353,7 @@ class DataCreationAPIs(Wrapper):
             'method': 'POST',
             'url': urljoin(self.creds.url, "upload/fileupload"),
             'headers': {"sessionId": sessionId, "correlation": self.uuid},
-            'files': {'file': ('singleACDWithCustomerQuery.nodeflow', open(nodeFlowFilePath, 'rb'), "application/xml")},
+             'files': {'file': ('singleACDWithCustomerQuery.nodeflow', open(nodeFlowFilePath, 'rb'), "application/xml")},
             'params': {
                 "sessionId": sessionId,
                 "campaignId": campaignId,
@@ -3455,6 +3501,8 @@ class DataCreationAPIs(Wrapper):
             'method': 'PUT',
             'url': urljoin(self.creds.url,
                            f"ameyorestapi/cc/contactCenterRoutingProfiles/modifyCallContextBasedProfile/{profileId}"),
+            # 'url': urljoin(self.creds.url,
+            #                f"ameyorestapi/cc/contactCenterRoutingProfiles/modifyCallContextBasedProfile/{profileId}"),
             'headers': {"sessionId": sessionId, "correlation": self.uuid},
             'json': {
               "profileName": profileName,

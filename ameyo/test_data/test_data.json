@@ -23,6 +23,7 @@
 	"ivr_src_number": "",
 	"ivr_dst_number": "",
 	"campaign_feature": "default.acd.feature",
+	"action_type": "feature.action",
 	"acd_node_name": "CommonQueue",
 	"CREDENTIALS": {
 		"multi_cc_manager": {
@@ -100,40 +101,27 @@
 			"password": "Test300!@#"
 		}
 	],
-	"process_names": ["PROCESS_01", "PROCESS_02", "PROCESS_03", "PROCESS_04", "PROCESS_05"],
-	"lead_names": ["PROCESS_01_LEAD", "PROCESS_02_LEAD", "PROCESS_03_LEAD", "PROCESS_04_LEAD", "PROCESS_05_LEAD"],
-	"inbound_campaigns": ["PROCESS_01_CAMPAIGN_IN", "PROCESS_02_CAMPAIGN_IN", "PROCESS_03_CAMPAIGN_IN",
-		"PROCESS_04_CAMPAIGN_IN", "PROCESS_05_CAMPAIGN_IN"
+	"process_names": ["PROCESS_01"],
+	"lead_names": ["PROCESS_01_LEAD"],
+	"inbound_campaigns": ["PROCESS_01_CAMPAIGN_IN"
 	],
-	"outbound_campaigns": ["PROCESS_01_CAMPAIGN_OUT", "PROCESS_02_CAMPAIGN_OUT", "PROCESS_03_CAMPAIGN_OUT",
-		"PROCESS_04_CAMPAIGN_OUT", "PROCESS_05_CAMPAIGN_OUT"
+	"outbound_campaigns": ["PROCESS_01_CAMPAIGN_OUT"
 	],
-	"preview_dial_campaigns": ["PROCESS_01_CAMPAIGN_PREVIEW", "PROCESS_02_CAMPAIGN_PREVIEW",
-		"PROCESS_03_CAMPAIGN_PREVIEW", "PROCESS_04_CAMPAIGN_PREVIEW", "PROCESS_05_CAMPAIGN_PREVIEW"
+	"preview_dial_campaigns": ["PROCESS_01_CAMPAIGN_PREVIEW"
 	],
-	"predictive_dial_campaigns": ["PROCESS_01_CAMPAIGN_PREDICTIVE", "PROCESS_02_CAMPAIGN_PREDICTIVE",
-		"PROCESS_03_CAMPAIGN_PREDICTIVE", "PROCESS_04_CAMPAIGN_PREDICTIVE", "PROCESS_05_CAMPAIGN_PREDICTIVE"
+	"predictive_dial_campaigns": ["PROCESS_01_CAMPAIGN_PREDICTIVE"
 	],
-	"progressive_dial_campaigns": ["PROCESS_01_CAMPAIGN_PROGRESSIVE", "PROCESS_02_CAMPAIGN_PROGRESSIVE",
-		"PROCESS_03_CAMPAIGN_PROGRESSIVE", "PROCESS_04_CAMPAIGN_PROGRESSIVE", "PROCESS_05_CAMPAIGN_PROGRESSIVE"
+	"progressive_dial_campaigns": ["PROCESS_01_CAMPAIGN_PROGRESSIVE"
 	],
-	"group_manager_campaigns": ["PROCESS_01_CAMPAIGN_GROUP", "PROCESS_02_CAMPAIGN_GROUP",
-		"PROCESS_03_CAMPAIGN_GROUP", "PROCESS_04_CAMPAIGN_GROUP", "PROCESS_05_CAMPAIGN_GROUP"
+	"group_manager_campaigns": ["PROCESS_01_CAMPAIGN_GROUP"
 	],
-	"interaction_campaigns": ["PROCESS_01_CAMPAIGN_INT", "PROCESS_02_CAMPAIGN_INT", "PROCESS_03_CAMPAIGN_INT",
-		"PROCESS_04_CAMPAIGN_INT", "PROCESS_05_CAMPAIGN_INT"
+	"interaction_campaigns": ["PROCESS_01_CAMPAIGN_INT"
 	],
 	"campaign_type_outbound": "Outbound Voice Campaign",
 	"campaign_type_inbound": "Interactive Voice Application",
 	"campaign_type_interaction": "Interaction Campaign",
-	"agents": ["E2E_8_EXECUTIVE_USER_01", "E2E_8_EXECUTIVE_USER_02",
-		"E2E_8_EXECUTIVE_USER_03", "E2E_8_EXECUTIVE_USER_04",
-		"E2E_8_EXECUTIVE_USER_05", "E2E_8_EXECUTIVE_USER_06",
-		"E2E_8_EXECUTIVE_USER_07", "E2E_8_EXECUTIVE_USER_08",
-		"E2E_8_EXECUTIVE_USER_09", "E2E_8_EXECUTIVE_USER_10"
+	"agents": ["E2E_8_EXECUTIVE_USER_01", "E2E_8_EXECUTIVE_USER_02"
 	],
-	"group_agents": ["E2E_8_GRP_EXECUTIVE_USER_01", "E2E_8_GRP_EXECUTIVE_USER_02",
-		"E2E_8_GRP_EXECUTIVE_USER_03", "E2E_8_GRP_EXECUTIVE_USER_04",
-		"E2E_8_GRP_EXECUTIVE_USER_05"
+	"group_agents": ["E2E_8_GRP_EXECUTIVE_USER_01", "E2E_8_GRP_EXECUTIVE_USER_02"
 	]
 }

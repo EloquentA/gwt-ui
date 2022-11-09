@@ -491,9 +491,9 @@ class TestSetup:
                     'sessionId': ameyo.adminToken,
                 })
 
-    def test_17_create_system_routing(self, ameyo, calling):
+    def test_17_create_system_routing_profiles(self, ameyo, calling):
         """
-        Create system routing
+        Create system routing profiles
         :param ameyo:
         :return:
         """
@@ -502,6 +502,12 @@ class TestSetup:
                                          profileName="DefaultCallContextProfile").json()
         time.sleep(1)
         calling.update({'call_context_profile_id': response['profileId']})
+        response = ameyo.get_cc_routing_profiles(sessionId=ameyo.adminToken,
+                                                    profileId=calling['call_context_profile_id']).json()
+        # calling.update({'call_context_id': response['ccRoutingProfilePlans'][0]['callContextId']})
+        # calling.update({'call_context_action_type': response['ccRoutingProfilePlans'][0]['actionType']})
+        # calling.update({'call_context_sub_action': response['ccRoutingProfilePlans'][0]['subAction']})
+        # calling.update({'call_context_action_context_id': response['ccRoutingProfilePlans'][0]['actionContextId']})
         response = ameyo.create_cc_routing_profiles(sessionId=ameyo.adminToken,
                                          profileType="cc.source.contact.based.profile",
                                          profileName="DefaultSourcePhoneProfile").json()
@@ -512,6 +518,22 @@ class TestSetup:
                                          profileName="DefaultDestinationPhoneProfile").json()
         time.sleep(1)
         calling.update({'dst_contact_profile_id': response['profileId']})
+
+    def test_17_create_system_routing_policies(self, ameyo, calling):
+        """
+        Create system routing profiles
+        :param ameyo:
+        :return:
+        """
+        cc_routing_profile_ids = [calling['call_context_profile_id'],
+                                          calling['src_contact_profile_id'],
+                                          calling['dst_contact_profile_id']]
+        response = ameyo.create_cc_routing_policies(sessionId=ameyo.adminToken,
+                                                    policyType="cc.default.policy.type",
+                                                    contactCenterRoutingProfileIds=cc_routing_profile_ids,
+                                                    policyName="DefaultPolicy").json()
+        time.sleep(1)
+        calling.update({'policyId': response['policyId']})
 
     def test_17_create_campaigns(self, ameyo, calling):
         """
@@ -683,7 +705,7 @@ class TestSetup:
                 ameyo.get_call_contexts_in_campaign(campaignId=Campaign['campaignId'],
                                                     sessionId=ameyo.adminToken)
 
-    def test_19_create_routing_policy_and_context_flow_for_campaign(self, ameyo, calling):
+    def test_19_create_context_flow_for_campaign(self, ameyo, calling):
         """
         Create Routing Policy for a Campaign
         :param ameyo:
@@ -692,7 +714,9 @@ class TestSetup:
         response = ameyo.get_cc_call_contexts(sessionId=ameyo.adminToken).json()
         for item in response:
             if item['callContextName'] == calling['test_data']['cxn'][0]:
-                ameyo.create_routing_profiles(callContextId=item['callContextId']).json()
+                response = ameyo.create_routing_profiles(callContextId=item['callContextId']).json()
+                ameyo.logger.info(f"Routing Profile: {response}")
+                calling.update({'callManagerRoutingRowPlans': response['callManagerRoutingRowPlans']})
         for count, Campaign in enumerate(ameyo.get_all_campaigns(sessionId=ameyo.adminToken).json()):
             policyName = f"{Campaign['campaignName']}_ROUTING_POLICY".upper()
             contextName = f"{Campaign['campaignName']}_CONTEXT".upper()
@@ -1599,6 +1623,25 @@ class TestSetup:
                                                                         id=calling['contextId']+1,
                                                                         agentQueueId=Queue['agentQueueId'],
                                                                         sessionId=ameyo.adminToken).json()
+                    time.sleep(1)
+                    response = ameyo.get_cc_routing_profiles(sessionId=ameyo.adminToken,
+                                                             profileId=calling['call_context_profile_id']).json()
+                    calling.update({'call_context_profile_id': response['profileId']})
+                    calling.update({'call_context_profile_name': response['profileName']})
+                    # calling.update({'call_context_id': response['ccRoutingProfilePlans']['callContextId']})
+                    # calling.update({'call_context_action_type': response['ccRoutingProfilePlans']['actionType']})
+                    # calling.update({'call_context_sub_action': response['ccRoutingProfilePlans']['subAction']})
+                    # calling.update(
+                    #     {'call_context_action_context_id': response['ccRoutingProfilePlans']['actionContextId']})
+
+                    response = ameyo.modify_call_context_based_profile(
+                                profileName=calling['call_context_profile_name'],
+                                callContextId=calling['contextId'],
+                                actionType=calling['test_data']['action_type'],
+                                subAction=calling['test_data']['campaign_feature'],
+                                actionContextId=calling['contextId']+1,
+                                profileId=calling['call_context_profile_id'],
+                                sessionId=ameyo.adminToken)
                     time.sleep(1)
 
     def test_42_create_tpv(self, ameyo, calling):
