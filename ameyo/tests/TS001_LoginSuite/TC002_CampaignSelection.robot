@@ -4,7 +4,7 @@ Documentation     Campaign selection test cases
 
 # Suite Setup and Teardown
 Suite Setup       Login Initialization
-Suite Teardown    Suite Cleanup
+Suite Teardown    Login Cleanup
 
 # Keywords Definition file
 Resource          ../../keywords/SetupTeardown.robot

@@ -15,3 +15,9 @@ I verify auto call and not on call filter
     [Arguments]  ${instance}    ${req_run_as}    ${auto_call}
     ${result}=   call method    ${instance}    verify_auto_call_not_on_call_filter    ${CREDENTIALS['${req_run_as}']['campaign_details']}    ${req_run_as}    ${auto_call}
     I verify result    ${result}
+
+I verify user not on call activity for auto call on
+    [Documentation]   This keyword verifies if auto-call is on and agent is inactive
+    [Arguments]  ${instance}    ${req_run_as}    ${auto_call}
+    ${result}=   call method    ${instance}    verify_auto_call_not_on_call_activity    ${CREDENTIALS['${req_run_as}']['campaign_details']}    ${auto_call}
+    I verify result    ${result}

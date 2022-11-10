@@ -43,5 +43,25 @@
     "by": "xpath",
     "value": "//span[@automationid='autoCallOffAgentNotOnCallCount']",
     "index": 0
+  },
+  "auto_call_on_and_agent_inactive": {
+    "by": "xpath",
+    "value": "//h6[contains(text(),'Auto-Call On and Not On Call:')]",
+    "index": 0
+  },
+  "inactive_twenty_secs": {
+    "by": "xpath",
+    "value": "//span[@automationid='inactiveSinceLessThanTwentysec']",
+    "index": 0
+  },
+  "inactive_twenty_sixty_secs": {
+    "by": "xpath",
+    "value": "//span[@automationid='inactiveSinceTwentyToSixtySec']",
+    "index": 0
+  },
+  "inactive_more_than_sixty_secs": {
+    "by": "xpath",
+    "value": "//span[@automationid='inactiveSinceGreaterThanSixtySec']",
+    "index": 0
   }
 }

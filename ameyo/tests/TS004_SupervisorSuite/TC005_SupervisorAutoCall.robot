@@ -4,6 +4,7 @@ Documentation     Ameyo Supervisor test cases to verify auto call features.
 ...               https://touchstone.ameyo.com/linkto.php?tprojectPrefix=AP&item=testcase&id=AP-8895
 ...               https://touchstone.ameyo.com/linkto.php?tprojectPrefix=AP&item=testcase&id=AP-8913
 ...               https://touchstone.ameyo.com/linkto.php?tprojectPrefix=AP&item=testcase&id=AP-8912
+...               https://touchstone.ameyo.com/linkto.php?tprojectPrefix=AP&item=testcase&id=AP-8916
 
 # Suite Setup and Teardown
 Suite Setup       Suite Initialization For Two Executives And Requested User
@@ -31,3 +32,7 @@ TC - Verify auto call off stats for supervisor user
 TC - Verify auto call off not on call filters for supervisor user
     [Tags]  sanity    testid=AP-8913    regression
     I verify auto call and not on call filter    ${instance1}    supervisor    ${FALSE}
+
+TC - Verify auto-call on and not on call
+    [Tags]  sanity    testid=AP-8916    regression
+    I verify user not on call activity for auto call on    ${instance1}    supervisor    ${TRUE}

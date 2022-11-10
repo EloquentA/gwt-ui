@@ -27,7 +27,7 @@ class AutoCall:
         """Sets user's auto call status to requested status."""
         auto_call_phone_icon_div_class = self.action.get_element_attribute('auto_call_phone_icon_div', 'class')
         trigger = False
-        if 'active' in auto_call_phone_icon_div_class:
+        if ' active' in auto_call_phone_icon_div_class:
             if auto_call:
                 print('Auto call status is already set to ON')
             else:
@@ -116,4 +116,42 @@ class AutoCall:
         self.setup_executives_with_auto_call(auto_call)
         campaign = self.monitor.set_up_campaign(campaign_details)
         # TODO(praveen): WIP
+        return True
+
+    def wait_for_user_inactivity(self, wakeup_times):
+        """Check auto-call on stats values on supervisor monitor with yield"""
+        for wakeup_time in wakeup_times:
+            time.sleep(wakeup_time)
+            yield wakeup_time
+
+    def verify_auto_call_not_on_call_activity(self, campaign_details, auto_call):
+        """Verifies auto call on and agent inactive"""
+        self.monitor.set_up_campaign(campaign_details)
+        self.setup_executives_with_auto_call(auto_call)
+        # A dictionary for wake up times i.e 32 and 42 having expected count as values
+        inactivity_time_expected_values = {
+            32: {
+                'not_on_call': '2',
+                'less_than_20': '0',
+                '20_to_60': '2',
+                'more_than_60': '0'
+            },
+
+            42: {
+                'not_on_call': '2',
+                'less_than_20': '0',
+                '20_to_60': '0',
+                'more_than_60': '2',
+            }
+        }
+        for wakeup_time in self.wait_for_user_inactivity(inactivity_time_expected_values.keys()):
+            assert inactivity_time_expected_values[wakeup_time]['not_on_call'] == \
+                   self.action.get_text('auto_call_on_and_agent_inactive').split(':')[-1].strip(), \
+                'Auto call on and not on call count Error'
+            assert inactivity_time_expected_values[wakeup_time]['less_than_20'] == \
+                   self.action.get_text('inactive_twenty_secs'), 'Auto call on less than 20 secs value Error'
+            assert inactivity_time_expected_values[wakeup_time]['20_to_60'] == \
+                   self.action.get_text('inactive_twenty_sixty_secs'), 'Auto call on 20_to_60 secs value Error'
+            assert inactivity_time_expected_values[wakeup_time]['more_than_60'] == \
+                   self.action.get_text('inactive_more_than_sixty_secs'), 'Auto call on more than 60 secs value Error'
         return True

@@ -531,3 +531,10 @@ class Ameyo:
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(
                 f"verify_auto_call_{'on' if auto_call else 'off'}_not_on_call_filter_{user_type}", error))
+
+    def verify_auto_call_not_on_call_activity(self, campaign_details, auto_call):
+        """Method to verify auto_call is on and agent is inactive"""
+        try:
+            return self._return_result(self.auto_call.verify_auto_call_not_on_call_activity(campaign_details, auto_call))
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"verify_auto_call_not_on_call_activity", error))
