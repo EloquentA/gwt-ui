@@ -538,3 +538,10 @@ class Ameyo:
             return self._return_result(self.auto_call.verify_auto_call_not_on_call_activity(campaign_details, auto_call))
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"verify_auto_call_not_on_call_activity", error))
+
+    def validate_call_data_from_csv_report(self, calling_number, call_date):
+        """Validates calling data from csv report"""
+        try:
+            return self._return_result(self.reports.validate_call_data_from_csv_report(calling_number, call_date))
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"validate_call_data_from_csv_report", error))

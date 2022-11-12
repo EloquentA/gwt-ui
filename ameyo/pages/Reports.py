@@ -272,3 +272,12 @@ class Reports:
         finally:
             self.action.switch_to_default_frame()
         return True
+
+    def validate_call_data_from_csv_report(self, calling_number, call_date):
+        """Validates calling data from csv report"""
+        new_filename = self.common.rename_file(extension=".csv")
+        csv_content_list = self.common.get_texts_from_csv_file(new_filename)
+        print(csv_content_list[-1])
+        assert csv_content_list[-1]['Phone'] == str(calling_number), "Calling Number doesnt match"
+        assert csv_content_list[-1]['Call Time'].split(" ")[0] == call_date, "Calling Date doesnt match"
+        return True

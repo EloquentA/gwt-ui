@@ -44,3 +44,9 @@ Create template and run report from template
     [Arguments]  ${instance}    ${report_name}    ${template_name}=TestTemplate    ${current_time_duration}=Year    ${format_list}=${format_list}
     ${result}=   call method    ${instance}    create_template_and_run_report_from_template    ${report_name}    ${template_name}    ${current_time_duration}    ${format_list}
     I verify result    ${result}
+
+Validate call data from CSV report
+    [Documentation]   This keyword validates calling data from CSV report"""
+    [Arguments]  ${instance}    ${calling_number}    ${calling_date}
+    ${result}=   call method    ${instance}    validate_call_data_from_csv_report    ${calling_number}    ${calling_date}
+    I verify result    ${result}

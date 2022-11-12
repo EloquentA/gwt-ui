@@ -7,6 +7,7 @@ import sys
 import string
 import time
 import requests
+import csv
 
 sys.path.append(os.path.join(
     os.path.dirname((os.path.dirname(os.path.dirname(__file__)))), "libs", "web_action")
@@ -179,3 +180,28 @@ class Common:
             else:
                 assert False, f"No such search record found in table: {search_query_str}. in table data: {table_data}"
         return search_query_str, current_total_records
+
+    def rename_file(self, directory=os.path.join(os.getcwd(), "ameyo", "temp_downloads"), extension=".csv"):
+        """Used to rename files from given directory"""
+        for path in os.listdir(directory):
+            if os.path.isfile(os.path.join(directory, path)) \
+                    and os.path.getsize(os.path.join(directory, path)) > 0 and path.endswith(extension):
+                new_filename = ''.join(random.choice(string.ascii_letters + string.digits) for i in range(10))
+                new_filename += extension
+                os.rename(os.path.join(directory, path), os.path.join(directory, new_filename))
+            else:
+                pass
+        return new_filename
+
+    def get_texts_from_csv_file(self, filename, directory=os.path.join(os.getcwd(), "ameyo", "temp_downloads")):
+        """Get contents of CSV file as a list of dictionary"""
+        filepath = directory+"\\\\"+filename
+        with open(filepath, mode='r') as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+            row_count = 0
+            file_content_list = []
+            for row in csv_reader:
+                row_count += 1
+                file_content_list.append(row)
+            print(row_count)
+        return file_content_list
