@@ -2,6 +2,7 @@
 Module: This is the login module which contains methods for functionality related to Login and Logout.
 """
 import os
+import random
 import sys
 import time
 
@@ -149,7 +150,7 @@ class Login:
             self.action.click_element("extension_dropdown")
             self.action.select_from_ul_dropdown_using_text("ul_campaign_selector", kwargs['extension'])
             self.action.explicit_wait("phone_number_input_for_extension")
-            self.action.input_text("phone_number_input_for_extension", kwargs['extension_number'])
+            self.action.input_text("phone_number_input_for_extension", f'{random.randrange(1, 10**3):3}')
             self.action.explicit_wait("extension_save_btn")
             self.action.click_element("extension_save_btn")
         return True
