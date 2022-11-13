@@ -5,6 +5,7 @@ import os
 import sys
 import time
 
+from selenium.webdriver.common.by import By
 from uuid import uuid4
 
 sys.path.append(os.path.join(
@@ -111,11 +112,59 @@ class AutoCall:
         self._verify_auto_call_stats(auto_call, is_connected=False)
         return True
 
+    def select_all_topline_filters(self):
+        """Selects all top line filters like: break, connected, on acw, ready and customers on hold."""
+        for selector in ['break_div', 'ready_div', 'connected_div', 'on_acw_div', 'customers_on_hold_div']:
+            self.action.click_element(selector)
+            if selector == 'break_div':
+                # TODO(praveen): Break filter not working in UI, remove this once filter is fixed
+                continue
+            assert 'active' in self.action.get_element_attribute(selector, 'class'), \
+                f"Requested filter: {selector}, was not selected."
+
+    def verify_all_top_line_filters(self, selected):
+        """Verifies all top line filters are selected or not."""
+        for selector in ['break_div', 'ready_div', 'connected_div', 'on_acw_div', 'customers_on_hold_div']:
+            if selector == 'break_div':
+                # TODO(praveen): Break filter not attaching active class in UI, remove this once filter is fixed
+                continue
+            if selected:
+                assert 'active' in self.action.get_element_attribute(selector, 'class'), \
+                    f"Requested filter: {selector}, was not selected."
+            else:
+                assert 'active' not in self.action.get_element_attribute(selector, 'class'), \
+                    f"Requested filter: {selector}, was selected."
+        try:
+            self.action.click_element('open_filter_btn')
+            for selector in [
+                'break_filter_span', 'ready_filter_span', 'connected_filter_span',
+                'on_acw_filter_span', 'on_hold_filter_span'
+            ]:
+                checkbox = self.action.get_element(selector).find_element(By.TAG_NAME,'input').get_attribute('checked')
+                assert checkbox == 'true' if selected else not checkbox, f"Checkbox selected state should be: {selected}."
+        finally:
+            self.action.click_element('open_filter_btn')
+
     def verify_auto_call_not_on_call_filter(self, campaign_details, auto_call):
         """Verifies auto call on/off, not on call filter."""
         self.setup_executives_with_auto_call(auto_call)
         campaign = self.monitor.set_up_campaign(campaign_details)
-        # TODO(praveen): WIP
+        # Wait for data to refresh
+        time.sleep(10)
+        assert len(self.action.get_table_row_elements('agent_list_table')) == 2, \
+            "Only two users should be in the agent table."
+        self.select_all_topline_filters()
+        self.verify_all_top_line_filters(selected=True)
+        self.action.click_element('auto_call_on_not_on_call_div')
+        assert 'selected-div' in self.action.get_element_attribute('auto_call_on_not_on_call_div', 'class'),\
+            "Not on call filter is not active after enabling not on call filter."
+        self.verify_all_top_line_filters(selected=False)
+        self.select_all_topline_filters()
+        assert 'selected-div' not in self.action.get_element_attribute('auto_call_on_not_on_call_div', 'class'), \
+            'Not on call is active after enabling break, connected etc.'
+        # Select and de-select filter to re-instate the state
+        self.action.click_element('auto_call_on_not_on_call_div')
+        self.action.click_element('auto_call_on_not_on_call_div')
         return True
 
     def wait_for_user_inactivity(self, wakeup_times):

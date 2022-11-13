@@ -27,7 +27,7 @@ class Monitor:
         current_campaign = self.action.get_text('current_selected_campaign_tab')
         campign = campaign_details.get(campaign_details.get('monitor_with'))
         if campign is None:
-            assert False, f'Please provide campiagn to monitor with as a key (like "voice_outbound") in campaign details: {campaign_details}'
+            assert False, f'Please provide campaign to monitor with as a key (like "voice_outbound") in campaign details: {campaign_details}'
         if campign == current_campaign:
             print("Requested campaign already selected: ", current_campaign)
             return campign

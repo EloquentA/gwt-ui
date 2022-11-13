@@ -63,5 +63,65 @@
     "by": "xpath",
     "value": "//span[@automationid='inactiveSinceGreaterThanSixtySec']",
     "index": 0
-  }
+  },
+  "auto_call_on_not_on_call_div": {
+    "by": "xpath",
+    "value": "//h6[contains(text(),'Auto-Call Off:')]/following-sibling::ul//span[text()='Not On Call']/parent::div",
+    "index": 0
+  },
+  "break_div": {
+    "by": "xpath",
+    "value": "//li//span[text()='Break']//parent::div",
+    "index": 0
+  },
+  "ready_div": {
+    "by": "xpath",
+    "value": "//li//span[text()='Ready']//parent::div",
+    "index": 0
+  },
+ "connected_div": {
+    "by": "xpath",
+    "value": "//li//span[text()='Ready']/parent::div/parent::li/parent::ul/following-sibling::ul//span[text()='Connected']/parent::div",
+    "index": 0
+  },
+  "on_acw_div": {
+    "by": "xpath",
+    "value": "//li//span[text()='On ACW']//parent::div",
+    "index": 0
+  },
+  "customers_on_hold_div": {
+    "by": "xpath",
+    "value": "//li//span[text()='Customers On Hold']//parent::div",
+    "index": 0
+  },
+  "open_filter_btn": {
+    "by": "xpath",
+    "value": "//button/i[@class='mdi mdi-filter']",
+    "index": 0
+  },
+  "break_filter_span": {
+    "by": "xpath",
+    "value": "//span[text()='Agent Status']/parent::div/parent::div/following-sibling::div/div[@id='panelBody']/span/input[@value='Break']/parent::span",
+    "index": 0
+  },
+  "ready_filter_span": {
+    "by": "xpath",
+    "value": "//span[text()='Agent Status']/parent::div/parent::div/following-sibling::div/div[@id='panelBody']/span/input[@value='Available']/parent::span",
+    "index": 0
+  },
+ "connected_filter_span": {
+    "by": "xpath",
+    "value": "//span[text()='Agent Call Status']/parent::div/parent::div/following-sibling::div/div[@id='panelBody']/span/input[@value='busy on call via current campaign']/parent::span",
+    "index": 0
+  },
+ "on_acw_filter_span": {
+    "by": "xpath",
+    "value": "//span[text()='Agent Call Status']/parent::div/parent::div/following-sibling::div/div[@id='panelBody']/span/input[@value='Wrapping Call via current campaign']/parent::span",
+    "index": 0
+  },
+ "on_hold_filter_span": {
+    "by": "xpath",
+    "value": "//span[text()='Customer Status']/parent::div/parent::div/following-sibling::div/div[@id='panelBody']/span/input[@value='On Hold']/parent::span",
+    "index": 0
+ }
 }
