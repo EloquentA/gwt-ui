@@ -29,6 +29,16 @@
     "value": "//table[contains(@class,'table-widget')]/thead",
     "index": "0"
   },
+  "total_user_records_live_monitoring": {
+    "by": "xpath",
+    "value": "//div[contains(@class,'action-page-panel')]/span",
+    "index": "0"
+  },
+ "live_monitoring_users_page_limit": {
+    "by": "xpath",
+    "value": "//div/h4[contains(text(),'Agents List')]/parent::div/parent::div/parent::div/following-sibling::div[3]//span[text()='Rows per page']/parent::div//input",
+    "index": "0"
+  },
   "snoop_btn": {
      "by": "xpath",
     "value": "//button[@automationid='snoopBtn']",
@@ -147,6 +157,41 @@
   "current_selected_campaign_tab": {
     "by": "xpath",
     "value": "//a[@automationid='supervisorCampaignTab']",
+    "index": "0"
+  },
+  "live_monitor_tab": {
+    "by": "xpath",
+    "value": "//a[@automationid='liveMonitoringTab']",
+    "index": "0"
+  },
+ "agent_monitor_tab": {
+    "by": "xpath",
+    "value": "//a[@automationid='agentMonitoringTab']",
+    "index": "0"
+  },
+  "agent_list_table_agent_monitoring": {
+     "by": "xpath",
+    "value": "//table[contains(@class,'table-widget')]/tbody",
+    "index": "0"
+  },
+ "agent_list_table_thead_agent_monitoring": {
+     "by": "xpath",
+    "value": "//table[contains(@class,'table-widget')]/thead",
+    "index": "0"
+  },
+  "total_user_records_agent_monitoring": {
+    "by": "xpath",
+    "value": "//div[contains(@class,'action-page-panel')]/span",
+    "index": "0"
+  },
+  "user_table_search_input_agent_monitoring": {
+    "by": "xpath",
+    "value": "//div/h4[contains(text(),'Agents List')]/parent::div/following-sibling::div//input[@placeholder='Search by name']",
+    "index": "0"
+  },
+  "agent_monitoring_users_page_limit": {
+    "by": "xpath",
+    "value": "//div/h4[contains(text(),'Agents List')]/parent::div/parent::div/parent::div/following-sibling::div[3]//span[text()='Rows per page']/parent::div//input",
     "index": "0"
   }
 }

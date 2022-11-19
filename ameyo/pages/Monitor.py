@@ -46,8 +46,8 @@ class Monitor:
         """Opens  available actions pop for requested logged in executive."""
         agent_list = []
         try:
-            # This sleep is need for the user status to refresh in monitoring tab
-            time.sleep(5)
+            # This sleep is needed for the user status to refresh in monitoring tab
+            self.common.sleep(5)
             self.action.explicit_wait('agent_list_table', 20)
             row  = 0
             total_rows = self.action.get_row_count('agent_list_table')
@@ -75,11 +75,7 @@ class Monitor:
             self.action.click_element('disconnect_btn')
         self.action.click_element('monitor_tab')
         self.action.click_element('close_actions')
-        # sleep to dispose call
-        time.sleep(50)
-        self.action.switch_to_window(0)
-        self.agent_homepage.open_close_dialer()
-        self.action.switch_to_window(1)
+        self._wrap_up_call()
 
     def verify_snoop_action(self, campaign_details, executive_username):
         """Method to verify snoop functionality."""
@@ -202,26 +198,51 @@ class Monitor:
         assert expected_home_url == home_url, f"Home url mismatched after force logout. Expected:{home_url}, Found:{expected_home_url}"
         return True
 
-    def get_user_data(self, executive_username, retries=0):
+    def get_user_data(
+            self,
+            executive_username,
+            total_records_selector= 'total_user_records_live_monitoring',
+            # Put agent live monitoring user table search input here
+            table_search_input='',
+            page_limit_selector='live_monitoring_users_page_limit',
+            table_body_selector='agent_list_table',
+            table_head_selector='agent_list_table_thead',
+            retries=0
+    ):
         """Gets available data for requested logged in executive."""
-        agent_list = []
+        # This sleep is need for the user status to refresh in monitoring tab
+        row_values = []
         try:
-            # This sleep is need for the user status to refresh in monitoring tab
             if retries == 0:
-                time.sleep(10)
-            self.action.explicit_wait('agent_list_table', 20)
-            row_values = self.action.get_table_row_values('agent_list_table')
-            col_names = self.action.get_table_header_columns_text_list('agent_list_table_thead')
+                self.common.sleep(10)
+            self.action.explicit_wait(table_body_selector, 20)
+            current_total_records = self.common.get_total_records(total_records_selector, table_body_selector)
+            if current_total_records > int(self.action.get_value(page_limit_selector)):
+                if not table_search_input:
+                    assert False, "Table search input cannot be empty for data with pagination."
+                self.common.search_record(executive_username, table_search_input, total_records_selector, table_body_selector)
+            row_values = self.action.get_table_row_values(table_body_selector)
+            col_names = self.action.get_table_header_columns_text_list(table_head_selector)
             for row in row_values:
                 if executive_username in row_values[row]:
-                    return dict(zip(col_names, row_values[row]))
+                    user_data = dict(zip(col_names, row_values[row]))
+                    if user_data['Agent ID'] == executive_username:
+                        return user_data
             else:
                 assert False, f"Expected user not found in user table data: {row_values}"
         except Exception as err:
             retries += 1
             if retries <= 3:
-                return self.get_user_data(executive_username, retries)
-            assert False, f'Logged in user:{executive_username} not found in agent list: {agent_list}'
+                return self.get_user_data(
+                    executive_username,
+                    total_records_selector,
+                    table_search_input,
+                    page_limit_selector,
+                    table_body_selector,
+                    table_head_selector,
+                    retries
+                )
+            assert False, f'Logged in user:{executive_username} not found in table data: {row_values}'
 
     def _verify_user_stats(self, expected_user_data, executive_username):
         """Verifies user stats from table."""
@@ -282,4 +303,61 @@ class Monitor:
         # Verify stats for inbound call
         self._verify_user_stats(expected_user_data, executive_username)
         self._wrap_up_call()
+        return True
+
+    def get_user_data_agent_monitoring(self, executive_username):
+        """Gets user data from agent monitoring agent list."""
+        return self.get_user_data(
+            executive_username=executive_username,
+            total_records_selector='total_user_records_agent_monitoring',
+            table_search_input='user_table_search_input_agent_monitoring',
+            page_limit_selector='agent_monitoring_users_page_limit',
+            table_body_selector='agent_list_table_agent_monitoring',
+            table_head_selector='agent_list_table_thead_agent_monitoring'
+        )
+
+    def _verify_user_stats_agent_monitoring(self, expected_user_data, executive_username):
+        """Verifies user stats from table."""
+        user_data = self.get_user_data_agent_monitoring(executive_username)
+        for col in expected_user_data.keys():
+            if col in ['Breaks', 'Total Wrapped Calls','Connected Calls', 'Already Hungup', 'Connected Manual Dials']:
+                assert int(user_data[col]) > int(expected_user_data[col]), \
+                    f"{col} data missmatch in table data, expected {user_data[col]} > {expected_user_data[col]}"
+            else:
+                assert expected_user_data[col] in user_data[col], \
+                    f"{col} data missmatch in table data expected:{expected_user_data[col]},  found:{user_data[col]}"
+
+    def verify_agent_monitoring(self, credentials, user_type):
+        """Method to verify agent monitoring functionality."""
+        self.action.switch_to_window(1)
+        campaign = self.set_up_campaign(credentials[user_type]['campaign_details'])
+        self.action.explicit_wait('agent_monitor_tab', ec='element_to_be_clickable')
+        # This sleep is required for tabs data to load, to avoid hanging
+        self.common.sleep(10)
+        self.action.click_element('agent_monitor_tab')
+        self.action.explicit_wait('agent_list_table_agent_monitoring', 60)
+        executive_username = credentials['executive']['username']
+        current_user_stats = self.get_user_data_agent_monitoring(executive_username)
+        print("Current user stats: ", current_user_stats)
+        # Make a call and verify
+        self.action.switch_to_window(0)
+        self.common.change_status('Available', 'available_status')
+        self.common.change_status('Break', 'break_status')
+        self.agent_homepage.manual_dial_only(999999999, campaign)
+        self._wrap_up_call()
+        # Sleep for 10 minutes to for data to refresh
+        self.common.sleep(10*60)
+        expected_user_data = {
+            'Agent Name': executive_username,
+            'Agent ID': executive_username,
+            'Extension': credentials['executive']['extension'],
+            'Breaks': current_user_stats['Breaks'],
+            'Connected Calls': current_user_stats['Connected Calls'],
+            'Connected Manual Dials': current_user_stats['Connected Manual Dials'],
+            'Total Wrapped Calls': current_user_stats['Total Wrapped Calls'],
+            'Already Hungup': current_user_stats['Already Hungup']
+        }
+        print("Expected user stats: ", expected_user_data)
+        self._verify_user_stats_agent_monitoring(expected_user_data, executive_username)
+        self.action.click_element('live_monitor_tab')
         return True

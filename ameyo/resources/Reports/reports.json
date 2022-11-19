@@ -33,20 +33,5 @@
   "template_name_header":{"by":"xpath", "value":"//div[text()='Template Name']", "index":"0"},
   "save_template_btn":{"by":"xpath", "value":"//button[contains(@class,'scheduler') and @title='Save selected options as Template and run']", "index":"0"},
   "save_template_as_modal":{"by":"xpath", "value":"//*[text()='Save Template As']//ancestor::div[@class='modal-content']", "index":"0"},
-  "template_name_input":{"by":"xpath", "value":"//*[text()='Save Template As']//following::input", "index":"0"},
-  "scheduler_tab":{"by":"xpath", "value":"//li//a[contains(@data-target, 'reportsSchedulerMenuItem')]", "index":"0"},
-  "add_schedule_btn":{"by":"xpath", "value":"//button[contains(@class,'schedulerButton')][text()='Add']", "index":"0"},
-  "schedule_name_input":{"by":"xpath", "value":"//strong[contains(text(),'Name')]//ancestor::div[contains(@class,'GridRow')]//input", "index":"0"},
-  "schedule_output_format":{"by":"xpath", "value":"//span[contains(text(),'replace_me')]//preceding-sibling::input[@type='checkbox']", "index":"0"},
-  "schedule_start_time":{"by":"xpath", "value":"//span[contains(text(),'Schedule Start Time')]//input", "index":"0"},
-  "current_time":{"by":"xpath", "value":"//a[@data-action='today']/span", "index":"0"},
-  "schedule_never_ends_radio":{"by":"xpath", "value":"//span[contains(text(),'Never Ends')]/preceding-sibling::input[@type='radio']", "index":"0"},
-  "frequency_duration":{"by":"xpath", "value":"//div[@id='frequencyColumn']//a[text()='replace_me']//parent::li", "index":"0"},
-  "hours_input":{"by":"xpath", "value":"//div[@id='hourlyTab']//input", "index":"0"},
-  "schedule_reports_dropdown":{"by":"xpath", "value":"//strong[contains(text(),'Reports')]//ancestor::div[contains(@class,'GridRow')]//a","index":"0"},
-  "schedule_report_name":{"by":"xpath", "value":"//li[contains(text(),'replace_me')]", "index":"0"},
-  "scheduled_saved_modal":{"by":"xpath", "value":"//*[contains(text(),'Scheduled saved')]/ancestor::div[@class='modal-content']", "index":"0"},
-  "schedule_saved_message":{"by":"xpath", "value":"//div[@class='modal-content']//p[contains(text(),'has been created successfully')]", "index":"0"},
-  "delete_schedule_btn":{"by":"xpath", "value":"//button[contains(@class,'schedulerButton')][text()='Delete']", "index":"0"},
-  "delete_schedule_modal":{"by":"xpath", "value":"//*[contains(text(),'Are you sure you want to delete all the selected schedules?')]/ancestor::div[@class='modal-content']", "index":"0"}
+  "template_name_input":{"by":"xpath", "value":"//*[text()='Save Template As']//following::input", "index":"0"}
 }

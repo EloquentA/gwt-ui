@@ -57,3 +57,10 @@ I verify live monitoring
     &{inbound_call_details}=    Create Dictionary    inbound_url=${inbound_api_url_append_calls}    did_prefix=${random_did_prefix}    calling_number=${random_calling_number_prefix}
     ${result}=   call method    ${instance}    verify_live_monitoring    ${CREDENTIALS}    ${req_run_as}    ${inbound_call_details}
     I verify result    ${result}
+
+# Agent Monitoring keywords
+I verify agent monitoring
+    [Documentation]   This keyword verifies agent monitoring functionality
+    [Arguments]  ${instance}    ${req_run_as}
+    ${result}=   call method    ${instance}    verify_agent_monitoring    ${CREDENTIALS}    ${req_run_as}
+    I verify result    ${result}

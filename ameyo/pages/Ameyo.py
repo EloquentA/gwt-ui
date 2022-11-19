@@ -570,3 +570,10 @@ class Ameyo:
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("delete_scheduled_report", error))
 
+    def verify_agent_monitoring(self, credentials, user_type):
+        """Method to verify agent monitoring functionality."""
+        try:
+            return self._return_result(
+                self.monitor.verify_agent_monitoring(credentials, user_type))
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"verify_agent_monitoring_{user_type}", error))
