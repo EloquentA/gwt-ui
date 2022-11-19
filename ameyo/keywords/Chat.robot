@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation     Keywords supported for Ameyo Home page
+Documentation     Keywords supported for Ameyo Chat Functionalities
 ...               Developed By - Developer by EA
 ...               Comments:
 
