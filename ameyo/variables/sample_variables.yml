@@ -66,8 +66,8 @@ CREDENTIALS:
       video: ''
     extension: 'customer_success_1800_DefaultVR'
   chat_executive:
-    username: 'ron'
-    password: 'Ameyo@12345'
+    username: ''
+    password: ''
     campaign_details:
       interaction: 'TestICCampaign'
       chat: 'TestChatCampaign'
