@@ -1,0 +1,76 @@
+{
+  "chat_active_dropdown":{
+    "by":"xpath",
+    "value":"//a[@class='switch-mode__dropdown-button switchMode dropdown-button']",
+    "index":"0"},
+
+  "chat_active_lever":{
+    "by":"xpath",
+    "value":"//label//span[contains(@class, 'lever disabled')]",
+    "index":"0"},
+
+  "chat_initiation_iframe":{
+    "by":"xpath",
+    "value":"//iframe[contains(@name, 'cboxmain')]",
+    "index":"0"},
+
+  "chat_initiation_tab":{
+    "by":"xpath",
+    "value":"//p[contains(@class, 'chat-initiation-text__heading')]",
+    "index":"0"},
+
+  "chat_initiation_name_input":{
+    "by":"xpath",
+    "value":"//input[contains(@placeholder, 'Enter full name')]",
+    "index":"0"},
+
+  "chat_initiation_submit_btn":{
+    "by":"xpath",
+    "value":"//button[contains(@type, 'submit')]",
+    "index":"0"},
+
+  "chat_text_message":{
+    "by":"xpath",
+    "value":"//div[contains(@class, 'twemoji-textarea') and contains(@contenteditable, 'true')]",
+    "index":"0"},
+
+  "chat_text_message_send":{
+    "by":"xpath",
+    "value":"//i[contains(@class, 'mdi mdi-send sendButton clickableSendButton')]",
+    "index":"0"},
+
+  "chat_received_on_agent":{
+    "by":"xpath",
+    "value":"//div[contains(@class, 'gwt-HTML')]",
+    "index":"0"},
+
+  "customer_name_received_on_agent":{
+    "by":"xpath",
+    "value":"//div[contains(@class, 'msg-timing left-align no-padding s12 m12 l12 col')]//span",
+    "index":"0"},
+
+  "create_customer_via_chat":{
+    "by":"xpath",
+    "value":"//a[contains(@data-tooltip, 'Customer Detail' )]",
+    "index":"0"},
+
+  "create_customer_phone_input":{
+    "by":"xpath",
+    "value":"//div[contains(@title, 'phone1')]//input[contains(@class, 'gwt-TextBox')]",
+    "index":"0"},
+
+  "create_customer_chat_link":{
+    "by":"xpath",
+    "value":"//a[contains(@class, 'create-new-link')]",
+    "index":"0"},
+
+  "create_customer_btn":{
+    "by":"xpath",
+    "value":"//*[@automationid='ticketCustomerInfoCreateOrUpdateBtn']//span",
+    "index":"0"},
+
+  "create_cust_page_loader":{
+    "by":"xpath",
+    "value":"//div[contains(@class, 'preloader-wrapper active')]",
+    "index":"0"}
+}

@@ -21,6 +21,12 @@ I open ameyo home page in separate tab
     ${result}=   call method    ${instance}    open_home_page_in_separate_tab    ${AMEYO_URL}
     I verify result    ${result}
 
+I open ameyo customer chat page in separate tab
+    [Documentation]   This keyword opens Ameyo customer chat page in separate tab
+    [Arguments]  ${instance}    ${req_run_as}
+    ${result}=   call method    ${instance}    open_customer_chat_page_in_separate_tab    ${CUSTOMER_URL}    ${CREDENTIALS['${req_run_as}']}
+    I verify result    ${result}
+
 I switch to requested tab
     [Documentation]   This keyword switches to requested tab, by default switches to last tab
     [Arguments]  ${instance}    ${req_tab}=-1
