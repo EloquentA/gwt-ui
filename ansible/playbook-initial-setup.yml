@@ -13,7 +13,7 @@
   tasks:
     - import_role:
         name: initial-setup
-        tasks_from: postgresql.yaml
+        tasks_from: dbserver.yaml
 
 - hosts: callserver
   gather_facts: true
