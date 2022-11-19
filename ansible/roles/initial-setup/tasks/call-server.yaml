@@ -1,0 +1,69 @@
+---
+- name: create asterisk directory if it does not exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  with_items:
+    - "/dacx/var/ameyo/dacxdata/asap/etc/asterisk"
+
+- name: copying sip.conf
+  copy:
+    src: files/sip.conf
+    dest: "{{ item }}"
+    mode: '0644'
+  with_items:
+    - "/dacx/var/ameyo/dacxdata/asap/etc/asterisk/sip.conf"
+
+- name: copying extensions.conf
+  copy:
+    src: files/extensions.conf
+    dest: "{{ item }}"
+    mode: '0644'
+  with_items:
+    - "/dacx/var/ameyo/dacxdata/asap/etc/asterisk/extensions.conf"
+
+- name: asap stop | ameyoctl service asap stop
+  command: ameyoctl service asap stop
+
+- name: asap wait to stop | ameyoctl service asap status
+  shell: ameyoctl service asap status | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g'
+  register: response
+  retries: 10
+  delay: 60
+  until: response.stdout is search('is NOT_RUNNING')
+
+- name: asap start | ameyoctl service asap start
+  command: ameyoctl service asap start
+
+- name: asap wait to start | ameyoctl service asap status
+  shell: ameyoctl service asap status | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g'
+  register: response
+  retries: 10
+  delay: 60
+  until: response.stdout is search('is RUNNING')
+
+- name: asterisk13 stop | ameyoctl service asterisk13 stop
+  command: ameyoctl service asterisk13 stop
+
+- name: asterisk13 wait to stop | ameyoctl service asterisk13 status
+  shell: ameyoctl service asterisk13 status | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g'
+  register: response
+  retries: 60
+  delay: 10
+  until: response.stdout is search('is NOT_RUNNING')
+
+- name: asterisk13 start | ameyoctl service asterisk13 start
+  command: ameyoctl service asterisk13 start
+
+- name: asterisk13 wait to start | ameyoctl service asterisk13 status
+  shell: ameyoctl service asterisk13 status | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g'
+  register: response
+  retries: 60
+  delay: 10
+  until: response.stdout is search('is RUNNING')
+
+- name: check asterisk13 server service port - 8088
+  wait_for:
+    port: 8088
+    delay: 30

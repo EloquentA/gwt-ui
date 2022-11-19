@@ -1,0 +1,15 @@
+---
+- import_tasks: postgresql.yaml
+  become: yes
+  tags:
+    - dbserver
+
+- import_tasks: call-server.yaml
+  become: yes
+  tags:
+    - callserver
+
+- import_tasks: app-server.yaml
+  become: yes
+  tags:
+    - appserver

@@ -1,0 +1,21 @@
+---
+# vars file
+
+# APP SERVER DATABASE CONNECTION CREDENATIALS
+APP_SERVER_DB_NAME: ameyodb
+APP_SERVER_DB_IP: 0.0.0.0
+
+POSTGRESQL_9:
+  POSTGRES_SERVICE_NAME: postgresql-9.3
+  POSTGRES_HOME: /usr/pgsql-9.3/bin
+  POSTGRES_LIB_PATH: /var/lib/pgsql/9.3
+
+POSTGRESQL_10:
+  POSTGRES_SERVICE_NAME: postgresql-10
+  POSTGRES_HOME: /usr/pgsql-10/bin
+  POSTGRES_LIB_PATH: /var/lib/pgsql/10
+
+POSTGRESQL_14:
+  POSTGRES_SERVICE_NAME: postgresql-14
+  POSTGRES_HOME: /usr/pgsql-14/bin
+  POSTGRES_LIB_PATH: /var/lib/pgsql/14

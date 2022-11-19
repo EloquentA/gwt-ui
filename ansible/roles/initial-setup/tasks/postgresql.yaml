@@ -1,0 +1,100 @@
+---
+- name: Set Postgres Defaults Facts (for version 9)
+  set_fact:
+    "{{ item.key }}": "{{ item.value }}"
+  loop: "{{ lookup('dict', POSTGRESQL_9) }}"
+  when: (POSTGRES_VERSION | default('10') | int) == 9
+
+- name: Set Postgres Defaults Facts (for version 10)
+  set_fact:
+    "{{ item.key }}": "{{ item.value }}"
+  loop: "{{ lookup('dict', POSTGRESQL_10) }}"
+  when: (POSTGRES_VERSION | default('10') | int) == 10
+
+- name: Set Postgres Defaults Facts (for version 14)
+  set_fact:
+    "{{ item.key }}": "{{ item.value }}"
+  loop: "{{ lookup('dict', POSTGRESQL_14) }}"
+  when: (POSTGRES_VERSION | default('10') | int) == 14
+
+- name: Update timezone in machine
+  shell: timedatectl set-timezone "Asia/Kolkata"
+
+- name: Replace pg_hba.conf file
+  replace:
+    path: "{{ POSTGRES_LIB_PATH }}/data/pg_hba.conf"
+    regexp: "{{ item.src }}"
+    replace: "{{ item.dest }}"
+  loop:
+    - { src: 'ident', dest: 'trust' }
+    - { src: 'peer', dest: 'trust' }
+
+- name: updating trusted host in pg_hba.conf file
+  lineinfile:
+    path: "{{ POSTGRES_LIB_PATH }}/data/pg_hba.conf"
+    state: present
+    line: "{{ item }}"
+    insertbefore: EOF
+  with_items:
+    - 'host    all             all             10.10.10.111/32             trust'
+    - 'host    all             all             127.0.0.1/32             trust'
+    - 'host    all             all             samehost                 trust'
+    - 'host    all             all             samenet                  trust'
+
+- name: updating trusted host in pg_hba.conf file
+  lineinfile:
+    path: "{{ POSTGRES_LIB_PATH }}/data/pg_hba.conf"
+    state: present
+    line: 'host    all             all             {{ APP_SERVER_IP }}/24         trust'
+    insertbefore: EOF
+  when: APP_SERVER_IP is defined
+
+- name: Change postgresql.conf file
+  replace:
+    path: "{{ POSTGRES_LIB_PATH }}/data/postgresql.conf"
+    regexp: "{{ item.src }}"
+    replace: "{{ item.dest }}"
+  loop:
+    - { src: '^(;|#|)listen_addresses(\s+)=(\s+).*$', dest: "listen_addresses = '*'" }
+    - { src: '^(;|#|)port(\s+)=(\s+).*$', dest: "port = 5432" }
+    - { src: '^(;|#|)max_connections(\s+)=(\s+).*$', dest: "max_connections = 9999" }
+    - { src: '^(;|#|)timezone(\s+)=(\s+).*$', dest: "timezone = 'Asia/Calcutta'" }
+    - { src: '^(;|#|)log_timezone(\s+)=(\s+).*$', dest: "log_timezone = 'Asia/Calcutta'" }
+
+- name: insert postgres_path to path bash_profile
+  lineinfile:
+    path: ~/.bash_profile
+    state: present
+    line: "POSTGRES_HOME='{{ POSTGRES_HOME }}/'"
+    insertbefore: EOF
+  changed_when: false
+
+- name: stop postgresql service
+  service:
+    name: "{{ POSTGRES_SERVICE_NAME }}"
+    state: stopped
+    enabled: no
+
+- name: wait for stop listening on port 5432
+  shell: netstat -nlp
+  register: response
+  retries: 60
+  delay: 10
+  until: response.stdout is not search(item)
+  loop:
+    - "0 0.0.0.0:5432"
+
+- name: start postgresql service
+  service:
+    name: "{{ POSTGRES_SERVICE_NAME }}"
+    state: started
+    enabled: yes
+
+- name: wait for start listening on port 5432
+  shell: netstat -nlp
+  register: response
+  retries: 60
+  delay: 10
+  until: response.stdout is search(item)
+  loop:
+    - "0 0.0.0.0:5432"

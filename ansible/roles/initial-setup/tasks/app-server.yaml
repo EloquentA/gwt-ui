@@ -1,0 +1,104 @@
+---
+- name: App Server | Gather the rpm package facts
+  package_facts:
+    manager: auto
+
+- name: App Server | update db connection
+  template:
+    src: hibernate.properties.j2
+    dest: /dacx/var/ameyo/dacxdata/com.drishti.dacx.server.product/conf/hibernate.properties
+    owner: dacx
+    group: dacx
+    mode: 0644
+
+- name: App Server | Get system config parameter
+  postgresql_query:
+    login_host: "{{ APP_SERVER_DB_IP }}"
+    db: "{{ APP_SERVER_DB_NAME }}"
+    query: select value from system_configuration_parameter where name ilike '%set%';
+  become_user: postgres
+  register: multi_tenant_status
+
+- name: App Server | Changes in DB for Voice Resource ID
+  postgresql_query:
+    login_host: "{{ APP_SERVER_DB_IP }}"
+    db: "{{ APP_SERVER_DB_NAME }}"
+    query: update asterisk_voice_resource_settings set host_name='{{ CALL_SERVER_IP }}' where voice_resource_id='1';
+  become_user: postgres
+
+- name: App Server | Get Call Manager details in Ameyo AppServer UI
+  postgresql_query:
+    login_host: "{{ APP_SERVER_DB_IP }}"
+    db: "{{ APP_SERVER_DB_NAME }}"
+    query: select value from server_preference_store where context_type = 'contactCenter';
+  become_user: postgres
+  register: call_manager_details
+
+- name: App Server | Enable Call Manager in Ameyo Appserver UI
+  postgresql_query:
+    login_host: "{{ APP_SERVER_DB_IP }}"
+    db: "{{ APP_SERVER_DB_NAME }}"
+    query: insert into server_preference_store (context_type,context_id,key,value) values('contactCenter','1','callManagerSlot','http://{{ ansible_default_ipv4.address }}:8888/app/build');
+  become_user: postgres
+  when: not call_manager_details.query_result is search(ansible_default_ipv4.address)
+
+- name: App Server | Get Token details For Customer Upload
+  postgresql_query:
+    login_host: "{{ APP_SERVER_DB_IP }}"
+    db: "{{ APP_SERVER_DB_NAME }}"
+    query: select * from system_configuration_parameter where name ilike '%token%';
+  become_user: postgres
+  register: tokenDetails
+
+- name: App Server | Add Token For Customer Upload
+  postgresql_query:
+    login_host: "{{ APP_SERVER_DB_IP }}"
+    db: "{{ APP_SERVER_DB_NAME }}"
+    query: insert into system_configuration_parameter (name,type,value,default_value) values ('token-based-authorization-policy-configuration','String','[{"hashKey":"fecace70bf6ea0c450c5b2071cbabc9","host":"localhost","allowedCommandList":["clickToCallWithTokenAsync","clickToCallWithToken"],"allowAll":"true"}]','NULL');
+  become_user: postgres
+  when: tokenDetails.rowcount == 0
+
+- name: App Server | Check if multi tenant
+  postgresql_query:
+    login_host: "{{ APP_SERVER_DB_IP }}"
+    db: "{{ APP_SERVER_DB_NAME }}"
+    query: select value from system_configuration_parameter where name='setup.type';
+  become_user: postgres
+  register: multiTenant
+
+- name: App Server | Changes in DB for multi tenant
+  postgresql_query:
+    login_host: "{{ item.src }}"
+    db: "{{ APP_SERVER_DB_NAME }}"
+    query: "{{ item.dest }}"
+  become_user: postgres
+  loop:
+    - { src: "{{ APP_SERVER_DB_IP }}", dest: "UPDATE system_configuration_parameter SET value = 'ameyo.professional.multi-tenant' where name = 'setup.type';" }
+    - { src: "{{ APP_SERVER_DB_IP }}", dest: "DELETE FROM data_version;" }
+    - { src: "{{ APP_SERVER_DB_IP }}", dest: "DELETE FROM schema_version;" }
+  when: multiTenant.query_result[0]['value'] != 'ameyo.professional.multi-tenant'
+
+- name: App Server | ameyoctl service appserver faststop
+  shell: ameyoctl service appserver faststop
+
+- name: App Server | Wait for the appserver to stop
+  shell: ameyoctl service appserver status | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g'
+  register: response
+  retries: 20
+  delay: 30
+  until: response.stdout is search('is NOT_RUNNING')
+
+- name: App Server | ameyoctl service appserver start
+  shell: ameyoctl service appserver start
+
+- name: App Server | Wait for the appserver come up
+  shell: ameyoctl service appserver status | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g'
+  register: response
+  retries: 20
+  delay: 30
+  until: response.stdout is search('is RUNNING')
+
+- name: App Server | check app server service port - 8888
+  wait_for:
+    port: 8888
+    delay: 30

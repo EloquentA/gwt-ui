@@ -1,0 +1,29 @@
+---
+- name: add hosts entries
+  lineinfile:
+    path: "/etc/hosts"
+    state: present
+    line: "{{ item }}"
+    insertbefore: EOF
+  with_items:
+  - '206.222.30.2 lic3.dacx.net'
+  - '54.183.228.162 auth2.dacx.net'
+  - '54.169.51.139 auth1.dacx.net'
+
+- name: allow user to have password less sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    line: '{{ ansible_user_id }} ALL=(ALL) NOPASSWD: ALL'
+    validate: visudo -cf %s
+    insertbefore: EOF
+
+- name: ensure firewalld service is disabled and stopped
+  systemd:
+    name: firewalld
+    state: stopped
+    enabled: no
+    masked: yes
+  register: firewalld_result
+  failed_when: "firewalld_result is failed and 'Could not find the requested service' not in firewalld_result.msg"
+  when: ansible_os_family == 'RedHat' and ansible_distribution_major_version >= '7'
