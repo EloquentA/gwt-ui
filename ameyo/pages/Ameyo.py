@@ -553,3 +553,20 @@ class Ameyo:
                 self.monitor.verify_live_monitoring(credentials, user_type, inbound_call_details))
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"verify_live_monitoring_{user_type}", error))
+
+    def schedule_report(self, schedule_name, report_name, current_time_duration='Year', format_list=['CSV','XLS','PDF','HTML']):
+        """Method to schedule report from Scheduler Tab at particular time of given duration and given formats"""
+        try:
+            self.reports.schedule_report(schedule_name, report_name, current_time_duration, format_list)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("schedule_report", error))
+
+    def delete_scheduled_report(self, schedule_name):
+        """Method to delete scheduled report from Scheduler Tab"""
+        try:
+            self.reports.delete_scheduled_report(schedule_name)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("delete_scheduled_report", error))
+

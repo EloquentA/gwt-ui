@@ -50,3 +50,15 @@ Validate call data from CSV report
     [Arguments]  ${instance}    ${calling_number}    ${calling_date}
     ${result}=   call method    ${instance}    validate_call_data_from_csv_report    ${calling_number}    ${calling_date}
     I verify result    ${result}
+
+Schedule report from Scheduler Tab
+    [Documentation]   This keyword schedules report from Scheduler Tab at particular time of given duration and given formats
+    [Arguments]  ${instance}    ${schedule_name}    ${report_name}    ${current_time_duration}=Year    ${format_list}=${format_list}
+    ${result}=   call method    ${instance}    schedule_report    ${schedule_name}    ${report_name}    ${current_time_duration}    ${format_list}
+    I verify result    ${result}
+
+Delete scheduled report from Scheduler Tab
+    [Documentation]   This keyword deletes scheduled report from Scheduler Tab
+    [Arguments]  ${instance}    ${schedule_name}
+    ${result}=   call method    ${instance}    delete_scheduled_report    ${schedule_name}
+    I verify result    ${result}
