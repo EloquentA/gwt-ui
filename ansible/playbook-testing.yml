@@ -11,7 +11,9 @@
     become_user: postgres
     register: response
     loop:
-      - select * from system_configuration_parameter where name='token-based-authorization-policy-configuration';
+      - SELECT * FROM server_preference_store where key ilike '%allowed%';
+#      - select * from system_configuration_parameter where name='token-based-authorization-policy-configuration';
+#      - insert into server_preference_store (context_type,context_id,key,value) values('contactCenter','1','callManagerSlot','http://{{ ansible_default_ipv4.address }}:8888/app/build');
 #      - update system_configuration_parameter set value='[{"hashKey":"{{ TOKEN_BASED_AUTH_HASH_KEY }}","host":"localhost","allowedCommandList":["clickToCallWithTokenAsync","clickToCallWithToken"],"allowAll":"true"}]' where name='token-based-authorization-policy-configuration';
 #      - select * from system_configuration_parameter where name ilike '%token-based-authorization-policy-configuration%';
 #      - SELECT value FROM system_configuration_parameter WHERE name ILIKE '%set%';
