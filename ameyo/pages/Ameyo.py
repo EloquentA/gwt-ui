@@ -545,3 +545,11 @@ class Ameyo:
             return self._return_result(self.reports.validate_call_data_from_csv_report(calling_number, call_date))
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"validate_call_data_from_csv_report", error))
+
+    def verify_live_monitoring(self, credentials, user_type, inbound_call_details):
+        """Method to verify live monitoring functionality."""
+        try:
+            return self._return_result(
+                self.monitor.verify_live_monitoring(credentials, user_type, inbound_call_details))
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"verify_live_monitoring_{user_type}", error))

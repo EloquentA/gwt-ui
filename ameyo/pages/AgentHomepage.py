@@ -17,7 +17,7 @@ class AgentHomepage:
         self.action = Action(web_browser)
         self.common = common
 
-    def manual_dial_only(self, calling_number, campaign_name, auto_call=True):
+    def manual_dial_only(self, calling_number, campaign_name, auto_call=True, select_campaign=False):
         """Method to manual dial only call to calling number."""
         self.common.change_status('Available', 'available_status')
         if auto_call:
@@ -25,6 +25,12 @@ class AgentHomepage:
         if self.action.is_presence_of_element_located('telephony_panel_hidden'):
             self.action.explicit_wait('phone_icon', ec='element_to_be_clickable')
             self.action.click_element('phone_icon')
+        # select campaign to perform outbound call if user is logged in with multiple campaign
+        if select_campaign:
+            self.action.explicit_wait('select_campaign_in_call_modal_ul_dropdown',ec='element_to_be_clickable')
+            self.action.click_element('select_campaign_in_call_modal_ul_dropdown')
+            self.action.explicit_wait('select_campaign_in_call_modal_ul', ec='element_to_be_clickable')
+            self.action.select_from_ul_dropdown_using_text('select_campaign_in_call_modal_ul', campaign_name)
         self.action.explicit_wait('search_for_customer_input', ec='element_to_be_clickable')
         self.action.input_text('search_for_customer_input', calling_number)
         self.action.click_element('call_btn')

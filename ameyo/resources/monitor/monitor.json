@@ -24,6 +24,11 @@
     "value": "//table[contains(@class,'table-widget')]/tbody",
     "index": "0"
   },
+ "agent_list_table_thead": {
+     "by": "xpath",
+    "value": "//table[contains(@class,'table-widget')]/thead",
+    "index": "0"
+  },
   "snoop_btn": {
      "by": "xpath",
     "value": "//button[@automationid='snoopBtn']",

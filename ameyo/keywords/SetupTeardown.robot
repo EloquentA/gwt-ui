@@ -73,8 +73,8 @@ Suite Initialization For Two Executives And Requested User
 
 Suite Initialization For One Executive And Requested User
     [Documentation]   This keyword does suite initialization for one executive and one requested user
-    [Arguments]  ${req_run_as}=supervisor
-    Suite Initialization    executive
+    [Arguments]  ${req_run_as}=supervisor    ${voice_campaign_type}=voice_outbound
+    Suite Initialization    executive    ${voice_campaign_type}
     I open ameyo home page in separate tab    ${instance1}
     I switch to requested tab   ${instance1}    1
     Ameyo setup    ${instance1}    ${req_run_as}

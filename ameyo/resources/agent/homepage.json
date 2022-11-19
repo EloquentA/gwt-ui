@@ -81,5 +81,15 @@
   "copyright_am":{"by":"xpath", "value":"//div[contains(@class, 'col-sm-6 text-center') and contains(text(), 'Copyright 2022, ')]", "index":"0"},
   "kb_iframe":{"by":"xpath", "value":"//iframe[contains(@class, 'iframe-button-app')]", "index":"0"},
   "kb_about_us_tab":{"by":"xpath", "value":"//a[contains(@class, 'mega-menu-link') and text() = 'About Us']", "index":"0"},
-  "kb_cookies_ok_btn":{"by":"id", "value":"cookie_action_close_header", "index":"0"}
+  "kb_cookies_ok_btn":{"by":"id", "value":"cookie_action_close_header", "index":"0"},
+  "select_campaign_in_call_modal_ul_dropdown": {
+    "by":"xpath",
+    "value":"//input[@value='Select a campaign to continue']",
+    "index":"0"
+  },
+  "select_campaign_in_call_modal_ul": {
+    "by":"xpath",
+    "value":"//input[@value='Select a campaign to continue']/parent::div/ul",
+    "index":"0"
+  }
 }

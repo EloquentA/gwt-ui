@@ -117,9 +117,11 @@ class Login:
                 if kwargs['chat']:
                     self.action.click_element("dropdown_chat")
                     self.action.select_from_ul_dropdown_using_text('ul_campaign_selector', kwargs['chat'])
-                if kwargs[voice_campaign_type]:
+                if voice_campaign_type:
                     self.action.click_element("dropdown_voice")
-                    self.action.select_from_ul_dropdown_using_text('ul_campaign_selector', kwargs[voice_campaign_type])
+                    for voice_campaign in voice_campaign_type.split(','):
+                        if kwargs.get(voice_campaign):
+                            self.action.select_from_ul_dropdown_using_text('ul_campaign_selector', kwargs.get(voice_campaign))
                 if kwargs['video']:
                     self.action.click_element("dropdown_video")
                     self.action.select_from_ul_dropdown_using_text('ul_campaign_selector', kwargs['video'])

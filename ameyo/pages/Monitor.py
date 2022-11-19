@@ -201,3 +201,85 @@ class Monitor:
         expected_home_url = self.action.get_current_url()
         assert expected_home_url == home_url, f"Home url mismatched after force logout. Expected:{home_url}, Found:{expected_home_url}"
         return True
+
+    def get_user_data(self, executive_username, retries=0):
+        """Gets available data for requested logged in executive."""
+        agent_list = []
+        try:
+            # This sleep is need for the user status to refresh in monitoring tab
+            if retries == 0:
+                time.sleep(10)
+            self.action.explicit_wait('agent_list_table', 20)
+            row_values = self.action.get_table_row_values('agent_list_table')
+            col_names = self.action.get_table_header_columns_text_list('agent_list_table_thead')
+            for row in row_values:
+                if executive_username in row_values[row]:
+                    return dict(zip(col_names, row_values[row]))
+            else:
+                assert False, f"Expected user not found in user table data: {row_values}"
+        except Exception as err:
+            retries += 1
+            if retries <= 3:
+                return self.get_user_data(executive_username, retries)
+            assert False, f'Logged in user:{executive_username} not found in agent list: {agent_list}'
+
+    def _verify_user_stats(self, expected_user_data, executive_username):
+        """Verifies user stats from table."""
+        user_data = self.get_user_data(executive_username)
+        for col in expected_user_data.keys():
+            assert expected_user_data[col] in user_data[col], \
+                f"{col} missmatch in table data expected:{expected_user_data[col]},  found:{user_data[col]}"
+
+    def _wrap_up_call(self):
+        """Wraps up call."""
+        self.action.switch_to_window(0)
+        self.agent_homepage.save_and_dispose()
+        self.agent_homepage.open_close_dialer()
+        self.action.switch_to_window(1)
+
+    def verify_live_monitoring(self, credentials, user_type, inbound_call_details):
+        """Method to verify live monitoring functionality."""
+        self.action.switch_to_window(1)
+        campaign = self.set_up_campaign(credentials[user_type]['campaign_details'])
+        self.action.switch_to_window(0)
+        self.agent_homepage.manual_dial_only(999999999, campaign, select_campaign=True)
+        self.action.switch_to_window(1)
+        executive_username = credentials['executive']['username']
+        expected_user_data = {
+            'Agent Name': executive_username,
+            'Agent ID': executive_username,
+            'AutoCall Status': 'On',
+            'Agent Status': 'Available',
+            'Extension': credentials['executive']['extension'],
+            'Agent Call Status': 'Connected',
+            'Call Type': 'outbound manual dial',
+            'Phone': '999999999',
+            'Customer Call Status': 'Connected'
+        }
+        # Verify stats for connected outbound call
+        self._verify_user_stats(expected_user_data, executive_username)
+        self._wrap_up_call()
+        expected_user_data.update({
+            'Call Type': '',
+            'Agent Call Status': 'inactive',
+            'Customer Call Status': '',
+            'Phone': ''
+        })
+        # Verify stats for not on call
+        self._verify_user_stats(expected_user_data, executive_username)
+        self.action.switch_to_window(0)
+        self.agent_homepage.validate_inbound_call(
+            inbound_call_details['inbound_url'],
+            inbound_call_details['did_prefix'],
+            inbound_call_details['calling_number'],
+            credentials['executive']['campaign_details']['voice_inbound'],
+            credentials['executive']['inbound_queue']
+        )
+        self.action.switch_to_window(1)
+        expected_user_data.update({
+            'Agent Call Status': 'Connected',
+        })
+        # Verify stats for inbound call
+        self._verify_user_stats(expected_user_data, executive_username)
+        self._wrap_up_call()
+        return True
