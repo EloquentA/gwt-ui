@@ -11,14 +11,6 @@
     group: dacx
     mode: 0644
 
-- name: App Server | Get system config parameter
-  postgresql_query:
-    login_host: "{{ APP_SERVER_DB_IP }}"
-    db: "{{ APP_SERVER_DB_NAME }}"
-    query: select value from system_configuration_parameter where name ilike '%set%';
-  become_user: postgres
-  register: multi_tenant_status
-
 - name: App Server | Changes in DB for Voice Resource ID
   postgresql_query:
     login_host: "{{ APP_SERVER_DB_IP }}"
