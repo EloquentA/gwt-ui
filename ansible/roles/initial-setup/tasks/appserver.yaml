@@ -46,7 +46,7 @@
   postgresql_query:
     login_host: "{{ APP_SERVER_DB_IP }}"
     db: "{{ APP_SERVER_DB_NAME }}"
-    query: select * from system_configuration_parameter where name ilike '%token%';
+    query: select * from system_configuration_parameter where name='token-based-authorization-policy-configuration';
   become_user: postgres
   register: tokenDetails
 
@@ -54,9 +54,17 @@
   postgresql_query:
     login_host: "{{ APP_SERVER_DB_IP }}"
     db: "{{ APP_SERVER_DB_NAME }}"
-    query: insert into system_configuration_parameter (name,type,value,default_value) values ('token-based-authorization-policy-configuration','String','[{"hashKey":"fecace70bf6ea0c450c5b2071cbabc9","host":"localhost","allowedCommandList":["clickToCallWithTokenAsync","clickToCallWithToken"],"allowAll":"true"}]','NULL');
+    query: insert into system_configuration_parameter (name,type,value,default_value) values ('token-based-authorization-policy-configuration','String','[{"hashKey":"{{ TOKEN_BASED_AUTH_HASH_KEY }}","host":"localhost","allowedCommandList":["clickToCallWithTokenAsync","clickToCallWithToken"],"allowAll":"true"}]','NULL');
   become_user: postgres
   when: tokenDetails.rowcount == 0
+
+- name: App Server | Update Token For Customer Upload
+  postgresql_query:
+    login_host: "{{ APP_SERVER_DB_IP }}"
+    db: "{{ APP_SERVER_DB_NAME }}"
+    query: update system_configuration_parameter set value='[{"hashKey":"{{ TOKEN_BASED_AUTH_HASH_KEY }}","host":"localhost","allowedCommandList":["clickToCallWithTokenAsync","clickToCallWithToken"],"allowAll":"true"}]' where name='token-based-authorization-policy-configuration';
+  become_user: postgres
+  when: tokenDetails.rowcount == 1
 
 - name: App Server | Check if multi tenant
   postgresql_query:

@@ -1,0 +1,24 @@
+---
+- hosts: dbserver
+  gather_facts: true
+  become: yes
+  tasks:
+  - name: App Server | Run Queries
+    postgresql_query:
+      login_host: "{{ APP_SERVER_DB_IP }}"
+      db: "{{ APP_SERVER_DB_NAME }}"
+      query: "{{ item }}"
+    become_user: postgres
+    register: response
+    loop:
+      - select * from system_configuration_parameter where name='token-based-authorization-policy-configuration';
+#      - update system_configuration_parameter set value='[{"hashKey":"{{ TOKEN_BASED_AUTH_HASH_KEY }}","host":"localhost","allowedCommandList":["clickToCallWithTokenAsync","clickToCallWithToken"],"allowAll":"true"}]' where name='token-based-authorization-policy-configuration';
+#      - select * from system_configuration_parameter where name ilike '%token-based-authorization-policy-configuration%';
+#      - SELECT value FROM system_configuration_parameter WHERE name ILIKE '%set%';
+#      - SELECT version();
+#      - SELECT host_name FROM asterisk_voice_resource_settings;
+#      - SELECT * FROM server_preference_store;
+#      - SELECT * FROM system_configuration_parameter;
+
+  - debug:
+      msg: "{{ response }}"
