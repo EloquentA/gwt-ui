@@ -7,6 +7,7 @@ BROWSER_CONFIG:
   download_directory: True
 SKIP_POST_RUN_CLEANUP: True
 AMEYO_URL: 'https://vapt.ameyo.net:8443/app/'
+CUSTOMER_URL: 'https://vapt.ameyo.net:8443/ameyochatjs/test.html?nodeflowId=55&campaignId=3856'
 INBOUND_API_URL: 'https://vapt.ameyo.net:8786/inbound.php/?count=no_of_calls&toprefix=did_prefix&calleridprefix=calling_number'
 # Automatically updated to True if run triggered with testrail reporting
 TESTRAIL_REPORTING: False
@@ -64,6 +65,19 @@ CREDENTIALS:
       voice_inbound: ''
       video: ''
     extension: 'customer_success_1800_DefaultVR'
+  chat_executive:
+    username: 'ron'
+    password: 'Ameyo@12345'
+    campaign_details:
+      interaction: 'TestICCampaign'
+      chat: 'TestChatCampaign'
+      voice_outbound: ''
+      voice_inbound: ''
+      video: ''
+    extension: 'customer_success_1800_DefaultVR'
+    customer_name: ''
+    customer_message: ''
+    customer_phone: ''
   supervisor:
     username: ''
     password: ''

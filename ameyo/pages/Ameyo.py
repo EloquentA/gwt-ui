@@ -26,6 +26,7 @@ from Manage import Manage
 from KnowledgeBase import KnowledgeBase
 from AdminGroup import AdminGroup
 from AutoCall import AutoCall
+from Chat import Chat
 
 class Ameyo:
     """Ameyo functionality class"""
@@ -49,6 +50,7 @@ class Ameyo:
         self.knowledgebase = KnowledgeBase(self.web_browser, self.common)
         self.admin_group = AdminGroup(self.web_browser, self.common, self.adminuser)
         self.auto_call = AutoCall(self.web_browser, self.common, self.agenthomepage, self.monitor)
+        self.chat = Chat(self.web_browser, self.common)
 
     def __capture_error(self, method_name, error_msg):
         """Utility method to capture and report errors"""
@@ -74,6 +76,15 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("open_home_page_in_separate_tab", error))
+
+    def open_customer_chat_page_in_separate_tab(self, url, customer_inputs):
+        """Opens home page in separate tab."""
+        try:
+            self.action.execute_javascript(f'''window.open("{url}","_blank");''')
+            self.chat.initiate_chat(customer_inputs)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("open_customer_chat_page_in_separate_tab", error))
 
     def switch_to_tab(self, req_tab=-1):
         """Switches to requested tab. By default switches to last tab."""
@@ -545,6 +556,14 @@ class Ameyo:
             return self._return_result(self.reports.validate_call_data_from_csv_report(calling_number, call_date))
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"validate_call_data_from_csv_report", error))
+
+    def verify_chat_routing(self, customer_inputs):
+        """Method to verify if chat is routed to available agent"""
+        try:
+            self.chat.verify_chat_routing(customer_inputs)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"verify_chat_routing", error))
 
     def verify_live_monitoring(self, credentials, user_type, inbound_call_details):
         """Method to verify live monitoring functionality."""

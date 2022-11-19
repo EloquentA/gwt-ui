@@ -78,3 +78,9 @@ Suite Initialization For One Executive And Requested User
     I open ameyo home page in separate tab    ${instance1}
     I switch to requested tab   ${instance1}    1
     Ameyo setup    ${instance1}    ${req_run_as}
+
+Suite Initialization For Single Requested User And Customer Chat Window
+    [Documentation]   This keyword does suite initialization for one executive and one customer chat window
+    [Arguments]  ${req_run_as}
+    Suite Initialization    chat_executive
+    I open ameyo customer chat page in separate tab    ${instance1}    ${req_run_as}
