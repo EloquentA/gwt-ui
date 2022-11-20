@@ -4,6 +4,7 @@ Module: This is the agent chat module which contains methods for functionality r
 import os
 import sys
 import time
+import random
 
 from selenium.webdriver.common.by import By
 from uuid import uuid4
@@ -48,4 +49,15 @@ class Chat:
             'Chat Routing to Agent failed'
         assert self.action.get_text('customer_name_received_on_agent').split()[0] == customer_inputs['customer_name'], \
             'Customer Name Mismatch'
+        return True
+
+    def create_customer_from_routed_chat(self):
+        """To create new customer from routed chat"""
+        self.action.click_element('create_customer_via_chat')
+        self.action.click_element('create_customer_chat_link')
+        self.action.explicit_wait('create_cust_page_loader', ec='invisibility_of_element_located', waittime=60)
+        self.action.input_text('create_customer_phone_input', random.randint(10**9, 10**10-1))
+        self.action.click_element('create_customer_btn')
+        assert self.common.validate_message_in_toast_popups(
+            'Customer Added successfully'), "Toast Message not as expected - Couldn't Create Customer"
         return True

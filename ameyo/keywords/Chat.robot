@@ -12,3 +12,9 @@ I verify chat routing to agent
     [Arguments]  ${instance}    ${req_run_as}
     ${result}=   call method    ${instance}    verify_chat_routing    ${CREDENTIALS['${req_run_as}']}
     I verify result    ${result}
+
+I create customer from routed chat
+    [Documentation]   This keyword will create new customer when chat is new
+    [Arguments]  ${instance}
+    ${result}=   call method    ${instance}    create_customer_from_routed_chat
+    I verify result    ${result}

@@ -597,6 +597,14 @@ class Ameyo:
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"verify_agent_monitoring_{user_type}", error))
 
+    def create_customer_from_routed_chat(self):
+        """Method to create new customer from routed chat when customer not present in the system"""
+        try:
+            self.chat.create_customer_from_routed_chat()
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"create_customer_from_routed_chat", error))
+
     def verify_dashboard_monitoring(self, credentials, user_type, inbound_call_details):
         """Method to verify dashboard monitoring functionality."""
         try:
