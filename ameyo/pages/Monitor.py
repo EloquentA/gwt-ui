@@ -15,6 +15,7 @@ from action import Action
 
 class Monitor:
     """Monitoring functionality class"""
+    MIN_VISIBLE_CHAR = 12
 
     def __init__(self, web_browser, common, agent_homepage):
         self.web_browser = web_browser
@@ -207,10 +208,12 @@ class Monitor:
             page_limit_selector='live_monitoring_users_page_limit',
             table_body_selector='agent_list_table',
             table_head_selector='agent_list_table_thead',
+            extension='',
             retries=0
     ):
         """Gets available data for requested logged in executive."""
         # This sleep is need for the user status to refresh in monitoring tab
+        assert extension, "Extension cannot be empty."
         row_values = []
         try:
             if retries == 0:
@@ -224,10 +227,12 @@ class Monitor:
             row_values = self.action.get_table_row_values(table_body_selector)
             col_names = self.action.get_table_header_columns_text_list(table_head_selector)
             for row in row_values:
-                if executive_username in row_values[row]:
-                    user_data = dict(zip(col_names, row_values[row]))
-                    if user_data['Agent ID'] == executive_username:
-                        return user_data
+                # Username is displayed with dots if it is greater than 18 chars: 'E2E_6_GRP_EXECUTIV...'
+                user_data = dict(zip(col_names, row_values[row]))
+                if user_data['Agent ID'][:self.MIN_VISIBLE_CHAR] == \
+                        executive_username[:self.MIN_VISIBLE_CHAR] and\
+                        extension == user_data['Call Context']:
+                    return user_data
             else:
                 assert False, f"Expected user not found in user table data: {row_values}"
         except Exception as err:
@@ -240,13 +245,14 @@ class Monitor:
                     page_limit_selector,
                     table_body_selector,
                     table_head_selector,
+                    extension,
                     retries
                 )
-            assert False, f'Logged in user:{executive_username} not found in table data: {row_values}'
+            assert False, f'Logged in user:{executive_username} not found in table data: {row_values} after {retries} retries. err:{err}'
 
-    def _verify_user_stats(self, expected_user_data, executive_username):
+    def _verify_user_stats(self, expected_user_data, executive_username, extension):
         """Verifies user stats from table."""
-        user_data = self.get_user_data(executive_username)
+        user_data = self.get_user_data(executive_username, extension=extension)
         for col in expected_user_data.keys():
             assert expected_user_data[col] in user_data[col], \
                 f"{col} missmatch in table data expected:{expected_user_data[col]},  found:{user_data[col]}"
@@ -266,19 +272,21 @@ class Monitor:
         self.agent_homepage.manual_dial_only(999999999, campaign, select_campaign=True)
         self.action.switch_to_window(1)
         executive_username = credentials['executive']['username']
+        extension = credentials['executive']['extension']
         expected_user_data = {
-            'Agent Name': executive_username,
-            'Agent ID': executive_username,
+            # Username is displayed with dots if it is greater than 12 chars: 'E2E_6_GRP_EXECUTIV...'
+            'Agent Name': executive_username[:self.MIN_VISIBLE_CHAR],
+            'Agent ID': executive_username[:self.MIN_VISIBLE_CHAR],
             'AutoCall Status': 'On',
             'Agent Status': 'Available',
-            'Extension': credentials['executive']['extension'],
+            'Call Context': credentials['executive']['extension'],
             'Agent Call Status': 'Connected',
             'Call Type': 'outbound manual dial',
             'Phone': '999999999',
             'Customer Call Status': 'Connected'
         }
         # Verify stats for connected outbound call
-        self._verify_user_stats(expected_user_data, executive_username)
+        self._verify_user_stats(expected_user_data, executive_username, extension)
         self._wrap_up_call()
         expected_user_data.update({
             'Call Type': '',
@@ -287,7 +295,7 @@ class Monitor:
             'Phone': ''
         })
         # Verify stats for not on call
-        self._verify_user_stats(expected_user_data, executive_username)
+        self._verify_user_stats(expected_user_data, executive_username, extension)
         self.action.switch_to_window(0)
         self.agent_homepage.validate_inbound_call(
             inbound_call_details['inbound_url'],
@@ -301,11 +309,11 @@ class Monitor:
             'Agent Call Status': 'Connected',
         })
         # Verify stats for inbound call
-        self._verify_user_stats(expected_user_data, executive_username)
+        self._verify_user_stats(expected_user_data, executive_username, extension)
         self._wrap_up_call()
         return True
 
-    def get_user_data_agent_monitoring(self, executive_username):
+    def get_user_data_agent_monitoring(self, executive_username,extension):
         """Gets user data from agent monitoring agent list."""
         return self.get_user_data(
             executive_username=executive_username,
@@ -313,12 +321,13 @@ class Monitor:
             table_search_input='user_table_search_input_agent_monitoring',
             page_limit_selector='agent_monitoring_users_page_limit',
             table_body_selector='agent_list_table_agent_monitoring',
-            table_head_selector='agent_list_table_thead_agent_monitoring'
+            table_head_selector='agent_list_table_thead_agent_monitoring',
+            extension=extension
         )
 
-    def _verify_user_stats_agent_monitoring(self, expected_user_data, executive_username):
+    def _verify_user_stats_agent_monitoring(self, expected_user_data, executive_username, extension):
         """Verifies user stats from table."""
-        user_data = self.get_user_data_agent_monitoring(executive_username)
+        user_data = self.get_user_data_agent_monitoring(executive_username, extension)
         for col in expected_user_data.keys():
             if col in ['Breaks', 'Total Wrapped Calls','Connected Calls', 'Already Hungup', 'Connected Manual Dials']:
                 assert int(user_data[col]) > int(expected_user_data[col]), \
@@ -337,7 +346,8 @@ class Monitor:
         self.action.click_element('agent_monitor_tab')
         self.action.explicit_wait('agent_list_table_agent_monitoring', 60)
         executive_username = credentials['executive']['username']
-        current_user_stats = self.get_user_data_agent_monitoring(executive_username)
+        extension = credentials['executive']['extension']
+        current_user_stats = self.get_user_data_agent_monitoring(executive_username, extension)
         print("Current user stats: ", current_user_stats)
         # Make a call and verify
         self.action.switch_to_window(0)
@@ -348,9 +358,10 @@ class Monitor:
         # Sleep for 10 minutes to for data to refresh
         self.common.sleep(10*60)
         expected_user_data = {
-            'Agent Name': executive_username,
-            'Agent ID': executive_username,
-            'Extension': credentials['executive']['extension'],
+            # Username is displayed with dots if it is greater than 12 chars: 'E2E_6_GRP_EXECUTIV...'
+            'Agent Name': executive_username[:self.MIN_VISIBLE_CHAR],
+            'Agent ID': executive_username[:self.MIN_VISIBLE_CHAR],
+            'Call Context': credentials['executive']['extension'],
             'Breaks': current_user_stats['Breaks'],
             'Connected Calls': current_user_stats['Connected Calls'],
             'Connected Manual Dials': current_user_stats['Connected Manual Dials'],
@@ -358,7 +369,7 @@ class Monitor:
             'Already Hungup': current_user_stats['Already Hungup']
         }
         print("Expected user stats: ", expected_user_data)
-        self._verify_user_stats_agent_monitoring(expected_user_data, executive_username)
+        self._verify_user_stats_agent_monitoring(expected_user_data, executive_username, extension)
         self.action.click_element('live_monitor_tab')
         return True
 
