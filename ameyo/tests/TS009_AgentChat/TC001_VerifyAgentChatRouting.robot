@@ -25,4 +25,4 @@ TC - Verify chat routed to agent
 
 TC - Create customer from routed chat
     [Tags]  smoke    testid=AP-16171    regression
-    I create customer from routed chat    ${instance1}    chat_executive
+    I create customer from routed chat    ${instance1}
