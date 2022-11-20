@@ -15,6 +15,6 @@ I verify chat routing to agent
 
 I create customer from routed chat
     [Documentation]   This keyword will create new customer when chat is new
-    [Arguments]  ${instance}    ${req_run_as}
-    ${result}=   call method    ${instance}    create_customer_from_routed_chat    ${CREDENTIALS['${req_run_as}']}
+    [Arguments]  ${instance}
+    ${result}=   call method    ${instance}    create_customer_from_routed_chat
     I verify result    ${result}
