@@ -361,3 +361,53 @@ class Monitor:
         self._verify_user_stats_agent_monitoring(expected_user_data, executive_username)
         self.action.click_element('live_monitor_tab')
         return True
+
+    def _get_dashboard_stats(self):
+        """Gets dashboard stats."""
+        self.action.explicit_wait('total_calls_dashboard')
+        self.action.explicit_wait('inbounds_received_dashboard')
+        return {
+            "total_calls": self.action.get_text('total_calls_dashboard'),
+            "inbounds_received": self.action.get_text('inbounds_received_dashboard'),
+            "total_wrapped_calls": self.action.get_text('total_wrapped_calls_dashboard')
+        }
+
+    def _verify_dashboard_stats(self, current_dashboard_stats, updated_dashboard_stats):
+        """Verifies dashboard data."""
+        for stat in updated_dashboard_stats.keys():
+            expected_val = int(current_dashboard_stats.get(stat))
+            found_val = int(updated_dashboard_stats.get(stat))
+            assert found_val > expected_val, f"{stat} missmatch for dashboard expected: {found_val} > {expected_val}"
+
+    def verify_dashboard_monitoring(self, credentials, user_type, inbound_call_details):
+        """Method to verify dashboard monitoring functionality."""
+        self.action.switch_to_window(1)
+        current_monitor_with = credentials[user_type]['campaign_details']['monitor_with']
+        # Monitor with inbound to verify inbound calls
+        credentials[user_type]['campaign_details']['monitor_with'] = 'voice_inbound'
+        campaign = self.set_up_campaign(credentials[user_type]['campaign_details'])
+        # Re-instate original monitor with
+        credentials[user_type]['campaign_details']['monitor_with'] = current_monitor_with
+        self.action.explicit_wait('dashboard_monitor_tab', ec='element_to_be_clickable')
+        # This sleep is required for tabs data to load, to avoid hanging
+        self.common.sleep(10)
+        self.action.click_element('dashboard_monitor_tab')
+        executive_username = credentials['executive']['username']
+        current_dashboard_stats = self._get_dashboard_stats()
+        print("Current dashboard stats: ", current_dashboard_stats)
+        self.action.switch_to_window(0)
+        self.agent_homepage.validate_inbound_call(
+            inbound_call_details['inbound_url'],
+            inbound_call_details['did_prefix'],
+            inbound_call_details['calling_number'],
+            credentials['executive']['campaign_details']['voice_inbound'],
+            credentials['executive']['inbound_queue']
+        )
+        self._wrap_up_call()
+        # Sleep for 6 minutes for data to be refreshed
+        self.common.sleep(6*60)
+        updated_dashboard_stats = self._get_dashboard_stats()
+        print("Updated dashboard stats: ", updated_dashboard_stats)
+        self._verify_dashboard_stats(current_dashboard_stats, updated_dashboard_stats)
+        self.action.click_element('live_monitor_tab')
+        return True

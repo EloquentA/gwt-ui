@@ -193,5 +193,25 @@
     "by": "xpath",
     "value": "//div/h4[contains(text(),'Agents List')]/parent::div/parent::div/parent::div/following-sibling::div[3]//span[text()='Rows per page']/parent::div//input",
     "index": "0"
+  },
+  "dashboard_monitor_tab": {
+    "by": "xpath",
+    "value": "//a[@automationid='voiceDashboardTab']",
+    "index": "0"
+  },
+  "total_calls_dashboard": {
+    "by": "xpath",
+    "value": "//h2[@automationid='totalCallsCount']",
+    "index": 0
+  },
+  "inbounds_received_dashboard": {
+    "by": "xpath",
+    "value": "//h2[@automationid='inoundReceived']",
+    "index": 0
+  },
+  "total_wrapped_calls_dashboard": {
+    "by": "xpath",
+    "value": "//span[text()='Total Wrapped Calls: ']/parent::div/span[@class='totalWrappedCallsCount']",
+    "index": 0
   }
 }

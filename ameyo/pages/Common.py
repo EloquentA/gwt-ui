@@ -209,6 +209,8 @@ class Common:
     @staticmethod
     def sleep(sleep_for, step=30):
         """Sleeps with indicator."""
+        if step > sleep_for:
+            step = sleep_for
         for i in range(sleep_for, 0, -step):
             print(f"Sleeping for...{i}", end="\r", flush=True)
             time.sleep(step)
