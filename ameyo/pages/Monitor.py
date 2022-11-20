@@ -56,7 +56,7 @@ class Monitor:
                 table_username_cell = self.action.get_table_cell_data('agent_list_table', row=row, col=1, raw_cell=True)
                 table_agent = table_username_cell.text
                 agent_list.append(table_agent)
-                if table_agent == executive_username:
+                if table_agent[:self.MIN_VISIBLE_CHAR] == executive_username[:self.MIN_VISIBLE_CHAR]:
                     table_username_cell.click()
                     return True
                 row += 1
