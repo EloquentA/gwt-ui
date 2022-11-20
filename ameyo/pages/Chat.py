@@ -56,7 +56,7 @@ class Chat:
         self.action.click_element('create_customer_via_chat')
         self.action.click_element('create_customer_chat_link')
         self.action.explicit_wait('create_cust_page_loader', ec='invisibility_of_element_located', waittime=60)
-        self.action.input_text('create_customer_phone_input', f'{random.randrange(1, 10**10):10}')
+        self.action.input_text('create_customer_phone_input', random.randint(10**9, 10**10-1))
         self.action.click_element('create_customer_btn')
         assert self.common.validate_message_in_toast_popups(
             'Customer Added successfully'), "Toast Message not as expected - Couldn't Create Customer"
