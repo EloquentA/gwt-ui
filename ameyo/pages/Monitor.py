@@ -217,7 +217,7 @@ class Monitor:
         row_values = []
         try:
             if retries == 0:
-                self.common.sleep(10)
+                self.common.sleep(12)
             self.action.explicit_wait(table_body_selector, 20)
             current_total_records = self.common.get_total_records(total_records_selector, table_body_selector)
             if current_total_records > int(self.action.get_value(page_limit_selector)):
