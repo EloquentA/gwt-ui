@@ -76,7 +76,11 @@ class Monitor:
             self.action.click_element('disconnect_btn')
         self.action.click_element('monitor_tab')
         self.action.click_element('close_actions')
-        self._wrap_up_call()
+        # sleep to dispose call
+        time.sleep(50)
+        self.action.switch_to_window(0)
+        self.agent_homepage.open_close_dialer()
+        self.action.switch_to_window(1)
 
     def verify_snoop_action(self, campaign_details, executive_username):
         """Method to verify snoop functionality."""
