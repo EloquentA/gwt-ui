@@ -376,6 +376,7 @@ class AgentHomepage:
     def verify_DTMF_working(self):
         """Verify DTMF feature is working Fine"""
         self.action.click_element('DTMF_btn')
+        assert self.action.is_presence_of_element_located('DTMF_btn_active_state'), 'Could Not Open DTMF Tab'
         input_number = random.randint(10**9, 10**10-1)
         self.action.input_text('enter_DTMF_number', input_number)
         # List comprehension to delete input numbers

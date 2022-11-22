@@ -97,6 +97,11 @@
     "value":"//button[contains(@title, 'DTMF')]",
     "index":"0"
   },
+  "DTMF_btn_active_state": {
+    "by":"xpath",
+    "value":"//button[contains(@class, 'btn btn-large left btn-active') and contains(@title, 'DTMF')]",
+    "index":"0"
+  },
   "enter_DTMF_number": {
     "by":"xpath",
     "value":"//input[contains(@placeholder, 'Enter DTMF')]",
