@@ -55,6 +55,22 @@ CREDENTIALS:
     # Extension number must be different for simultaneously logged in personas
     new_extension: 'agent_success_1800_DefaultVR'
     inbound_queue: 'finance_support'
+  webrtc_executive:
+    username: ''
+    password: ''
+    campaign_details:
+      interaction: ''
+      chat: ''
+      voice_outbound: 'finance_outbound'
+      voice_inbound: 'finance_inbound'
+      video: ''
+      new_interaction: ''
+      new_chat: ''
+      new_voice: 'finance_inbound'
+      new_video: ''
+    extension: 'webrtc'
+    # Extension number must be different for simultaneously logged in personas
+    inbound_queue: 'finance_support'
   spare_executive:
     username: ''
     password: ''

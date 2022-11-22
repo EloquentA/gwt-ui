@@ -4,6 +4,7 @@ Module: This is the login module which contains methods for functionality relate
 import os
 import sys
 import time
+import random
 
 sys.path.append(os.path.join(
     os.path.dirname((os.path.dirname(os.path.dirname(__file__)))), "libs", "web_action")
@@ -361,4 +362,27 @@ class AgentHomepage:
         self.action.click_element('btn_save_and_dispose')
         time.sleep(1)
         self.open_close_dialer()
+        return True
+
+    def verify_mute_unmute(self):
+        """Verify Mute and UnMute feature is working Fine"""
+        mute_unmute = ['UnMute', 'Mute']
+        for i in range(2):
+            self.action.click_element('mute_call_btn')
+            assert self.action._get_attribute('mute_call_btn', 'title') == mute_unmute[i], \
+                f"Could not perform {mute_unmute[i]} operation"
+        return True
+
+    def verify_DTMF_working(self):
+        """Verify DTMF feature is working Fine"""
+        self.action.click_element('DTMF_btn')
+        input_number = random.randint(10**9, 10**10-1)
+        self.action.input_text('enter_DTMF_number', input_number)
+        # List comprehension to delete input numbers
+        [self.action.click_element('delete_DTMF_number') for _ in range(len('input_number'))]
+        self.action.click_element('DTMF_keypad_btn')
+        number = ['DTMF_key_1', 'DTMF_key_2', 'DTMF_key_3']
+        # List comprehension for clicking on keys - 1 2 and 3 on keypad
+        [self.action.click_element(i) for i in number]
+        [self.action.click_element('delete_DTMF_number') for _ in range(len(number))]
         return True

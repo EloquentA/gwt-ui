@@ -23,7 +23,7 @@ TC - Test Case for Setting User Status
 
 TC - Test Case to change campaign
     [Tags]  smoke    testid=AP-16013-2    regression
-    I change campaign    ${instance1}
+    I change campaign    ${instance1}    change_executive
 
 #This will fail as the UI has a bug with change password rules.
 TC - Test Case to Change password
