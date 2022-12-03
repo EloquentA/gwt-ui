@@ -91,5 +91,45 @@
     "by":"xpath",
     "value":"//input[@value='Select a campaign to continue']/parent::div/ul",
     "index":"0"
+  },
+  "DTMF_btn": {
+    "by":"xpath",
+    "value":"//button[contains(@title, 'DTMF')]",
+    "index":"0"
+  },
+  "DTMF_btn_active_state": {
+    "by":"xpath",
+    "value":"//button[contains(@class, 'btn btn-large left btn-active') and contains(@title, 'DTMF')]",
+    "index":"0"
+  },
+  "enter_DTMF_number": {
+    "by":"xpath",
+    "value":"//input[contains(@placeholder, 'Enter DTMF')]",
+    "index":"0"
+  },
+  "delete_DTMF_number": {
+    "by":"xpath",
+    "value":"//i[contains(@class, 'material-icons') and contains(text(), 'backspace')]",
+    "index":"0"
+  },
+  "DTMF_keypad_btn": {
+    "by":"xpath",
+    "value":"//span[contains(@class, 'mdi mdi-apps')]",
+    "index":"0"
+  },
+  "DTMF_key_1": {
+    "by":"xpath",
+    "value":"//strong[contains(text(), '1')]",
+    "index":"0"
+  },
+  "DTMF_key_2": {
+    "by":"xpath",
+    "value":"//strong[contains(text(), '2')]",
+    "index":"0"
+  },
+  "DTMF_key_3": {
+    "by":"xpath",
+    "value":"//strong[contains(text(), '3')]",
+    "index":"0"
   }
 }

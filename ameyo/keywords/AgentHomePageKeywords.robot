@@ -58,8 +58,8 @@ I set status
 
 I change campaign
     [Documentation]   This keyword will change campaign
-    [Arguments]  ${instance}
-    ${result}=   call method    ${instance}    change_campaign    ${CREDENTIALS['change_executive']['campaign_details']}
+    [Arguments]  ${instance}    ${req_run_as}
+    ${result}=   call method    ${instance}    change_campaign    ${CREDENTIALS['${req_run_as}']['campaign_details']}
     I verify result    ${result}
 
 I change password
@@ -108,4 +108,16 @@ schedule callback
     [Documentation]   This keyword will cover call schedule flow
     [Arguments]  ${instance}
     ${result}=   call method    ${instance}    schedule_callback    ${CALLBACK}
+    I verify result    ${result}
+
+Verify mute umute on call
+    [Documentation]   This keyword will verify mute/unmute is working fine
+    [Arguments]  ${instance}
+    ${result}=   call method    ${instance}    verify_mute_unmute
+    I verify result    ${result}
+
+Verify DTMF feature
+    [Documentation]   This keyword will verify DTMF feature is working fine
+    [Arguments]  ${instance}
+    ${result}=   call method    ${instance}    verify_DTMF_working
     I verify result    ${result}

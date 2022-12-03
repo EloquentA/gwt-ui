@@ -612,3 +612,19 @@ class Ameyo:
                 self.monitor.verify_dashboard_monitoring(credentials, user_type, inbound_call_details))
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"verify_dashboard_monitoring_{user_type}", error))
+
+    def verify_mute_unmute(self):
+        """Method to verify Mute UnMute functionality."""
+        try:
+            return self._return_result(
+                self.agenthomepage.verify_mute_unmute())
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"verify_mute_unmute", error))
+
+    def verify_DTMF_working(self):
+        """Method to verify DTMF functionality."""
+        try:
+            return self._return_result(
+                self.agenthomepage.verify_DTMF_working())
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"verify_DTMF_working", error))
