@@ -72,5 +72,80 @@
   "create_cust_page_loader":{
     "by":"xpath",
     "value":"//div[contains(@class, 'preloader-wrapper active')]",
+    "index":"0"},
+
+  "live_monitoring_queue_dropdown":{
+    "by":"xpath",
+    "value":"//span[contains(@title, 'All')]",
+    "index":"0"},
+
+  "ul_queue_selector":{
+    "by":"xpath",
+    "value":"//ul[contains(@class,'select2-results__options')]",
+    "index":"0"},
+
+  "users_assigned":{
+    "by":"xpath",
+    "value":"//span[text()='Users Assigned']//parent::div//h2",
+    "index":"0"},
+
+  "users_loggedin":{
+    "by":"xpath",
+    "value":"//span[text()='Users LoggedIn']//parent::div//h2",
+    "index":"0"},
+
+  "auto_chat_on":{
+    "by":"xpath",
+    "value":"//span[text() = 'Auto Chat ON']//following::div[contains(@class, 'right-align value s6 m6 col')]//span",
+    "index":"0"},
+
+  "auto_chat_off":{
+    "by":"xpath",
+    "value":"//span[text() = 'Auto Chat OFF']//following::div[contains(@class, 'right-align value s6 m6 col')]//span",
+    "index":"0"},
+
+  "total_available_instances":{
+    "by":"xpath",
+    "value":"//span[text() = 'Total Available Instances']//following::div[contains(@class, 'right-align value s6 m6 col')]//span",
+    "index":"0"},
+
+  "total_occupied_instances":{
+    "by":"xpath",
+    "value":"//span[text() = 'Total Occupied Instances']//following::div[contains(@class, 'right-align value s6 m6 col')]//span",
+    "index":"0"},
+
+  "sort_dropdown":{
+    "by":"xpath",
+    "value":"//span[contains(@class, 'select2-selection__rendered')]",
+    "index":"1"},
+
+  "ul_sort_selector":{
+    "by":"xpath",
+    "value":"//ul[contains(@class,'select2-results__options')]",
+    "index":"0"},
+
+  "active_chats":{
+    "by":"xpath",
+    "value":"//span[text()= 'Active Chats']",
+    "index":"0"},
+
+  "active_chats_per_user":{
+    "by":"xpath",
+    "value":"//span[text()= 'Active Chats (Per User)']",
+    "index":"0"},
+
+  "refresh_active_chat_per_user":{
+    "by":"xpath",
+    "value":"//i[contains(@class,'mdi mdi-reload material-icons')]",
+    "index":"0"},
+
+  "refresh_active_chat_message":{
+    "by":"xpath",
+    "value":"//span[contains(@class, 'info-value left')]",
+    "index":"0"},
+
+  "queued_chats":{
+    "by":"xpath",
+    "value":"//span[text()= 'Queued Chats']",
     "index":"0"}
 }
