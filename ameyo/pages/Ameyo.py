@@ -50,7 +50,7 @@ class Ameyo:
         self.knowledgebase = KnowledgeBase(self.web_browser, self.common)
         self.admin_group = AdminGroup(self.web_browser, self.common, self.adminuser)
         self.auto_call = AutoCall(self.web_browser, self.common, self.agenthomepage, self.monitor)
-        self.chat = Chat(self.web_browser, self.common)
+        self.chat = Chat(self.web_browser, self.common, self.monitor)
 
     def __capture_error(self, method_name, error_msg):
         """Utility method to capture and report errors"""
@@ -628,3 +628,11 @@ class Ameyo:
                 self.agenthomepage.verify_DTMF_working())
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"verify_DTMF_working", error))
+
+    def validate_real_time_chat_data(self, campaign_details):
+        """Method to verify and validate real-time chat data on supervisor."""
+        try:
+            return self._return_result(
+                self.chat.validate_real_time_chat_data(campaign_details))
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"validate_real_time_chat_data", error))
