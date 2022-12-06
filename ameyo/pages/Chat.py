@@ -126,7 +126,6 @@ class Chat:
         row_values = self.action.get_table_row_values('agent_list_table')
         col_names = self.action.get_table_header_columns_text_list('agent_list_table_thead')
         for row in row_values:
-            print(row)
             user_data = dict(zip(col_names, row_values[row]))
             assert user_data['User ID'] == 'ron'
         return True
