@@ -147,5 +147,35 @@
   "queued_chats":{
     "by":"xpath",
     "value":"//span[text()= 'Queued Chats']",
+    "index":"0"},
+
+  "queue_monitoring":{
+    "by":"xpath",
+    "value":"//*[@automationid='queueMonitoringTab']",
+    "index":"0"},
+
+  "real_time_data_message":{
+    "by":"xpath",
+    "value":"//*[@automationid='liveDataRefreshTimeInterval']",
+    "index":"0"},
+
+  "historical_data_message":{
+    "by":"xpath",
+    "value":"//*[@automationid='statsDataRefreshTimeInterval']",
+    "index":"0"},
+
+  "queue_list_count":{
+    "by":"xpath",
+    "value":"//div[@class='table-widget__search-panel row']//h4",
+    "index":"0"},
+
+  "queue_filter_checkbox":{
+    "by":"xpath",
+    "value":"//input[@class='filled-in']/following::label",
+    "index":"0"},
+
+  "queue_filter_apply_btn":{
+    "by":"xpath",
+    "value":"//button[@type='button']//span[text() = 'Apply']",
     "index":"0"}
 }

@@ -2,6 +2,7 @@
 Documentation     Ameyo test cases to verify superivor monitoring chat data.
 ...               Developed By - Developer by EA
 ...               https://touchstone.ameyo.com/linkto.php?tprojectPrefix=AP&item=testcase&id=AP-16201
+..                https://touchstone.ameyo.com/linkto.php?tprojectPrefix=AP&item=testcase&id=AP-16203
 
 # Suite Setup and Teardown
 Suite Setup       Suite Initialization For Two Requested Users And Customer Chat Window    chat_executive
@@ -21,3 +22,7 @@ Library           ../../pages/Ameyo.py    browser_config=${BROWSER_CONFIG}    pr
 TC - Verify live monitoring data on supervisor for chat
     [Tags]  smoke    testid=AP-16201    regression
     I verify live monitoring data for chat    ${instance1}    chat_supervisor
+
+TC - Verify queue monitoring data on supervisor for chat
+    [Tags]  smoke    testid=AP-16203    regression
+    I verify queue monitoring data for chat    ${instance1}    chat_supervisor

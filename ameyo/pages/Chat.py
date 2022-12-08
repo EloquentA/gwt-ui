@@ -63,7 +63,7 @@ class Chat:
             'Customer Added successfully'), "Toast Message not as expected - Couldn't Create Customer"
         return True
 
-    def validate_real_time_chat_data(self, campaign_details):
+    def validate_real_time_chat_data(self, campaign_details, executive_username):
         """Method to verify live monitoring for chat campaign on supervisor"""
         self.monitor.set_up_campaign(campaign_details)
         self.action.explicit_wait('live_monitoring_queue_dropdown', waittime=30)
@@ -80,7 +80,7 @@ class Chat:
             'total_occupied_instances': '1'
         }
         self.verify_data_on_dashboard(user_data, chat_data)
-        self.sort_by_ordering_list()
+        self.sort_by_ordering_list(executive_username)
         return True
 
     def verify_data_on_dashboard(self, user_data, chat_data):
@@ -95,7 +95,8 @@ class Chat:
             'Occupied Instances value error'
         return True
 
-    def sort_by_ordering_list(self):
+    def sort_by_ordering_list(self, executive_username):
+        """Creating a dict of options and sorting options"""
         sorting_options_based_on_chat_type = {
             'active_chats': ['Order Chats by Elapsed Time (Descending)',
                              'Order Chats by User Name (Ascending)'],
@@ -110,22 +111,57 @@ class Chat:
 
         for i in sorting_options_based_on_chat_type:
             self.action.click_element(i)
-            self.apply_sorting_and_verify_data(sorting_options_based_on_chat_type[i])
+            self.apply_sorting_and_verify_data(sorting_options_based_on_chat_type[i], executive_username)
         return True
 
-    def apply_sorting_and_verify_data(self, sorting_options):
-        """Method to select table sorting for data on chat stats monitoring"""
+    def apply_sorting_and_verify_data(self, sorting_options, executive_username):
+        """Method to select table sorting options for data on chat stats monitoring"""
         for i in sorting_options:
             self.action.click_element('sort_dropdown')
             self.action.select_from_ul_dropdown_using_text('ul_sort_selector', i)
-            self.verify_chat_stats_in_table()
+            self.verify_chat_stats_in_table(executive_username)
         return True
 
-    def verify_chat_stats_in_table(self):
-        """Method to verify table data for chat on supervisor"""
+    def verify_chat_stats_in_table(self, executive_username):
+        """Method to verify table data for chat on supervisor live monitoring"""
+        self.action.explicit_wait('agent_list_table')
         row_values = self.action.get_table_row_values('agent_list_table')
         col_names = self.action.get_table_header_columns_text_list('agent_list_table_thead')
         for row in row_values:
             user_data = dict(zip(col_names, row_values[row]))
-            assert user_data['User ID'] == 'ron'
+            assert user_data['User ID'] == executive_username, 'User ID mismatch Error'
+        return True
+
+    def verify_and_validate_queue_monitoring(self, supervisor_campaign):
+        """Method to verify refresh messages and filter for queue monitoring on supervisor"""
+        self.monitor.set_up_campaign(supervisor_campaign)
+        self.action.explicit_wait('users_assigned')
+        self.action.click_element('queue_monitoring')
+        self.action.explicit_wait('historical_data_message')
+        assert self.action.get_text('real_time_data_message') == 'Real-Time Data: Refreshes after every 10 secs', \
+            'Real-Time Refresh message error'
+        assert self.action.get_text('historical_data_message') == 'Historical Data: Refreshes after every 07 mins', \
+            'Historical data message error'
+        self.action.explicit_wait('agent_list_table', waittime=30)
+        queue_list_count = self.action.get_text('queue_list_count')
+        if int(queue_list_count.split(' ')[-1].strip('List()')) >= 1:
+            self.action.click_element('open_filter_btn')
+            self.action.click_element('queue_filter_checkbox')
+            self.action.click_element('queue_filter_apply_btn')
+            self.validate_queue_monitoring_table_data(supervisor_campaign)
+        return True
+
+    def validate_queue_monitoring_table_data(self, supervisor_campaign):
+        """Method to validate queue monitoring data on supervisor"""
+        # Sleep time is required here to tackle 'stale element error'
+        time.sleep(3)
+        row_values = self.action.get_table_row_values('agent_list_table')
+        col_names = self.action.get_table_header_columns_text_list('agent_list_table_thead')
+        for row in row_values:
+            user_data = dict(zip(col_names, row_values[row]))
+            assert user_data['Queue Name'] == supervisor_campaign['queue_name'], 'Queue Name error'
+            assert user_data['Queued Chats'] == '0', 'Queued chats count error'
+            assert user_data['Staffed Users'] == '1', 'Staffed User count error'
+            assert user_data['Available Users'] == '1', 'Available User count error'
+            assert user_data['Connected Users'] == '1', 'Connected User count error'
         return True
