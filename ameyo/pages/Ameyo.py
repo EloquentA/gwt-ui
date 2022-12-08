@@ -629,10 +629,18 @@ class Ameyo:
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"verify_DTMF_working", error))
 
-    def validate_real_time_chat_data(self, campaign_details):
+    def validate_real_time_chat_data(self, campaign_details, executive_username):
         """Method to verify and validate real-time chat data on supervisor."""
         try:
             return self._return_result(
-                self.chat.validate_real_time_chat_data(campaign_details))
+                self.chat.validate_real_time_chat_data(campaign_details, executive_username))
         except Exception as error:
             return self._return_result(False, error, self.__capture_error(f"validate_real_time_chat_data", error))
+
+    def verify_and_validate_queue_monitoring(self, campaign_details):
+        """Method to verify and validate Queue Monitoring on supervisor."""
+        try:
+            return self._return_result(
+                self.chat.verify_and_validate_queue_monitoring(campaign_details))
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error(f"verify_and_validate_queue_monitoring", error))

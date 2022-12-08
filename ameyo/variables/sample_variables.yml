@@ -113,6 +113,29 @@ CREDENTIALS:
       phone_number: 9988776655
     call_details:
       user: 'rahul'
+  chat_supervisor:
+    username: ''
+    password: ''
+    campaign_details:
+      interaction: 'TestICCampaign'
+      chat: 'TestChatCampaign'
+      voice_outbound: 'TestChatCampaign'
+      voice_inbound: ''
+      voice: ''
+      video: ''
+      # To perform monitoring test cases out of: interaction, chat, voice or video
+      monitor_with: 'voice_outbound'
+      select_queue: 'TestChatQueue'
+      queue_name: 'TestChatQueue'
+    extension: 'customer_success_1800_DefaultVR'
+    # Extension number must be different for simultaneously logged in personas
+    extension_number: 9999999993
+    call_back:
+      callback_type: 'user'
+      user: 'rahul'
+      phone_number: 9988776655
+    call_details:
+      user: 'rahul'
   analyst:
     username: ''
     password: ''
