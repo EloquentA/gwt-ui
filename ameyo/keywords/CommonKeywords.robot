@@ -15,6 +15,13 @@ I open ameyo home page
     ${result}=   call method    ${instance}    open_home_page    ${url}
     I verify result    ${result}
 
+I open ameyo toolbar page
+    [Documentation]   This keyword opens Ameyo ToolBar page and maximazes browser window
+    [Arguments]  ${instance}
+    &{url}=    Create Dictionary      url=${TOOLBAR_URL}
+    ${result}=   call method    ${instance}    open_home_page    ${url}
+    I verify result    ${result}
+
 I open ameyo home page in separate tab
     [Documentation]   This keyword opens Ameyo home page in separate tab
     [Arguments]  ${instance}
@@ -51,6 +58,12 @@ I close alert if present
     ${result}=   call method    ${instance}    close_alert_if_present
     I verify result    ${result}
 
+I close alert if present in toolbar
+    [Documentation]   This keyword closes alert if present in toolbar
+    [Arguments]  ${instance}
+    ${result}=   call method    ${instance}    close_alert_if_present_toolbar
+    I verify result    ${result}
+
 Ameyo setup
     [Documentation]   This keyword sets up setup for every suite
     [Arguments]  ${instance}    ${req_run_as}    ${voice_campaign_type}=voice_outbound
@@ -64,4 +77,19 @@ Ameyo teardown
     [Documentation]   This keyword does teardown setup for every suite
     [Arguments]  ${instance}
     I logout from ameyo homepage    ${instance}
+    I close browser window    ${instance}
+
+Ameyo Toolbar setup
+    [Documentation]   This keyword sets up setup for every toolbar suite
+    [Arguments]  ${instance}    ${req_run_as}    ${voice_campaign_type}=voice_outbound
+    I open ameyo toolbar page    ${instance}
+    I login into Ameyo Toolbar   ${instance}    ${req_run_as}
+    I close alert if present in toolbar   ${instance}
+    select toolbar campaign    ${instance}    ${req_run_as}
+    I select extension    ${instance}    ${req_run_as}
+
+Ameyo Toolbar teardown
+    [Documentation]   This keyword does teardown setup for every toolbar suite
+    [Arguments]  ${instance}
+    I logout from ameyo toolbar    ${instance}
     I close browser window    ${instance}

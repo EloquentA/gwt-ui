@@ -50,6 +50,20 @@ class Login:
         assert self.action.is_presence_of_element_located('logout_btn'), "Logout button not located after login."
         return True
 
+    def login_toolbar(self, **kwargs) -> bool:
+        """Login to Ameyo ToolBar portal"""
+        # import sys, pdb;
+        # pdb.Pdb(stdout=sys.__stdout__).set_trace()
+
+        self.action.explicit_wait('user_id_input_toolbar')
+        self.action.explicit_wait('password_input_toolbar')
+        self.action.input_text('user_id_input_toolbar', kwargs['username'])
+        self.action.input_text('password_input_toolbar', kwargs['password'])
+        self.action.click_element('login_btn_toolbar')
+        self.close_force_login_pop_up()
+        # assert self.action.is_presence_of_element_located('login_btn_toolbar'), "Logout button not located after login."
+        return True
+
     def logout_from_campaign_selection_page(self, **kwargs) -> bool:
         """Logout from Ameyo system"""
         assert self.action.is_presence_of_element_located('logout_btn'), "Logout button not located."
@@ -63,6 +77,17 @@ class Login:
         self.action.click_element('preferences_drop_down_btn')
         self.action.explicit_wait('preferences_logout_btn', ec='element_to_be_clickable')
         self.action.click_element('preferences_logout_btn')
+        self.common.close_alert_if_exists()
+        return True
+
+    def logout_from_ameyo_toolbar(self):
+        """Logout from Ameyo ToolBar"""
+        self.action.is_presence_of_element_located('more_btn_toolbar')
+        self.action.click_element('more_btn_toolbar')
+        self.action.explicit_wait('logout_btn_toolbar_1', ec='element_to_be_clickable')
+        self.action.click_element('logout_btn_toolbar_1')
+        self.action.explicit_wait('logout_btn_toolbar_2')
+        self.action.click_element('logout_btn_toolbar_2')
         self.common.close_alert_if_exists()
         return True
 
@@ -105,6 +130,22 @@ class Login:
         self.action.input_text(search_box_locator, value)
         self.action.press_key(search_box_locator, "ARROW_DOWN")
         self.action.press_key(search_box_locator, "ENTER")
+
+    def select_toolbar_campaign(self, kwargs, user_type) -> bool:
+        """This function will select campaign"""
+        current_url = self.action.get_current_url()
+        # import sys, pdb;
+        # pdb.Pdb(stdout=sys.__stdout__).set_trace()
+        if 'executive' in user_type.lower():
+            if 'toolbar' in current_url:
+                self.action.explicit_wait('voice_filter')
+                # self.action.click_element('voice_filter')
+                self.action.explicit_wait('toolbar_campaign_search_btn')
+                self.action.click_element('toolbar_campaign_search_btn')
+                self.action.input_text('toolbar_campaign_search', kwargs['voice_outbound'])
+                self.action.click_element('toolbar_campaign_checkbox')
+                self.action.click_element('toolbar_campaign_next')
+        return True
 
     def select_campaign(self, kwargs, user_type, voice_campaign_type="voice_outbound", workbench=False) -> bool:
         """This function will select campaign"""

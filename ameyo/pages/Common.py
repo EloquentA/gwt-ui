@@ -30,6 +30,18 @@ class Common:
             print("Error closing alert after logout: ", e)
             return True
 
+    def close_alert_if_exists_toolbar(self):
+        """Method to close force login pop up."""
+        try:
+            self.action.explicit_wait('force_login_btn_toolbar')
+            # import sys, pdb;
+            # pdb.Pdb(stdout=sys.__stdout__).set_trace()
+            self.action.click_element('force_login_btn_toolbar')
+            return True
+        except Exception as e:
+            print("Error closing alert after logout: ", e)
+            return True
+
     def change_status(self, desired_state, new_state_element):
         """Method to change user status to desired state"""
         if not self.action.get_element_attribute('status_dropdown_link', 'title') == desired_state:

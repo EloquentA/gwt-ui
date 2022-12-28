@@ -18,5 +18,9 @@
   "extension_dropdown":{"by":"xpath", "value":"//span[@title='Select Extension']", "index":"0"},
   "phone_number_input_for_extension":{"by":"xpath", "value":"//input[contains(@placeholder, 'Enter Number')]", "index":"0"},
   "extension_save_btn":{"by":"xpath", "value":"//*[@automationid='extensionSaveBtn']", "index":"0"},
-  "extension_selection_modal_header":{"by":"xpath", "value":"//h2[text()='Extension Selection']", "index":"0"}
+  "extension_selection_modal_header":{"by":"xpath", "value":"//h2[text()='Extension Selection']", "index":"0"},
+  "user_id_input_toolbar":{"by":"id", "value":"userId", "index":"0"},
+  "password_input_toolbar":{"by":"id", "value":"password", "index":"0"},
+  "login_btn_toolbar":{"by":"id", "value":"login_b", "index":"0"},
+  "force_login_btn_toolbar":{"by":"id", "value":"forceLoginBtn", "index":"0"}
 }
