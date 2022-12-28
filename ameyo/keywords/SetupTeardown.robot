@@ -93,3 +93,34 @@ Suite Initialization For Two Requested Users And Customer Chat Window
     I open ameyo home page in separate tab    ${instance1}
     I switch to requested tab   ${instance1}    2
     Ameyo setup    ${instance1}    chat_supervisor
+
+Suite Initialization For ToolBar
+    [Arguments]    ${req_run_as}    ${voice_campaign_type}=voice_outbound    ${override}=${FALSE}
+    ${current_instance1} =    Get Variable Value    ${instance1}
+    Set Global Variable	${is_parent_setup}  """${current_instance1}""" != 'None'
+    IF  not ${is_parent_setup}
+        ${obj_instance1}=  Get library instance    Client1
+        Set Global Variable	${instance1}  ${obj_instance1}
+        Ameyo Toolbar setup  ${instance1}    ${req_run_as}
+    ELSE IF    ${override}
+        I logout from ameyo toolbar    ${instance1}
+        Ameyo Toolbar setup    ${instance1}    ${req_run_as}
+    ELSE
+        # If some other persona has been requested in common suite setup, login with requested persona
+        Run Keyword If    '${req_run_as}' != '${RUN_AS}'    I logout from ameyo toolbar    ${instance1}
+        Run Keyword If    '${req_run_as}' != '${RUN_AS}'    Ameyo Toolbar setup    ${instance1}    ${req_run_as}
+    END
+
+Suite Cleanup Toolbar
+    [Arguments]    ${req_run_as}=${RUN_AS}
+    IF  not ${is_parent_setup}
+        Ameyo Toolbar teardown  ${instance1}
+    ELSE
+        # Close second tab if present
+        I close requested tab    ${instance1}    1    ${FALSE}
+        # Close second tab if present
+        I close requested tab    ${instance1}    2    ${FALSE}
+        # If some other persona has been requested in common suite setup, login with original persona on suite cleanup
+        Run Keyword If    '${req_run_as}' != '${RUN_AS}'    I logout from ameyo toolbar    ${instance1}
+        Run Keyword If    '${req_run_as}' != '${RUN_AS}'    Ameyo Toolbar setup    ${instance1}    ${RUN_AS}
+    END

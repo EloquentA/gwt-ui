@@ -1,0 +1,121 @@
+{
+  "voice_filter" : {
+    "by":"id",
+    "value":"navVoice",
+    "index":"0"
+  },
+
+  "toolbar_campaign_options" : {
+    "by":"id",
+    "value":"voiceCampaignListId",
+    "index":"0"
+  },
+
+  "toolbar_campaign_search_btn" : {
+    "by":"xpath",
+    "value":"//select-campaign[contains(@id, 'selectCampaignOnLoadId')]//button[contains(@class, 'search__icon-chat' )]",
+    "index":"0"
+  },
+
+  "toolbar_campaign_search" : {
+    "by":"xpath",
+    "value":"//select-campaign//input[contains(@id, 'globalHeaderSearchBox')]",
+    "index":"0"
+  },
+
+  "change_toolbar_campaign_search" : {
+    "by":"xpath",
+    "value":"//select-campaign//input[contains(@id, 'globalHeaderSearchBox')]",
+    "index":"1"
+  },
+
+  "toolbar_campaign_checkbox" : {
+    "by":"xpath",
+    "value":"//input[contains(@class, 'filled-in')]/parent::span[contains(@class,'campaign-list-radio')]",
+    "index":"0"
+  },
+
+  "toolbar_campaign_change_checkbox" : {
+    "by":"xpath",
+    "value":"//select-campaign[contains(@id, 'selectCampaignComponentId')]//input[contains(@class, 'filled-in')]/parent::span[contains(@class,'campaign-list-radio')]",
+    "index":"0"
+  },
+
+  "toolbar_campaign_change_new_checkbox" : {
+    "by":"xpath",
+    "value":"//select-campaign[contains(@id, 'selectCampaignComponentId')]//li[contains(@value, '20')]//input[contains(@class, 'filled-in')]/parent::span[contains(@class, 'campaign-list-radio')]",
+    "index":"0"
+  },
+
+  "toolbar_campaign_next" : {
+    "by":"id",
+    "value":"doneBtn",
+    "index":"0"
+  },
+
+  "toolbar_selected_campaign_verification" : {
+    "by":"id",
+    "value":"selectedCampaignNameId",
+    "index":"0"
+  },
+
+  "toolbar_campaign_change_next" : {
+    "by":"xpath",
+    "value":"//select-campaign[contains(@id, 'selectCampaignComponentId')]//button[text() = 'Next']",
+    "index":"0"
+  },
+
+  "campaign_change_search" : {
+    "by":"xpath",
+    "value":"//select-campaign[contains(@id, 'selectCampaignComponentId')]//button[contains(@id, 'globalHeaderSearchBtn')]",
+    "index":"0"
+  },
+
+  "setting_button" : {
+    "by":"id",
+    "value":"settings",
+    "index":"0"
+  },
+
+  "change_campaign_btn" : {
+    "by":"id",
+    "value":"changeCampaignOpt",
+    "index":"0"
+  },
+
+  "agent_status_dropdown" : {
+    "by":"id",
+    "value":"agentStatus",
+    "index":"0"
+  },
+
+  "agent_status_selector" : {
+    "by":"id",
+    "value":"agentStatusModalOptionsList",
+    "index":"0"
+  },
+
+  "phone_number_textbox" : {
+    "by":"id",
+    "value":"phone",
+    "index":"0"
+  },
+
+  "call_button" : {
+    "by":"id",
+    "value":"manual-dial-new",
+    "index":"0"
+  },
+
+  "end_call_button" : {
+    "by":"id",
+    "value":"endCall_bid",
+    "index":"0"
+  },
+
+  "disposition_reason_customer" : {
+    "by":"id",
+    "value":"hangUpCustomer",
+    "index":"0"
+  }
+}

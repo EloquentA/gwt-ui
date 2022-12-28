@@ -27,6 +27,7 @@ from KnowledgeBase import KnowledgeBase
 from AdminGroup import AdminGroup
 from AutoCall import AutoCall
 from Chat import Chat
+from ToobarHomepage import ToolbarHomepage
 
 class Ameyo:
     """Ameyo functionality class"""
@@ -51,6 +52,7 @@ class Ameyo:
         self.admin_group = AdminGroup(self.web_browser, self.common, self.adminuser)
         self.auto_call = AutoCall(self.web_browser, self.common, self.agenthomepage, self.monitor)
         self.chat = Chat(self.web_browser, self.common, self.monitor)
+        self.toolbarhomepage = ToolbarHomepage(self.web_browser, self.common)
 
     def __capture_error(self, method_name, error_msg):
         """Utility method to capture and report errors"""
@@ -110,6 +112,14 @@ class Ameyo:
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("close_alert_if_present", error))
 
+    def close_alert_if_present_toolbar(self):
+        """Closes alert if present in toolbar"""
+        try:
+            self.common.close_alert_if_exists_toolbar()
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("close_alert_if_present_toolbar", error))
+
     def ameyo_login(self, kwargs, run_as=None):
         """Method to login"""
         try:
@@ -117,6 +127,14 @@ class Ameyo:
             return self._return_result(self.login.login(**kwargs.get(run_as or self._run_as)))
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("ameyo_login", error))
+
+    def ameyo_toolbar_login(self, kwargs, run_as=None):
+        """Method to login into Ameyo ToolBar"""
+        try:
+            print(f'Logging in as {self._run_as}')
+            return self._return_result(self.login.login_toolbar(**kwargs.get(run_as or self._run_as)))
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("ameyo_toolbar_login", error))
 
     def ameyo_login_new_password(self, user, pwd):
         """Method to login"""
@@ -140,6 +158,15 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("logout_from_ameyo_homepage", error))
+
+    def logout_from_ameyo_toolbar(self):
+        """Method to logout from Ameyo Home Page"""
+        try:
+            self.login.logout_from_ameyo_toolbar()
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("logout_from_ameyo_toolbar", error))
+
 
     def login_failure(self, kwargs, username_type, password_type):
         """Method to test login failures."""
@@ -193,6 +220,18 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("select_campaign", error))
+
+    def select_toolbar_campaign(self, kwargs, run_as):
+        """This function will select campaign"""
+        try:
+            kwargs = kwargs.get(run_as).get('campaign_details')
+            if kwargs is not None:
+                self.login.select_toolbar_campaign(kwargs, run_as)
+            else:
+                print(f'Select campaign is not applicable for user type: {run_as}')
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("select_toolbar_campaign", error))
 
     def manual_dial_only(self, calling_number, campaign_name, auto_call=True):
         """Method to manual dial only"""
@@ -280,6 +319,15 @@ class Ameyo:
             return self._return_result()
         except Exception as error:
             return self._return_result(False, error, self.__capture_error("change_campaign", error))
+
+    def change_toolbar_campaign(self, kwargs):
+        """This function will change campaign"""
+        try:
+            self.toolbarhomepage.change_toolbar_campaign(kwargs)
+            return self._return_result()
+        except Exception as error:
+            return self._return_result(False, error, self.__capture_error("change_toolbar_campaign", error))
+
 
     def change_password(self, oldpass, newpass):
         """Method to change the password of logged in user"""

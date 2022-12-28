@@ -13,6 +13,12 @@ I login into Ameyo
     ${result}=   call method    ${instance}    ameyo_login    ${CREDENTIALS}    ${req_run_as}
     I verify result    ${result}
 
+I login into Ameyo Toolbar
+    [Documentation]   This keyword logs-in to Ameyo Toolbar portal
+    [Arguments]  ${instance}    ${req_run_as}
+    ${result}=   call method    ${instance}    ameyo_toolbar_login    ${CREDENTIALS}    ${req_run_as}
+    I verify result    ${result}
+
 I logout from campaign selection page
     [Documentation]   This keyword logouts from campaign selection page
     [Arguments]  ${instance}
@@ -49,10 +55,22 @@ select campaign
     ${result}=   call method    ${instance}    select_campaign    ${CREDENTIALS}    ${req_run_as}    ${voice_campaign_type}    ${workbench}
     I verify result    ${result}
 
+select toolbar campaign
+    [Documentation]   This keyword will select campaigns as per input given from script
+    [Arguments]  ${instance}    ${req_run_as}
+    ${result}=   call method    ${instance}    select_toolbar_campaign    ${CREDENTIALS}    ${req_run_as}
+    I verify result    ${result}
+
 I logout from ameyo homepage
     [Documentation]   This keyword logouts from the Ameyo home page by clicking on the preferences dropdown
     [Arguments]  ${instance}
     ${result}=   call method    ${instance}    logout_from_ameyo_homepage
+    I verify result    ${result}
+
+I logout from ameyo toolbar
+    [Documentation]   This keyword logouts from the Ameyo toolbar by clicking on the preferences button
+    [Arguments]  ${instance}
+    ${result}=   call method    ${instance}    logout_from_ameyo_toolbar
     I verify result    ${result}
 
 I login into Ameyo using new password

@@ -2,7 +2,7 @@
 Documentation     Ameyo test cases to verify superivor monitoring chat data.
 ...               Developed By - Developer by EA
 ...               https://touchstone.ameyo.com/linkto.php?tprojectPrefix=AP&item=testcase&id=AP-16201
-..                https://touchstone.ameyo.com/linkto.php?tprojectPrefix=AP&item=testcase&id=AP-16203
+...                https://touchstone.ameyo.com/linkto.php?tprojectPrefix=AP&item=testcase&id=AP-16203
 
 # Suite Setup and Teardown
 Suite Setup       Suite Initialization For Two Requested Users And Customer Chat Window    chat_executive

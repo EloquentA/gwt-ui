@@ -1,0 +1,5 @@
+{
+  "more_btn_toolbar":{"by":"id", "value":"moreSettingTabId", "index":"0"},
+  "logout_btn_toolbar_1":{"by":"id", "value":"doLogout", "index":"0"},
+  "logout_btn_toolbar_2":{"by":"id", "value":"logoutBtn", "index":"0"}
+}
